@@ -12,3 +12,5 @@ plt.ylabel('values')
 plt.title('Test Figure')
 
 plt.show()
+
+# test for understanding jupyter working with git
