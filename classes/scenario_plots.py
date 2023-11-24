@@ -1,7 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-import ipywidgets as widgets
-from IPython.display import display,clear_output
+from ipywidgets import interactive, widgets
+from IPython.display import display, clear_output
 
 class sc_plot():
     def init(self):
@@ -22,60 +22,49 @@ class sc_plot():
         plt.grid(True)
         plt.show()
     
-    def drop_down(self, data: pd.DataFrame):
-        #drop down
-        region_dropdown = widgets.Dropdown(
-            options=['Alle'] + list(data['RegionCode'].unique()),
+class PlotDropDown:
+    def __init__(self,data): 
+        self.data =data
+        self.regioncode_dropdown = self.choose_dropdown("RegionCode")
+        self.model_dropdown = self.choose_dropdown("Model")
+        self.id_dropdown = self.choose_dropdown("ID")
+        self.domain_dropdown = self.choose_dropdown("domain")
+        self.commodity_code_dropdown = self.choose_dropdown("CommodityCode")
+
+        self.interactive_plot_update = interactive(self.update_plot_data,
+                                                   region = self.regioncode_dropdown,
+                                                   model = self.model_dropdown,
+                                                   id = self.id_dropdown,
+                                                   domain= self.domain_dropdown,
+                                                   commodity = self.commodity_code_dropdown)     
+        display(self.interactive_plot_update)
+
+
+    def choose_dropdown(self, column):
+        options = ['Alle'] + list(self.data[column].unique())
+        return widgets.Dropdown(
+            options=options,
             value='Alle',
-            description='Select RegionCode:',
-            disabled=False,
+            description=f'Select {column}:',
+            disabled=False
         )
 
-        model_dropdown = widgets.Dropdown(
-            options=['Alle'] + list(data['Model'].unique()),
-            value='Alle',
-            description='Select Model:',
-            disabled=False,
-        )
+    def update_plot_data(self, region, model, id, domain, commodity):
+        region_filter = [region] if region != 'Alle' else self.data['RegionCode'].unique()
+        model_filter = [model] if model != 'Alle' else self.data['Model'].unique()
+        id_filter = [id] if id != 'Alle' else self.data['ID'].unique()
+        domain_filter = [domain] if domain != 'Alle' else self.data['domain'].unique()
+        commodity_filter = [commodity] if commodity != 'Alle' else self.data['CommodityCode'].unique()
 
-        id_dropdown = widgets.Dropdown(
-            options=['Alle'] + list(data['ID'].unique()),
-            value='Alle',
-            description='Select ID:',
-            disabled=False,
-        )
 
-        domain_dropdown = widgets.Dropdown(
-            options=['Alle'] + list(data['domain'].unique()),
-            value='Alle',
-            description='Select Domain:',
-            disabled=False,
-        )
-
-        commodity_code_dropdown = widgets.Dropdown(
-            options=['Alle'] + list(data['CommodityCode'].unique()),
-            value='Alle',
-            description='Select CommodityCode:',
-            disabled=False,
-        )
-        return region_dropdown, model_dropdown, id_dropdown, domain_dropdown, commodity_code_dropdown
-    
-    '''The next passages did not work until now    
-    def update_plot_data(self, data, region_code, model, id_value, domain, commodity_code):
-        region_code_filter = [region_code] if region_code != 'Alle' else data['RegionCode'].unique()
-        model_filter = [model] if model != 'Alle' else data['Model'].unique()
-        id_filter = [id_value] if id_value != 'Alle' else data['ID'].unique()
-        domain_filter = [domain] if domain != 'Alle' else data['domain'].unique()
-        commodity_code_filter = [commodity_code] if commodity_code != 'Alle' else data['CommodityCode'].unique()
-
-        filtered_data = data[
-            (data['RegionCode'].isin(region_code_filter)) &
-            (data['Model'].isin(model_filter)) &
-            (data['ID'].isin(id_filter)) &
-            (data['domain'].isin(domain_filter)) &
-            (data['CommodityCode'].isin(commodity_code_filter))
+        filtered_data = self.data[
+            (self.data['RegionCode'].isin(region_filter)) &
+            (self.data['Model'].isin(model_filter)) &
+            (self.data['ID'].isin(id_filter)) &
+            (self.data['domain'].isin(domain_filter)) &
+            (self.data['CommodityCode'].isin(commodity_filter))
         ]
-        
+    
         grouped_data = filtered_data.groupby(['Period', 'Scenario']).sum().reset_index()
 
         plt.figure(figsize=(12, 8))
@@ -84,20 +73,9 @@ class sc_plot():
             subset = grouped_data[grouped_data['Scenario'] == price_value]
             plt.plot(subset['Period'], subset['quantity'], label=f'M: {price_value}')
 
-        plt.title(f'quantity for each Period - RegionCode: {region_code}, Model: {model}, ID: {id_value}, Domain: {domain}, CommodityCode: {commodity_code}')
+        plt.title(f'quantity for each Period - RegionCode: {region}, Model: {model}, ID: {id}, Domain: {domain}, CommodityCode: {commodity}')
         plt.xlabel('period')
         plt.ylabel('quantity')
         plt.legend()
         plt.grid(True)
-        plt.show()
-    
-    def interactive_plot(self, data: pd.DataFrame):
-        region_dropdown, model_dropdown, id_dropdown, domain_dropdown, commodity_code_dropdown = self.drop_down(data=data)
-        interactive_plot_update = widgets.interactive(self.update_plot_data,
-                                                      region_code=region_dropdown,
-                                                      model=model_dropdown,
-                                                      id_value=id_dropdown,
-                                                      domain=domain_dropdown,
-                                                      commodity_code=commodity_code_dropdown)
-        display(interactive_plot_update)
-    '''
+        plt.show() 
