@@ -98,8 +98,9 @@ class import_pkl_data():
         data = pd.read_csv(str(PACKAGEDIR) + parameters.input_folder.value + "\\" + parameters.csv_input.value)
         data = self.downcasting(data)
         data_results = pd.concat([data_prev["results"], data], axis=0)
+        data_prev["results"] = data_results
 
-        return data, data_results
+        return data_prev
     
     def julias_data():
         file_path = "data.xlsx"
