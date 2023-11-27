@@ -37,11 +37,11 @@ class import_pkl_data():
         """read data container from pkl file and store it within dictionary
         :return: dictionary of data container
         """
-        data_container = {"Forest": data["Forest"].forest_output, 
-                        "ManufactureCost": data["ManufactureCost"].manufacture_output, 
-                        "results_agg": data["OptimizationHelpers"].data_aggregated,
-                        "results": data["OptimizationHelpers"].data_periods,
-                        "WorldPrices": data["WorldPrices"].data_periods}
+        data_container = {"Forest": data["Forest"], 
+                        "ManufactureCost": data["ManufactureCost"], 
+                        "results_agg": data["data_aggregated"],
+                        "results": data["data_periods"],
+                        "WorldPrices": data["WorldPrices"]}
         return data_container
     
     def downcasting(self, data: pd.DataFrame):
@@ -86,19 +86,20 @@ class import_pkl_data():
             scenario_name = scenario_files[scenario_files.rfind(parameters.seperator_scenario_name.value)+3
                                         :-4]
             try:
-                data_container = self.open_pickle(src_filepath)
-                data = self.read_pkl(data=data_container)
+                data = self.open_pickle(src_filepath)
+                print(data)
+                #data = self.read_pkl(data=data_container)
                 self.concat_scenarios(data=data, sc_name=scenario_name, data_prev=data_prev, ID=ID)
             except pickle.UnpicklingError:
                 pass
             data_prev = data
             ID += 1
         
-        data_prev["results"] = self.downcasting(data_prev["results"])
+        data_prev["data_periods"] = self.downcasting(data_prev["data_periods"])
         data = pd.read_csv(str(PACKAGEDIR) + parameters.input_folder.value + "\\" + parameters.csv_input.value)
         data = self.downcasting(data)
-        data_results = pd.concat([data_prev["results"], data], axis=0)
-        data_prev["results"] = data_results
+        data_results = pd.concat([data_prev["data_periods"], data], axis=0)
+        data_prev["data_periods"] = data_results
 
         return data_prev
     
