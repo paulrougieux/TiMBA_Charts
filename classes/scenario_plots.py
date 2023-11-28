@@ -77,7 +77,7 @@ class PlotDropDown:
             subset = grouped_data[grouped_data['Scenario'] == price_value]
             plt.plot(subset['Period'], subset['quantity'], label=f'M: {price_value}')
 
-        plt.title(f'quantity for each Period - RegionCode: {region},Continent: {continent}, Model: {model}, ID: {id}, Domain: {domain}, CommodityCode: {commodity}')
+        #plt.title(f'quantity for each Period - RegionCode: {region},Continent: {continent}, Model: {model}, ID: {id}, Domain: {domain}, CommodityCode: {commodity}')
         plt.xlabel('period')
         plt.ylabel('quantity')
         plt.legend()
