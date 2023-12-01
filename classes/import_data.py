@@ -110,21 +110,3 @@ class import_pkl_data():
         data = pd.read_excel(file_path)
         data.head()
         return data
-    
-    def validation(self, data: pd.DataFrame):
-        data_vali = data[data.ID==0].reset_index(drop=True)
-        data_std_prev = []
-        for i in data.ID.unique():
-            sc_name = data.Scenario[data.ID == i][0]
-            data_gfpm = data_vali
-            data_gfpmpt = data[data.ID==i].reset_index(drop=True)
-            data_gfpm["vali"] = data_gfpm.quantity - data_gfpmpt.quantity
-            data_std = pd.DataFrame(data_gfpm.groupby(['RegionCode','domain',"CommodityCode"])["vali"].std()).reset_index()
-            data_std.columns = ["Region", "Domain","Commodity",sc_name]
-            data_std_index = data_std[["Region", "Domain","Commodity"]]
-            data_std_prev = pd.concat([pd.DataFrame(data_std_prev),pd.DataFrame(data_std[sc_name])], axis=1)
-        data_std = pd.concat([data_std_index, data_std_prev], axis=1)
-        fourth_quantile = data_std[data_std.columns[3]].quantile([.75])
-        data_std = data_std.sort_values(by=data_std.columns[3], ascending=False)
-        #data_std_count = pd.DataFrame(data_std.groupby(['Region','Domain']).count()).reset_index()
-        return data_std
