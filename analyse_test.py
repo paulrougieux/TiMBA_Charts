@@ -27,4 +27,4 @@ data = data["data_periods"]
 validation = validation()
 data_vali = validation.model_difference(data=data)
 
-data_quantities = validation.model_corrcoef(data)
+data_quantities = validation.model_corrcoef(data=data, unit='quantity')
