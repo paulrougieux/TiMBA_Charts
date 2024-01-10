@@ -11,6 +11,7 @@ def package_directory():
 PACKAGEDIR = package_directory()
 
 class parameters(Enum):
+    input_folder_sc = "\\Input"
     input_folder = "\\Input"
     seperator_scenario_name = "Sc_"
     column_name_scenario = "Scenario"
@@ -74,15 +75,15 @@ class import_pkl_data():
             if data_prev != []:
                 data[key] = pd.concat([data_prev[key], data[key]], axis=0)
                 
-    def combined_data(self):
+    def combined_data(self, input_folder = parameters.input_folder_sc.value):
         """loop trough all input files in input directory
         """
-        file_list = os.listdir(str(PACKAGEDIR) + parameters.input_folder.value)
+        file_list = os.listdir(str(PACKAGEDIR) + input_folder)
         data = []
         data_prev = []
         ID = 1
         for scenario_files in file_list:
-            src_filepath = str(PACKAGEDIR) + parameters.input_folder.value + "\\" + scenario_files
+            src_filepath = str(PACKAGEDIR) + input_folder + "\\" + scenario_files
             scenario_name = scenario_files[scenario_files.rfind(parameters.seperator_scenario_name.value)+3
                                         :-4]
             try:
@@ -96,12 +97,15 @@ class import_pkl_data():
             ID += 1
         
         data_prev["data_periods"] = self.downcasting(data_prev["data_periods"])
-        data = pd.read_csv(str(PACKAGEDIR) + parameters.input_folder.value + "\\" + parameters.csv_input.value)
-        data = self.downcasting(data)
-        data_results = pd.concat([data_prev["data_periods"], data], axis=0)
-        data_prev["data_periods"] = data_results
+        try:
+            data = pd.read_csv(str(PACKAGEDIR) + input_folder + "\\" + parameters.csv_input.value)
+            data = self.downcasting(data)
+        except FileNotFoundError:
+            data = pd.DataFrame()
         country_data = self.read_country_data()
         data_prev["data_periods"] = pd.merge(data_prev["data_periods"], country_data, on="RegionCode", how="left")
+        data_results = pd.concat([data_prev["data_periods"], data], axis=0)
+        data_prev["data_periods"] = data_results
 
         return data_prev
     
