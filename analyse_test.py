@@ -15,24 +15,9 @@ print(PACKAGEDIR)
 #Import data
 import_pkl = import_pkl_data()
 data = import_pkl.combined_data()
-#data = data["data_periods"]
-data = data['Forest']
-# data.ForStock = data.ForStock.astype("float32")
-# data.ForArea = data.ForArea.astype("float32")
-# data = data.drop_duplicates().reset_index(drop=True)
-# data = data[['Scenario','Model','ID','RegionCode','Period','ForStock','ForArea']]
-# #data = pd.pivot_table(data, values='ForStock', index=['RegionCode'],columns=['Period'], aggfunc="mean")
-print(data)
-#data.to_csv('ForstockData.csv')
+data = data["data_periods"]
 
-# #Predefined plot
-# sc_plot = sc_plot()
-# sc_plot.predefined_plot(data)
-
-# #Interactive plot
-# plot_dropdown_instance = PlotDropDown(data)
-
-#validation = validation()
+validation = validation()
 #data_vali = validation.model_difference(data=data)
-
-#data_quantities = validation.model_corrcoef(data=data, unit='quantity')
+data_quantities = validation.model_corrcoef(data=data, unit='quantity')
+#data_std = validation.validation(data=data)
