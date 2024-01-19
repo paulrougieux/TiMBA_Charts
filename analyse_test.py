@@ -16,8 +16,24 @@ print(PACKAGEDIR)
 import_pkl = import_pkl_data()
 data = import_pkl.combined_data()
 data = data["data_periods"]
+#print(import_pkl.validation(data=data))
 
+#Plot predefined scenario results 
+sc_plot = sc_plot()
+sc_plot.predefined_plot(data)
+
+#Interactive scenario results (quantities)
+plot_dropdown_instance = PlotDropDown(data)
+
+#Validation tables
 validation = validation()
-#data_vali = validation.model_difference(data=data)
-data_quantities = validation.model_corrcoef(data=data, unit='quantity')
-#data_std = validation.validation(data=data)
+data_vali = validation.model_difference(data=data)
+data_quantities = validation.model_corrcoef(data)
+
+#Interactive scenario results (prices)
+
+#Forest Plots
+
+#Worldmap
+
+#Heatmap
