@@ -13,15 +13,15 @@ class sc_plot():
 
     def predefined_plot(self, data: pd.DataFrame):
         #data[['RegionCode', 'domain']] = data[['RegionCode', 'domain']].astype('str') # must be changed to perform groupby()
-        grouped_data = data.groupby(['Period', 'Scenario']).sum().reset_index()
+        grouped_data = data.groupby(['year', 'Scenario']).sum().reset_index()
         plt.figure(figsize=(12, 8))
 
         for price_value in grouped_data['Scenario'].unique():
             subset = grouped_data[grouped_data['Scenario'] == price_value]
-            plt.plot(subset['Period'], subset['quantity'], label=f'Scenario {price_value}')
+            plt.plot(subset['year'], subset['quantity'], label=f'Scenario {price_value}')
 
-        plt.title('Quantity for each country grouped by Period')
-        plt.xlabel('period')
+        plt.title('Quantity for each country grouped by year')
+        plt.xlabel('Year')
         plt.ylabel('Quantity')
         plt.legend()
         plt.grid(True)
@@ -74,18 +74,21 @@ class PlotDropDown:
             (self.data['CommodityCode'].isin(commodity_filter))
         ]
     
-        grouped_data = filtered_data.groupby(['Period', 'Scenario']).sum().reset_index()
+        grouped_data = filtered_data.groupby(['year', 'Scenario']).sum().reset_index()
 
         plt.figure(figsize=(12, 8))
 
         for price_value in grouped_data['Scenario'].unique():
             subset = grouped_data[grouped_data['Scenario'] == price_value]
-            plt.plot(subset['Period'], subset['quantity'], label=f'M: {price_value}')
+            if price_value in ['World500','FAOStat']:
+                plt.plot(subset['year'], subset['quantity'], label=f'M: {price_value}',color="black")
+            else:
+                plt.plot(subset['year'], subset['quantity'], label=f'M: {price_value}',color="darkblue", alpha=0.35)
 
-        #plt.title(f'quantity for each Period - RegionCode: {region},Continent: {continent}, Model: {model}, ID: {id}, Domain: {domain}, CommodityCode: {commodity}')
-        plt.xlabel('period')
+        #plt.title(f'quantity for each Year - RegionCode: {region},Continent: {continent}, Model: {model}, ID: {id}, Domain: {domain}, CommodityCode: {commodity}')
+        plt.xlabel('Year')
         plt.ylabel('quantity')
-        plt.legend()
+        #plt.legend()
         plt.grid(True)
         plt.show() 
 
@@ -244,7 +247,7 @@ class InteractivePrice:
             plt.title(f'Price for each scenario grouped by Period - RegionCode: {region_code}, Model: {model}, ID: {id_value}, Domain: {domain}, CommodityCode: {commodity_code}')
             plt.xlabel('Period')
             plt.ylabel('Price')
-            plt.legend()
+            #plt.legend()
             plt.grid(True)
             plt.show()
 

@@ -18,7 +18,7 @@ class parameters(Enum):
     column_name_model = "Model"
     column_name_id = "ID"
     model_name = "GFPMpt"
-    csv_input = "GFPM_results_World500.csv"
+    csv_input = "FAO_Data.csv"
 
 class import_pkl_data():
     def init(self):
@@ -68,12 +68,15 @@ class import_pkl_data():
         :param data: dictionary of the data container
         :param sc_name: scenario name from file name in dictionary
         """    
-        for key in data: #loop through all data from datacontainer
-            data[key][parameters.column_name_scenario.value] = sc_name
-            data[key][parameters.column_name_model.value] = parameters.model_name.value
-            data[key][parameters.column_name_id.value] = ID
-            if data_prev != []:
-                data[key] = pd.concat([data_prev[key], data[key]], axis=0)
+        try:
+            for key in data: #loop through all data from datacontainer
+                data[key][parameters.column_name_scenario.value] = sc_name
+                data[key][parameters.column_name_model.value] = parameters.model_name.value
+                data[key][parameters.column_name_id.value] = ID
+                if data_prev != []:
+                    data[key] = pd.concat([data_prev[key], data[key]], axis=0)
+        except KeyError:
+            pass
                 
     def combined_data(self, input_folder = parameters.input_folder_sc.value):
         """loop trough all input files in input directory
