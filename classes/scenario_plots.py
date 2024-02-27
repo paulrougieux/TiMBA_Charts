@@ -28,8 +28,15 @@ class sc_plot():
         plt.show()
     
 class PlotDropDown:
-    def __init__(self,data): 
+    def __init__(self,data,unique_color:bool = False,color:str="darkblue",legend:bool=True,
+                 start:int=1990,end:int=2050,scenario_range:bool=False): 
         self.data =data
+        self.unique_color =unique_color
+        self.color =color
+        self.legend =legend
+        self.start=start
+        self.end=end
+        self.scenario_range=scenario_range
         self.regioncode_dropdown = self.choose_dropdown("RegionCode")
         self.continentcode_dropdown = self.choose_dropdown("Continent")
         self.model_dropdown = self.choose_dropdown("Model")
@@ -75,20 +82,40 @@ class PlotDropDown:
         ]
     
         grouped_data = filtered_data.groupby(['year', 'Scenario']).sum().reset_index()
+        grouped_data = grouped_data[grouped_data["year"]>=self.start]
+        grouped_data = grouped_data[grouped_data["year"]<self.end]
 
         plt.figure(figsize=(12, 8))
 
-        for price_value in grouped_data['Scenario'].unique():
-            subset = grouped_data[grouped_data['Scenario'] == price_value]
-            if price_value in ['World500','FAOStat']:
-                plt.plot(subset['year'], subset['quantity'], label=f'M: {price_value}',color="black")
+        for scenario in grouped_data['Scenario'].unique():
+            subset = grouped_data[grouped_data['Scenario'] == scenario]
+            if scenario in ['World500','FAOStat']:
+                plt.plot(subset['year'], subset['quantity'], label=f'M: {scenario}',color="black")
             else:
-                plt.plot(subset['year'], subset['quantity'], label=f'M: {price_value}',color="darkblue", alpha=0.35)
+                if self.scenario_range:
+                    scenario_group = grouped_data[['year','ID','CommodityCode','quantity']]
+                    scenario_group = scenario_group[scenario_group.ID>0]
+                    scenario_group = scenario_group[['year','CommodityCode','quantity']]
+                    scenario_mean = scenario_group.groupby(['year','CommodityCode']).mean().reset_index()
+                    scenario_max = scenario_group.groupby(['year','CommodityCode']).max().reset_index()
+                    scenario_min = scenario_group.groupby(['year','CommodityCode']).min().reset_index()
+                    plt.plot(scenario_mean['year'], scenario_mean['quantity'], label=f'M: {scenario}',
+                             color=self.color, alpha=0.05, linestyle='dashed')
+                    plt.plot(scenario_max['year'], scenario_max['quantity'], label=f'M: {scenario}',
+                             color=self.color, alpha=0.05,linestyle='dotted')
+                    plt.plot(scenario_min['year'], scenario_min['quantity'], label=f'M: {scenario}',
+                             color=self.color, alpha=0.05,linestyle='dotted')
+                else:
+                    if self.unique_color:
+                        plt.plot(subset['year'], subset['quantity'], label=f'M: {scenario}',color=self.color, alpha=0.35)
+                    else:
+                        plt.plot(subset['year'], subset['quantity'], label=f'M: {scenario}')
 
         #plt.title(f'quantity for each Year - RegionCode: {region},Continent: {continent}, Model: {model}, ID: {id}, Domain: {domain}, CommodityCode: {commodity}')
         plt.xlabel('Year')
         plt.ylabel('quantity')
-        #plt.legend()
+        if self.legend:
+            plt.legend()
         plt.grid(True)
         plt.show() 
 
