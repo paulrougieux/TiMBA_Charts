@@ -247,11 +247,12 @@ class validation():
     def add_world(self, data: pd.DataFrame):
 
         data_new = pd.DataFrame()
+        list_parameter = ['CarbonStockBiomass [MtCO2]', 'CarbonStockHWP [MtCO2]', 'ForestArea', 'RoundwoodHarvest']
 
         for parameter in data['Parameter'].unique():
             data_temp = data[data['Parameter'] == parameter]
             
-            if any(~data_temp['Region'].isin(['World'])):
+            if parameter in list_parameter:
                 data_world = data_temp.groupby(['Model', 'Parameter', 'Scenario', 'Period'])['Data'].sum().reset_index()
                 data_world['Region'] = 'World'
                 data_temp = pd.concat([data_temp, data_world], axis=0).reset_index(drop=True)
