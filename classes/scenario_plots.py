@@ -357,15 +357,16 @@ class interactiveModelComparison():
 
                 fsm_data_max = fsm_data.groupby(['Period', 'Region', 'Parameter', 'Scenario'])['Data'].max().reset_index()
                 fsm_data_min = fsm_data.groupby(['Period', 'Region', 'Parameter', 'Scenario'])['Data'].min().reset_index()
-                color_palette = []
                 sns.lineplot(x='Period', y='Data', data=fsm_data_max, style='Region')
                 sns.lineplot(x='Period', y='Data', data=fsm_data_min, style='Region')
                 sns.lineplot(x='Period', y='Data', data=gfpmpt_data, style='Region')
             
-            if self.plot_option == 'ssp_fsm':
-                sns.lineplot(x="Period", y="Data", hue="Scenario", data=filtered_data)
-            # add line (x=0)
-            # plt.axhline(y=0, color='black', linestyle='--')
+            if self.plot_option == 'ssp_fsm_range':
+                sns.lineplot(x="Period", y="Data", hue="Model", data=filtered_data, style='Region')
+
+            if self.plot_option == 'ssp_fsm_all':
+                filtered_data['Scenario'] = filtered_data['Model'] + '_' + filtered_data['Scenario']
+                sns.lineplot(x="Period", y="Data", hue="Scenario", data=filtered_data, style='Region')
 
             plt.title(f'Model intercomparison results - Region: {region}, Model: {model}, Parameter: {parameter}, Scenario: {scenario}')
             plt.xlabel('Period')
