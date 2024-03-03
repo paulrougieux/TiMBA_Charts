@@ -244,6 +244,11 @@ class validation():
 
         return data_aligned
     
+    def add_world(self, data: pd.DataFrame):
+
+        
+        pass
+    
     def convert_unit(self, data: pd.DataFrame):
         
         # Convert harvest (tsd m³ to M m³):
@@ -267,7 +272,8 @@ class validation():
         # rename parameter
         parameter_name = {'CarbonStockBiomass [MtCO2]': 'Total Forest Non-soil C Stock (MtC)',
                           'ForestArea': 'Forest Area (Mha)',
-                          'RoundwoodHarvest': 'Roundwood Harvest (Mm3/yr)'}
+                          'RoundwoodHarvest': 'Roundwood Harvest (Mm3/yr)',
+                          'wtRoundwoodPrice': 'Wt Avg Roundwood Price (/m3)'}
         
         for parameter in parameter_name.keys():
             selection_index = data[data['Parameter'] == parameter].index
