@@ -55,7 +55,8 @@ external_model_data = validation.reformate_external_data(data=external_model_dat
 period_data = validation.period_structure(data=data_model_intercomparison['Data'])
 data_aligned = validation.align_period_data(data=data_filtered, period_data=period_data)
 
-# convert units of gfpmpt 
+# convert units of gfpmpt
+data_aligned = validation.add_world(data=data_aligned) 
 data_aligned = validation.convert_unit(data=data_aligned)
 data_aligned = validation.rename_parameter(data=data_aligned)
 

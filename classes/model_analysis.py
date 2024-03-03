@@ -246,8 +246,20 @@ class validation():
     
     def add_world(self, data: pd.DataFrame):
 
+        data_new = pd.DataFrame()
+
+        for parameter in data['Parameter'].unique():
+            data_temp = data[data['Parameter'] == parameter]
+            
+            if any(~data_temp['Region'].isin(['World'])):
+                data_world = data_temp.groupby(['Model', 'Parameter', 'Scenario', 'Period'])['Data'].sum().reset_index()
+                data_world['Region'] = 'World'
+                data_temp = pd.concat([data_temp, data_world], axis=0).reset_index(drop=True)
+            data_new = pd.concat([data_new, data_temp], axis=0)
         
-        pass
+        return data_new
+
+
     
     def convert_unit(self, data: pd.DataFrame):
         
