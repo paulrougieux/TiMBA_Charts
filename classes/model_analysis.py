@@ -191,7 +191,7 @@ class validation():
             for period in periods:
                 data_period = data_temp[period]
                 data_period = pd.DataFrame(data_period).rename(columns={period: 'Data'})
-                data_period['Period'] = period
+                data_period['Period'] = int(period)
                 data_period = pd.concat([data_info, data_period], axis=1)
                 data_periods = pd.concat([data_periods, data_period], axis=0)
 
@@ -251,6 +251,11 @@ class validation():
         selection_index = data[data['Parameter'] == col_name].index
         data.loc[selection_index, 'Data'] = data.loc[selection_index, 'Data'] / 1000
 
+        # Convert forest area (tsd ha to M ha)
+        col_name = 'ForestArea'
+        selection_index = data[data['Parameter'] == col_name].index
+        data.loc[selection_index, 'Data'] = data.loc[selection_index, 'Data'] / 1000
+
         # Convert carbon (CO2 to C):
         col_name = ['CarbonStockBiomass [MtCO2]', 'CarbonStockHWP [MtCO2]']
         selection_index = data[[x in col_name for x in data['Parameter']]].index
@@ -275,6 +280,5 @@ class validation():
 
     def merge_data(self, data: pd.DataFrame, external_data: pd.DataFrame):
         data_fin = pd.concat([data, external_data], axis=0)
-
-
+        
         return data_fin
