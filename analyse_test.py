@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 from classes.import_data import package_directory, parameters
 from classes.import_data import import_pkl_data
-from classes.scenario_plots import sc_plot, PlotDropDown
+from classes.scenario_plots import sc_plot, PlotDropDown, interactiveModelComparison
 from classes.model_analysis import validation
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
@@ -62,6 +62,7 @@ data_aligned = validation.rename_parameter(data=data_aligned)
 # merge data gfpmpt and external model data
 data_fin = validation.merge_data(data=data_aligned, external_data=external_model_data)
 
-# plot data
+# plot interactive model intercomparison
+model_intercomparison = interactiveModelComparison(data=data_fin, plot_option="min_max")
 
 
