@@ -289,9 +289,7 @@ class InteractivePrice:
                               self.domain_dropdown.value, self.commodity_code_dropdown.value)
         
 class interactiveModelComparison():
-    def __init__(self,
-                data,
-                plot_option) -> None:
+    def __init__(self, data, plot_option):
         self.data = data
         self.plot_option = plot_option
         self.model_dropdown = self.create_dropdown('Model', 'Select Model:')
@@ -353,10 +351,15 @@ class interactiveModelComparison():
             if self.plot_option == 'min_max':
                 gfpmpt_data = filtered_data[filtered_data['Model'] == 'GFPMpt'].reset_index(drop=True)
                 gfpmpt_data = gfpmpt_data[['Period', 'Region', 'Parameter', 'Scenario', 'Data']]
-                fsm_data = filtered_data[filtered_data['Model'] != 'GFPMpt'].reset_index(drop=True)
+                gfpmpt_data['Region'] = gfpmpt_data['Region'] + '_' + gfpmpt_data['Model']
 
+
+                fsm_data = filtered_data[filtered_data['Model'] != 'GFPMpt'].reset_index(drop=True)
                 fsm_data_max = fsm_data.groupby(['Period', 'Region', 'Parameter', 'Scenario'])['Data'].max().reset_index()
                 fsm_data_min = fsm_data.groupby(['Period', 'Region', 'Parameter', 'Scenario'])['Data'].min().reset_index()
+                fsm_data_max['Region'] = fsm_data_max['Region'] + '_' + fsm_data_max['max']
+                fsm_data_min['Region'] = fsm_data_min['Region'] + '_' + fsm_data_min['min']
+
                 sns.lineplot(x='Period', y='Data', data=fsm_data_max, style='Region')
                 sns.lineplot(x='Period', y='Data', data=fsm_data_min, style='Region')
                 sns.lineplot(x='Period', y='Data', data=gfpmpt_data, style='Region')
