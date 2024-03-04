@@ -339,7 +339,6 @@ class interactiveModelComparison():
             (self.data['Scenario'].isin(scenario_filter))
         ].reset_index(drop=True)
 
-        # grouped_data = filtered_data.groupby(['Period', 'Scenario', 'Model', 'Region']).sum().reset_index()
         max_period = max(filtered_data[filtered_data['Model'] == 'GFPMpt']['Period'])
         filtered_data = filtered_data[filtered_data['Period'] <= max_period].reset_index(drop=True)
 
@@ -350,26 +349,27 @@ class interactiveModelComparison():
             fig, ax = plt.subplots(figsize=(20, 10))
             if self.plot_option == 'min_max':
                 gfpmpt_data = filtered_data[filtered_data['Model'] == 'GFPMpt'].reset_index(drop=True)
-                gfpmpt_data = gfpmpt_data[['Period', 'Region', 'Parameter', 'Scenario', 'Data']]
-                gfpmpt_data['Region'] = gfpmpt_data['Region'] + '_' + gfpmpt_data['Model']
-
-
+                
                 fsm_data = filtered_data[filtered_data['Model'] != 'GFPMpt'].reset_index(drop=True)
                 fsm_data_max = fsm_data.groupby(['Period', 'Region', 'Parameter', 'Scenario'])['Data'].max().reset_index()
                 fsm_data_min = fsm_data.groupby(['Period', 'Region', 'Parameter', 'Scenario'])['Data'].min().reset_index()
-                fsm_data_max['Region'] = fsm_data_max['Region'] + '_' + fsm_data_max['max']
-                fsm_data_min['Region'] = fsm_data_min['Region'] + '_' + fsm_data_min['min']
+                fsm_data_max['Model'] = 'Max'
+                fsm_data_min['Model'] = 'Min'
 
-                sns.lineplot(x='Period', y='Data', data=fsm_data_max, style='Region')
-                sns.lineplot(x='Period', y='Data', data=fsm_data_min, style='Region')
-                sns.lineplot(x='Period', y='Data', data=gfpmpt_data, style='Region')
+                data_fin = pd.concat([gfpmpt_data, fsm_data_max, fsm_data_min], axis=0).reset_index(drop=True)
+
+                sns.lineplot(x='Period', y='Data', data=data_fin, hue= 'Model', style='Region')
             
             if self.plot_option == 'ssp_fsm_range':
                 sns.lineplot(x="Period", y="Data", hue="Model", data=filtered_data, style='Region')
 
             if self.plot_option == 'ssp_fsm_all':
-                filtered_data['Scenario'] = filtered_data['Model'] + '_' + filtered_data['Scenario']
-                sns.lineplot(x="Period", y="Data", hue="Scenario", data=filtered_data, style='Region')
+                filtered_data['Scenario'] = filtered_data['Region'] + '_' + filtered_data['Scenario']
+                sns.lineplot(x="Period", y="Data", hue="Model", data=filtered_data, style='Scenario')
+                # Alternative representation
+                # filtered_data['Scenario'] = filtered_data['Model'] + '_' + filtered_data['Scenario']
+                # sns.lineplot(x="Period", y="Data", hue="Scenario", data=filtered_data, style='Region')
+
 
             plt.title(f'Model intercomparison results - Region: {region}, Model: {model}, Parameter: {parameter}, Scenario: {scenario}')
             plt.xlabel('Period')
