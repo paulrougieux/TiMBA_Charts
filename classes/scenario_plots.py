@@ -386,7 +386,7 @@ class interactiveModelComparison():
     
 
     
-    def update_outputs(self):
+    def update_outputs(self, *args):
         self.update_plot_data(self.region_dropdown.value, self.model_dropdown.value, 
                               self.parameter_dropdown.value, self.scenario_dropdown.value)
     
