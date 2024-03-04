@@ -246,7 +246,9 @@ class validation():
     
     def add_world(self, data: pd.DataFrame):
 
+        data = data[data['Region'] != 'Rest of World'].reset_index(drop=True)
         data_new = pd.DataFrame()
+
         list_parameter = ['CarbonStockBiomass [MtCO2]', 'CarbonStockHWP [MtCO2]', 'ForestArea', 'RoundwoodHarvest']
 
         for parameter in data['Parameter'].unique():
@@ -256,14 +258,14 @@ class validation():
                 data_world = data_temp.groupby(['Model', 'Parameter', 'Scenario', 'Period'])['Data'].sum().reset_index()
                 data_world['Region'] = 'World'
                 data_temp = pd.concat([data_temp, data_world], axis=0).reset_index(drop=True)
-            data_new = pd.concat([data_new, data_temp], axis=0)
+            data_new = pd.concat([data_new, data_temp], axis=0).reset_index(drop=True)
         
         return data_new
 
 
     
     def convert_unit(self, data: pd.DataFrame):
-        
+
         # Convert harvest (tsd m³ to M m³):
         col_name = 'RoundwoodHarvest'
         selection_index = data[data['Parameter'] == col_name].index
@@ -298,6 +300,6 @@ class validation():
         return data
 
     def merge_data(self, data: pd.DataFrame, external_data: pd.DataFrame):
-        data_fin = pd.concat([data, external_data], axis=0)
+        data_fin = pd.concat([data, external_data], axis=0).reset_index(drop=True)
         
         return data_fin
