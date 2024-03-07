@@ -287,3 +287,107 @@ class InteractivePrice:
     def update_outputs(self, *args):
         self.update_plot_data(self.region_dropdown.value, self.model_dropdown.value, self.id_dropdown.value, 
                               self.domain_dropdown.value, self.commodity_code_dropdown.value)
+        
+class interactiveModelComparison():
+    def __init__(self, data, plot_option):
+        self.data = data
+        self.plot_option = plot_option
+        self.model_dropdown = self.create_dropdown('Model', 'Select Model:')
+        self.region_dropdown = self.create_dropdown('Region', 'Select Region:')
+        self.parameter_dropdown = self.create_dropdown('Parameter', 'Select Parameter:')
+        self.scenario_dropdown = self.create_dropdown('Scenario', 'Select Scenario:')
+
+        self.interactive_plot_update = widgets.interactive(
+            self.update_plot_data,
+            region = self.region_dropdown,
+            model = self.model_dropdown,
+            parameter = self.parameter_dropdown,
+            scenario = self.scenario_dropdown
+        )
+
+        self.region_dropdown.observe(self.update_outputs, 'value')
+        self.model_dropdown.observe(self.update_outputs, 'value')
+        self.parameter_dropdown.observe(self.update_outputs, 'value')
+        self.scenario_dropdown.observe(self.update_outputs, 'value')
+
+        self.output_plot = widgets.Output()
+        self.output_table = widgets.Output()
+
+        display(self.region_dropdown, self.model_dropdown, self.parameter_dropdown, self.scenario_dropdown)
+        display(self.output_plot)
+        display(self.output_table)
+
+    def create_dropdown(self, column, description):
+        dropdown = widgets.Dropdown(
+            options=['Alle'] + list(self.data[column].unique()),
+            value='Alle',
+            description=description,
+            disabled=False,
+        )
+        return dropdown
+    
+    def update_plot_data(self, region, model, parameter, scenario):
+        region_filter = [region] if region != 'Alle' else self.data['Region'].unique()
+        model_filter = [model] if model != 'Alle' else self.data['Model'].unique()
+        parameter_filter = [parameter] if parameter != 'Alle' else self.data['Parameter'].unique()
+        scenario_filter = [scenario] if scenario != 'Alle' else self.data['Scenario'].unique()
+
+        filtered_data = self.data[
+            (self.data['Region'].isin(region_filter)) &
+            (self.data['Model'].isin(model_filter)) &
+            (self.data['Parameter'].isin(parameter_filter)) &
+            (self.data['Scenario'].isin(scenario_filter))
+        ].reset_index(drop=True)
+
+        max_period = max(filtered_data[filtered_data['Model'] == 'GFPMpt']['Period'])
+        filtered_data = filtered_data[filtered_data['Period'] <= max_period].reset_index(drop=True)
+
+        with self.output_plot:
+            clear_output(wait=True)
+            sns.set_style("darkgrid", {"grid.color": ".6", "grid.linestyle": ":"})
+            sns.set_theme(palette='Dark2')  # other fitting possiblities: Paired_r, Paired
+            fig, ax = plt.subplots(figsize=(20, 10))
+            if self.plot_option == 'min_max':
+                gfpmpt_data = filtered_data[filtered_data['Model'] == 'GFPMpt'].reset_index(drop=True)
+                
+                fsm_data = filtered_data[filtered_data['Model'] != 'GFPMpt'].reset_index(drop=True)
+                fsm_data_max = fsm_data.groupby(['Period', 'Region', 'Parameter', 'Scenario'])['Data'].max().reset_index()
+                fsm_data_min = fsm_data.groupby(['Period', 'Region', 'Parameter', 'Scenario'])['Data'].min().reset_index()
+                fsm_data_max['Model'] = 'Max'
+                fsm_data_min['Model'] = 'Min'
+
+                data_fin = pd.concat([gfpmpt_data, fsm_data_max, fsm_data_min], axis=0).reset_index(drop=True)
+
+                sns.lineplot(x='Period', y='Data', data=data_fin, hue= 'Model', style='Region')
+            
+            if self.plot_option == 'ssp_fsm_range':
+                sns.lineplot(x="Period", y="Data", hue="Model", data=filtered_data, style='Region')
+
+            if self.plot_option == 'ssp_fsm_all':
+                filtered_data['Scenario'] = filtered_data['Region'] + '_' + filtered_data['Scenario']
+                sns.lineplot(x="Period", y="Data", hue="Model", data=filtered_data, style='Scenario')
+                # Alternative representation
+                # filtered_data['Scenario'] = filtered_data['Model'] + '_' + filtered_data['Scenario']
+                # sns.lineplot(x="Period", y="Data", hue="Scenario", data=filtered_data, style='Region')
+
+
+            plt.title(f'Model intercomparison results - Region: {region}, Model: {model}, Parameter: {parameter}, Scenario: {scenario}')
+            plt.xlabel('Period')
+            plt.ylabel(f'{parameter}')
+            #plt.legend()
+            plt.grid(True)
+            plt.show()
+
+        with self.output_table:
+            clear_output(wait=True)
+            display_table = filtered_data[['Period', 'Region', 'Model', 'Parameter',
+                                           'Scenario', 'Data']]
+            display(display_table)
+    
+
+    
+    def update_outputs(self, *args):
+        self.update_plot_data(self.region_dropdown.value, self.model_dropdown.value, 
+                              self.parameter_dropdown.value, self.scenario_dropdown.value)
+    
+    
