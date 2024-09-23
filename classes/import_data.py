@@ -4,6 +4,8 @@ import numpy as np
 from pathlib import Path
 import os
 from enum import Enum
+import pickle
+import gzip
 
 def package_directory():
     PACKAGEDIR = Path(__file__).parent.parent.absolute()
@@ -89,11 +91,17 @@ class import_pkl_data:
         ID = 1
         for scenario_files in file_list:
             src_filepath = str(PACKAGEDIR) + self.inputfolder + "\\" + scenario_files
+            print(src_filepath)
             scenario_name = scenario_files[scenario_files.rfind(parameters.seperator_scenario_name.value)+3
                                         :-4]
+            print(scenario_name)
             try:
-                data = self.open_pickle(src_filepath)
+                #data = self.open_pickle(src_filepath)
+                with gzip.open(src_filepath,'rb') as f:
+                    data = pickle.load(f)
                 self.concat_scenarios(data=data, sc_name=scenario_name, data_prev=data_prev, ID=ID)
+            except gzip.BadGzipFile:
+                pass
             except pickle.UnpicklingError:
                 pass
             except PermissionError:

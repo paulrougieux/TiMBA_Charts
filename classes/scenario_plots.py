@@ -100,14 +100,14 @@ class PlotDropDown:
                     scenario_max = scenario_group.groupby(['year','CommodityCode']).max().reset_index()
                     scenario_min = scenario_group.groupby(['year','CommodityCode']).min().reset_index()
                     plt.plot(scenario_mean['year'], scenario_mean['quantity'], label=f'M: {scenario}',
-                             color=self.color, alpha=0.05, linestyle='dashed')
+                             color=self.color, alpha=0.25, linestyle='dashed')
                     plt.plot(scenario_max['year'], scenario_max['quantity'], label=f'M: {scenario}',
-                             color=self.color, alpha=0.05,linestyle='dotted')
+                             color=self.color, alpha=0.35,linestyle='dotted')
                     plt.plot(scenario_min['year'], scenario_min['quantity'], label=f'M: {scenario}',
-                             color=self.color, alpha=0.05,linestyle='dotted')
+                             color=self.color, alpha=0.25,linestyle='dotted')
                 else:
                     if self.unique_color:
-                        plt.plot(subset['year'], subset['quantity'], label=f'M: {scenario}',color=self.color, alpha=0.35)
+                        plt.plot(subset['year'], subset['quantity'], label=f'M: {scenario}',color=self.color, alpha=0.5)
                     else:
                         plt.plot(subset['year'], subset['quantity'], label=f'M: {scenario}')
 
