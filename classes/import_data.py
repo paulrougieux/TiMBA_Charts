@@ -91,14 +91,13 @@ class import_pkl_data:
         ID = 1
         for scenario_files in file_list:
             src_filepath = str(PACKAGEDIR) + self.inputfolder + "\\" + scenario_files
-            print(src_filepath)
             scenario_name = scenario_files[scenario_files.rfind(parameters.seperator_scenario_name.value)+3
                                         :-4]
-            print(scenario_name)
             try:
                 #data = self.open_pickle(src_filepath)
                 with gzip.open(src_filepath,'rb') as f:
-                    data = pickle.load(f)
+                    if type(f) == gzip.GzipFile:
+                        data = pickle.load(f)
                 self.concat_scenarios(data=data, sc_name=scenario_name, data_prev=data_prev, ID=ID)
             except gzip.BadGzipFile:
                 pass
@@ -140,7 +139,7 @@ class import_pkl_data:
                 rearranged_for_data_domain['ForStock'] = foreststock
             else: 
                 foreststock = rearranged_for_data_domain['for']
-        print(rearranged_for_data_domain)
+        #print(rearranged_for_data_domain)
         forest_data = rearranged_for_data_domain[['Country', 'Year', 'for', 'ForStock']]
         forest_data.columns = ['Country', 'Year', 'ForArea', 'ForStock']
         forest_data = pd.merge(forest_data, country_data, on= 'Country')
