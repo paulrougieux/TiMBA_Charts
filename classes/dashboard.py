@@ -2,8 +2,12 @@ import plotly.graph_objects as go
 import dash
 import dash_bootstrap_components as dbc
 from dash import dcc, html
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 import pandas as pd
+from pathlib import Path
+import io
+
+PACKAGEDIR = Path(__file__).parent.parent.absolute()
 
 class DashboardPlotter:
     def __init__(self, data):
@@ -12,16 +16,16 @@ class DashboardPlotter:
         self.start = self.data['year'].min()
         self.end = self.data['year'].max()
         self.color_list = ['black','darkblue','green','red','yellow','purple','cyan','orange','pink','brown','teal']
+        self.logo = PACKAGEDIR/'timba_logo_v3.png'
         self.create_layout()
         self.create_callbacks()
 
     def create_layout(self):
         dropdown_style = {'height': '30px','marginBottom': '10px'}
-        
+        print(self.logo)
         self.app.layout = dbc.Container([
             dbc.Row([
-                dbc.Col(html.H1("TiMBA Dashboard", className="text-center mb-4"), width=12)
-            ]),
+                dbc.Col(html.H1("TiMBA Dashboard", className="text-center mb-4"), width=10)]),
             dbc.Row([
                 dbc.Col([
                     dbc.Card([
@@ -43,6 +47,8 @@ class DashboardPlotter:
                                          options=[{'label': i, 'value': i} for i in ['Alle'] + self.data['CommodityCode'].dropna().unique().tolist()], 
                                          value='Alle',
                                          style=dropdown_style),
+                            html.Button("Download CSV", id="btn_csv"),
+                            dcc.Download(id="download-dataframe-csv"),
                         ])
                     ], className="mb-4")
                 ], width=3),
@@ -69,7 +75,20 @@ class DashboardPlotter:
         def update_plot(region, continent, domain, commodity):
             return self.update_plot_data(region, continent, domain, commodity)
 
-    def update_plot_data(self, region, continent, domain, commodity):
+        @self.app.callback(
+            Output("download-dataframe-csv", "data"),
+            Input("btn_csv", "n_clicks"),
+            [State('region-dropdown', 'value'),
+             State('continent-dropdown', 'value'),
+             State('domain-dropdown', 'value'),
+             State('commodity-dropdown', 'value')],
+            prevent_initial_call=True,
+        )
+        def func(n_clicks, region, continent, domain, commodity):
+            filtered_data = self.filter_data(region, continent, domain, commodity)
+            return dcc.send_data_frame(filtered_data.to_csv, "filtered_data.csv")
+
+    def filter_data(self, region, continent, domain, commodity):
         filtered_data = self.data
 
         if region != 'Alle':
@@ -81,6 +100,11 @@ class DashboardPlotter:
         if commodity != 'Alle':
             filtered_data = filtered_data[filtered_data['CommodityCode'] == commodity]
 
+        return filtered_data
+
+    def update_plot_data(self, region, continent, domain, commodity):
+        filtered_data = self.filter_data(region, continent, domain, commodity)
+
         grouped_data = filtered_data.groupby(['year', 'Scenario']).sum().reset_index()
         grouped_data = grouped_data[(grouped_data["year"] >= self.start) & (grouped_data["year"] < self.end)]
 
@@ -89,9 +113,9 @@ class DashboardPlotter:
         for i, scenario in enumerate(grouped_data['Scenario'].unique()):
             subset = grouped_data[grouped_data['Scenario'] == scenario]
             color = self.color_list[i % len(self.color_list)]
-            dash = 'solid' if scenario in ['World500', 'FAOStat'] else 'dash'
+            dash = 'solid' if scenario in ['FAOStat'] else 'dash'
             fig.add_trace(go.Scatter(x=subset['year'], y=subset['quantity'], mode='lines', 
-                                     name=f'M: {scenario}', line=dict(color=color, dash=dash)))
+                                     name=f'{scenario}', line=dict(color=color, dash=dash)))
 
         title = self.generate_title(region, continent, domain, commodity)
         fig.update_layout(

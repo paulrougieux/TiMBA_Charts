@@ -4,7 +4,7 @@ import numpy as np
 from classes.import_data import import_pkl_data
 from classes.dashboard import DashboardPlotter
 import warnings
-warnings.simplefilter(action='ignore', category=FutureWarning)
+#warnings.simplefilter(action='ignore', category=FutureWarning)
 
 #Import data
 import_pkl = import_pkl_data()
