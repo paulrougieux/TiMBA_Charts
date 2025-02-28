@@ -247,15 +247,11 @@ class InteractivePrice:
 
     def update_plot_data(self, region_code, model, id_value, domain, commodity_code):
         region_code_filter = [region_code] if region_code != 'Alle' else self.data['RegionCode'].unique()
-        model_filter = [model] if model != 'Alle' else self.data['Model'].unique()
-        id_filter = [id_value] if id_value != 'Alle' else self.data['ID'].unique()
         domain_filter = [domain] if domain != 'Alle' else self.data['domain'].unique()
         commodity_code_filter = [commodity_code] if commodity_code != 'Alle' else self.data['CommodityCode'].unique()
 
         filtered_data = self.data[
             (self.data['RegionCode'].isin(region_code_filter)) &
-            (self.data['Model'].isin(model_filter)) &
-            (self.data['ID'].isin(id_filter)) &
             (self.data['domain'].isin(domain_filter)) &
             (self.data['CommodityCode'].isin(commodity_code_filter))
         ]
@@ -271,22 +267,20 @@ class InteractivePrice:
                 x_positions = subset['Period'] + i * bar_width
                 plt.bar(x_positions, subset['price'], width=bar_width, label=f'Scenario {scenario_value}')
 
-            plt.title(f'Price for each scenario grouped by Period - RegionCode: {region_code}, Model: {model}, ID: {id_value}, Domain: {domain}, CommodityCode: {commodity_code}')
+            plt.title(f'Price for each scenario grouped by Period - RegionCode: {region_code}, Domain: {domain}, CommodityCode: {commodity_code}')
             plt.xlabel('Period')
             plt.ylabel('Price')
-            #plt.legend()
             plt.grid(True)
             plt.show()
 
         with self.output_table:
             clear_output(wait=True)
-            display_table = filtered_data[['Period', 'RegionCode', 'Model', 'ID', 'domain', 'CommodityCode', 
+            display_table = filtered_data[['Period', 'RegionCode', 'domain', 'CommodityCode', 
                                            'Scenario', 'quantity', 'price']]
             display(display_table)
 
     def update_outputs(self, *args):
-        self.update_plot_data(self.region_dropdown.value, self.model_dropdown.value, self.id_dropdown.value, 
-                              self.domain_dropdown.value, self.commodity_code_dropdown.value)
+        self.update_plot_data(self.region_dropdown.value, self.domain_dropdown.value, self.commodity_code_dropdown.value)
         
 class interactiveModelComparison():
     def __init__(self, data, plot_option):
