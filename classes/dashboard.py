@@ -33,8 +33,8 @@ class DashboardPlotter:
                         dbc.CardBody([
                             html.H4("Filters", className="card-title"),
                             dcc.Dropdown(id='region-dropdown',
-                                         options=[{'label': i, 'value': i} for i in ['Region'] + self.data['RegionCode'].dropna().unique().tolist()],
-                                         value='Region',
+                                         options=[{'label': i, 'value': i} for i in ['Country'] + self.data['ISO3'].dropna().unique().tolist()],
+                                         value='Country',
                                          style=dropdown_style),
                             dcc.Dropdown(id='continent-dropdown',
                                          options=[{'label': i, 'value': i} for i in ['Continent'] + self.data['Continent'].dropna().unique().tolist()],
@@ -119,8 +119,8 @@ class DashboardPlotter:
 
     def filter_data(self, region, continent, domain, commodity):
         filtered_data = self.data
-        if region != 'Region':
-            filtered_data = filtered_data[filtered_data['RegionCode'] == region]
+        if region != 'Country':
+            filtered_data = filtered_data[filtered_data['ISO3'] == region]
         if continent != 'Continent':
             filtered_data = filtered_data[filtered_data['Continent'] == continent]
         if domain != 'Domain':
@@ -179,7 +179,7 @@ class DashboardPlotter:
 
     def generate_title(self, region, continent, domain, commodity):
         title_parts = []
-        if region != 'Region':
+        if region != 'Country':
             title_parts.append(f"{region}")
         if continent != 'Continent':
             title_parts.append(f"{continent}")

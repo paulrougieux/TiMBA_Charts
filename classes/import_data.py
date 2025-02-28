@@ -19,7 +19,7 @@ class parameters(Enum):
     column_name_scenario = "Scenario"
     column_name_model = "Model"
     column_name_id = "ID"
-    model_name = "GFPMpt"
+    model_name = "TiMBA"
     csv_input = "FAO_Data.csv"
     csv_input_forest = 'Input\\Additional_Information\\Forest_world500.csv'
 
@@ -42,10 +42,11 @@ class import_pkl_data:
         :return: country data
         """
         country_data = pd.read_csv(str(PACKAGEDIR) + parameters.input_folder.value + "\\Additional_Information\\country_info.csv", encoding = "ISO-8859-1")
-        country_data = country_data[["Country-Code", "ContinentNew", "Country"]]
-        country_data.columns = ["RegionCode","Continent", "Country"]
+        country_data = country_data[["Country-Code", "ContinentNew", "Country","ISO-Code"]]
+        country_data.columns = ["RegionCode","Continent", "Country","ISO3"]
         country_data.Country = country_data.Country.astype("category")
         country_data.Continent = country_data.Continent.astype("category")
+        country_data.ISO3 = country_data.ISO3.astype("category")
         return country_data
     
     def downcasting(self, data: pd.DataFrame):
@@ -54,17 +55,10 @@ class import_pkl_data:
         data.domain = data.domain.astype("category")
         data.price = data.price.astype("float32")
         data.quantity = data.quantity.astype("float32")
-        data.elasticity_price = data.elasticity_price.astype("float32")
-        data.slope = data.slope.astype("float32")
-        data.intercept = data.intercept.astype("float32")
         data.Period = data.Period.astype("int16")
         data.year = data.year.astype("int16")
-        data.shadow_price = data.shadow_price.astype("float32")
-        data.lower_bound = data.lower_bound.astype("float32")
-        data.upper_bound = data.upper_bound.astype("float32")
         data.Scenario = data.Scenario.astype("category")
         data.Model = data.Model.astype("category")
-        data.ID = data.ID.astype("category")
         return data
 
     def concat_scenarios(self, data: pd.DataFrame, sc_name:str, data_prev: pd.DataFrame, ID: int):
@@ -76,7 +70,7 @@ class import_pkl_data:
             for key in data: #loop through all data from datacontainer
                 data[key][parameters.column_name_scenario.value] = sc_name
                 data[key][parameters.column_name_model.value] = parameters.model_name.value
-                data[key][parameters.column_name_id.value] = ID
+                #data[key][parameters.column_name_id.value] = ID
                 if data_prev != []:
                     data[key] = pd.concat([data_prev[key], data[key]], axis=0)
         except KeyError:
@@ -98,6 +92,7 @@ class import_pkl_data:
                 with gzip.open(src_filepath,'rb') as f:
                     if type(f) == gzip.GzipFile:
                         data = pickle.load(f)
+                        data['data_periods'] = data['data_periods'][['RegionCode','CommodityCode','Period','year','domain','price','quantity']]
                 self.concat_scenarios(data=data, sc_name=scenario_name, data_prev=data_prev, ID=ID)
             except gzip.BadGzipFile:
                 pass
@@ -119,9 +114,9 @@ class import_pkl_data:
             data = pd.DataFrame()
         country_data = self.read_country_data()
         self.read_forest_data_gfpm(country_data)
-        data_prev["data_periods"] = pd.merge(data_prev["data_periods"], country_data, on="RegionCode", how="left")
         data_results = pd.concat([data_prev["data_periods"], data], axis=0)
         data_prev["data_periods"] = data_results
+        data_prev["data_periods"] = pd.merge(data_prev["data_periods"], country_data, on="RegionCode", how="left")
 
         return data_prev
 
@@ -151,3 +146,8 @@ class import_pkl_data:
         forest_gfpm[parameters.column_name_scenario.value]= 'world500'
         forest_data['Model'] = 'GFPM'
         return forest_gfpm
+    
+if __name__ == "__main__":
+    import_pkl = import_pkl_data()
+    data = import_pkl.combined_data()
+    print(data['data_periods'])
