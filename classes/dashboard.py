@@ -45,8 +45,12 @@ class DashboardPlotter:
                                          value='Domain',
                                          style=dropdown_style),
                             dcc.Dropdown(id='commodity-dropdown',
-                                         options=[{'label': i, 'value': i} for i in ['Commodity'] + self.data['CommodityCode'].dropna().unique().tolist()],
+                                         options=[{'label': i, 'value': i} for i in ['Commodity'] + self.data['Commodity'].dropna().unique().tolist()],
                                          value='Commodity',
+                                         style=dropdown_style),
+                            dcc.Dropdown(id='commodity-group-dropdown',
+                                         options=[{'label': i, 'value': i} for i in ['Commodity_Group'] + self.data['Commodity_Group'].dropna().unique().tolist()],
+                                         value='Commodity_Group',
                                          style=dropdown_style),
                             html.Button("Download CSV", id="btn_csv"),
                             dcc.Download(id="download-dataframe-csv"),
@@ -56,7 +60,7 @@ class DashboardPlotter:
                         dbc.CardBody([
                             dcc.Graph(id='price-plot',
                                       config={'toImageButtonOptions': {'format': 'png', 'filename': 'price_plot'}},
-                                      style={'height': '55vh'})
+                                      style={'height': '54.5vh'})
                     ])
                 ], style={'white': 'white'})  #price box
             ], width=3),
@@ -74,7 +78,7 @@ class DashboardPlotter:
                     dbc.Col([
                         dbc.Card([
                             dbc.CardBody([
-                                dcc.Graph(id='placeholder-plot-1',
+                                dcc.Graph(id='forstock-plot',  # Geändert: ID auf 'forstock-plot'
                                           config={'toImageButtonOptions': {'format': 'png'}},
                                           style={'height': '40vh'})
                             ])
@@ -95,29 +99,32 @@ class DashboardPlotter:
     def create_callbacks(self):
         @self.app.callback(
             [Output('quantity-plot', 'figure'),
-             Output('price-plot', 'figure')],
+             Output('price-plot', 'figure'),
+             Output('forstock-plot', 'figure')
+             ], # Hinzugefügt: Output für 'forstock-plot'
             [Input('region-dropdown', 'value'),
              Input('continent-dropdown', 'value'),
              Input('domain-dropdown', 'value'),
-             Input('commodity-dropdown', 'value')]
+             Input('commodity-dropdown', 'value'),
+             Input('commodity-group-dropdown', 'value')]
         )
-        def update_plots(region, continent, domain, commodity):
-            return self.update_plot_data(region, continent, domain, commodity)
-
+        def update_plots(region, continent, domain, commodity, commodity_group):
+            return self.update_plot_data(region, continent, domain, commodity, commodity_group)
         @self.app.callback(
             Output("download-dataframe-csv", "data"),
             Input("btn_csv", "n_clicks"),
             [State('region-dropdown', 'value'),
              State('continent-dropdown', 'value'),
              State('domain-dropdown', 'value'),
-             State('commodity-dropdown', 'value')],
+             State('commodity-dropdown', 'value'),
+             State('commodity-group-dropdown', 'value')],
             prevent_initial_call=True
         )
-        def func(n_clicks, region, continent, domain, commodity):
-            filtered_data = self.filter_data(region, continent, domain, commodity)
+        def func(n_clicks, region, continent, domain, commodity, commodity_group):
+            filtered_data = self.filter_data(region, continent, domain, commodity, commodity_group)
             return dcc.send_data_frame(filtered_data.to_csv, "filtered_data.csv")
 
-    def filter_data(self, region, continent, domain, commodity):
+    def filter_data(self, region, continent, domain, commodity, commodity_group):
         filtered_data = self.data
         if region != 'Country':
             filtered_data = filtered_data[filtered_data['ISO3'] == region]
@@ -126,11 +133,13 @@ class DashboardPlotter:
         if domain != 'Domain':
             filtered_data = filtered_data[filtered_data['domain'] == domain]
         if commodity != 'Commodity':
-            filtered_data = filtered_data[filtered_data['CommodityCode'] == commodity]
+            filtered_data = filtered_data[filtered_data['Commodity'] == commodity]
+        if commodity_group != 'Commodity_Group':
+            filtered_data = filtered_data[filtered_data['Commodity_Group'] == commodity_group]
         return filtered_data
 
-    def update_plot_data(self, region, continent, domain, commodity):
-        filtered_data = self.filter_data(region, continent, domain, commodity)
+    def update_plot_data(self, region, continent, domain, commodity, commodity_group):
+        filtered_data = self.filter_data(region, continent, domain, commodity, commodity_group)
 
         # Quantity plot
         grouped_data_quantity = filtered_data.groupby(['year', 'Scenario']).sum().reset_index()
@@ -139,10 +148,10 @@ class DashboardPlotter:
         for i, scenario in enumerate(grouped_data_quantity['Scenario'].unique()):
             subset = grouped_data_quantity[grouped_data_quantity['Scenario'] == scenario]
             color = self.color_list[i % len(self.color_list)]
-            dash = 'solid' if scenario in ['FAOStat'] else 'dash'
+            dash = 'solid' if scenario in ['Historic Data'] else 'dash'
             fig_quantity.add_trace(go.Scatter(x=subset['year'], y=subset['quantity'], mode='lines',
                                               name=f'{scenario}', line=dict(color=color, dash=dash)))
-        title_quantity = self.generate_title(region, continent, domain, commodity)
+        title_quantity = self.generate_title(region, continent, domain, commodity, commodity_group)
         fig_quantity.update_layout(
             title=title_quantity,
             xaxis_title='Year',
@@ -175,9 +184,41 @@ class DashboardPlotter:
             barmode='group'
         )
 
-        return fig_quantity, fig_price
+        # ForStock plot
+        grouped_data_stock = filtered_data.drop(columns=['domain', 'Domain', 'price','quantity','CommodityCode','Commodity','Commodity_Group'])
+        grouped_data_stock = grouped_data_stock.drop_duplicates().reset_index(drop=True)
+        grouped_data_stock = grouped_data_stock.groupby(['year', 'Scenario']).agg({
+            'ForStock': 'sum',  # Summe von ForStock
+            }).reset_index()
+        grouped_data_stock = grouped_data_stock[grouped_data_stock.Scenario!='Historic Data']
+        print('grouped',grouped_data_stock)
+        fig_stock = go.Figure()
+        for i, scenario in enumerate(grouped_data_stock['Scenario'].unique()):
+            subset = grouped_data_stock[grouped_data_stock['Scenario'] == scenario]
+            color = self.color_list[i % len(self.color_list)]
+            fig_stock.add_trace(go.Bar(x=subset['year'], y=subset['ForStock'],
+                                    name=f'{scenario}', marker_color=color))
 
-    def generate_title(self, region, continent, domain, commodity):
+        # Angenommen, 'Period' enthält die Jahreszahlen
+        min_year = grouped_data_stock['year'].min() - 1
+        max_year = grouped_data_stock['year'].max() + 0.5
+
+        fig_stock.update_layout(
+            title='ForStock by Year and Scenario',
+            xaxis_title='Year',
+            xaxis=dict(range=[min_year, max_year]),
+            yaxis_title='ForStock',
+            template='plotly_white',
+            showlegend=True,
+            legend=dict(orientation="h", yanchor="top", y=-0.2, xanchor="center", x=0.5),
+            barmode='group'
+        )
+
+
+
+        return fig_quantity, fig_price, fig_stock # Hinzugefügt: fig_forstock zum Return
+
+    def generate_title(self, region, continent, domain, commodity, commodity_group):
         title_parts = []
         if region != 'Country':
             title_parts.append(f"{region}")
@@ -187,6 +228,8 @@ class DashboardPlotter:
             title_parts.append(f"{domain}")
         if commodity != 'Commodity':
             title_parts.append(f"{commodity}")
+        if commodity_group != 'Commodity_Group':
+            title_parts.append(f"{commodity_group}")
         return "Quantity by Period and Scenario for " + ", ".join(title_parts) if title_parts else "Quantity by Period and Scenario for all data"
 
     def run(self):

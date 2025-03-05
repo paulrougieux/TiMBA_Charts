@@ -49,6 +49,17 @@ class import_pkl_data:
         country_data.ISO3 = country_data.ISO3.astype("category")
         return country_data
     
+    def read_commodity_data(self):
+        """read data additional information for commodity data
+        :return: commodity data
+        """
+        commodity_data = pd.read_csv(str(PACKAGEDIR) + parameters.input_folder.value + "\\Additional_Information\\commodity_info.csv", encoding = "ISO-8859-1")
+        commodity_data = commodity_data[["Commodity","CommodityCode","Commodity_Group"]]
+        commodity_data.Commodity = commodity_data.Commodity.astype("category")
+        commodity_data.CommodityCode = commodity_data.CommodityCode.astype("category")
+        commodity_data.Commodity_Group = commodity_data.Commodity_Group.astype("category")
+        return commodity_data
+        
     def downcasting(self, data: pd.DataFrame):
         data.RegionCode = data.RegionCode.astype("category")
         data.CommodityCode = data.CommodityCode.astype("category")
@@ -113,11 +124,27 @@ class import_pkl_data:
         except FileNotFoundError:
             data = pd.DataFrame()
         country_data = self.read_country_data()
+        commodity_data = self.read_commodity_data()
+        forest_data = data_prev['Forest']
+        forest_data = forest_data[['Scenario','RegionCode','Period','ForStock','ForArea']]
+        forest_data = forest_data.drop_duplicates(subset=['Scenario', 'RegionCode', 'Period'], keep='first')
         self.read_forest_data_gfpm(country_data)
-        data_results = pd.concat([data_prev["data_periods"], data], axis=0)
-        data_prev["data_periods"] = data_results
+        data_prev["data_periods"] = pd.merge(data_prev["data_periods"], forest_data, how='left', on=['Scenario','RegionCode','Period'])
+        data_prev["data_periods"] = pd.concat([data_prev["data_periods"], data], axis=0)
         data_prev["data_periods"] = pd.merge(data_prev["data_periods"], country_data, on="RegionCode", how="left")
-
+        data_prev["data_periods"] = pd.merge(data_prev["data_periods"], commodity_data, on="CommodityCode", how="left")
+        data_prev["data_periods"]["Domain"] = data_prev["data_periods"]["domain"]
+        data_prev["data_periods"]["Domain"] = data_prev["data_periods"]["Domain"].replace({
+            'Supply': 'Production', 
+            'ManufactureCost': 'Production',
+            'TransportationExport': 'Export',
+            'TransportationImport': 'Import',
+            })
+        data_prev["data_periods"] = data_prev["data_periods"][['Model','Scenario','RegionCode','Continent','Country','ISO3',
+                                                               'CommodityCode','Commodity','Commodity_Group','Period','year',
+                                                               'domain','Domain','price','quantity',
+                                                               'ForStock','ForArea',
+                                                               ]]
         return data_prev
 
     def read_forest_data_gfpm(self, country_data:pd.DataFrame):
@@ -134,7 +161,6 @@ class import_pkl_data:
                 rearranged_for_data_domain['ForStock'] = foreststock
             else: 
                 foreststock = rearranged_for_data_domain['for']
-        #print(rearranged_for_data_domain)
         forest_data = rearranged_for_data_domain[['Country', 'Year', 'for', 'ForStock']]
         forest_data.columns = ['Country', 'Year', 'ForArea', 'ForStock']
         forest_data = pd.merge(forest_data, country_data, on= 'Country')
