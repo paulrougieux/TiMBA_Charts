@@ -167,6 +167,7 @@ class DashboardPlotter:
         return filtered_data
 
     def update_plot_data(self, region, continent, domain, commodity, commodity_group):
+        graphic_template='plotly_white'#'plotly_dark'#'plotly_white'
         filtered_data = self.filter_data(region, continent, domain, commodity, commodity_group)
 
         # Quantity plot
@@ -188,7 +189,7 @@ class DashboardPlotter:
             legend_title='Scenario',
             legend=dict(orientation="h", yanchor="top", y=-0.1, xanchor="center", x=0.5),
             hovermode='x unified',
-            template='plotly_white'
+            template=graphic_template
         )
 
         # Price plot
@@ -205,7 +206,7 @@ class DashboardPlotter:
             xaxis_title='Price',
             yaxis_title='Period',
             legend_title='Scenario',
-            template='plotly_white',
+            template=graphic_template,
             showlegend=True,
             legend=dict(orientation="h", yanchor="top", y=-0.25, xanchor="center", x=0.5),
             margin=dict(l=50, r=50, t=50, b=5),
@@ -238,7 +239,7 @@ class DashboardPlotter:
             xaxis=dict(range=[min_year, max_year]),
             yaxis=dict(range=[min_val, max_val]),
             yaxis_title='ForStock',
-            template='plotly_white',
+            template=graphic_template,
             showlegend=True,
             legend=dict(orientation="h", yanchor="top", y=-0.35, xanchor="center", x=0.5),
             margin=dict(l=50, r=50, t=40, b=5),
@@ -268,7 +269,7 @@ class DashboardPlotter:
         if year:
             filtered_data = filtered_data[filtered_data['year']==year]
         country_data = filtered_data.groupby('ISO3')['quantity'].sum().reset_index()
-        print(filtered_data)
+        country_data = country_data[country_data['quantity']>=0.001].reset_index()
 
         # Erstelle die Choropleth-Karte
         fig = px.choropleth(
