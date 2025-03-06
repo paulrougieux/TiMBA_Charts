@@ -134,49 +134,49 @@ Samoa,n1,WSM,244,Oceania,LM,Trp,Oceania,xoc,RestofWorld,Oceania,Asia
 Solomon Islands,n2,SLB,25,Oceania,LM,Trp,Oceania,xoc,RestofWorld,Oceania,Asia
 Tonga,n3,TON,219,Oceania,UM,Trp,Oceania,xoc,RestofWorld,Oceania,Asia
 Vanuatu,n4,VUT,155,Oceania,LM,Trp,Oceania,xoc,RestofWorld,Oceania,Asia
-Albania,n5,ALB,3,Europe,UM,SubTrp,Europe,ALB,RestofWorld,Europe,Europe
-Austria,n6,AUT,11,Europe,H,Temp,Europe,AUT,RestEU,Europe,Europe
-Belgium,n7,BEL,255,Europe,H,Temp,Europe,BEL,RestEU,Europe,Europe
-Bosnia and Herzegovina,n8,BIH,80,Europe,UM,Temp,Europe,xer,RestofWorld,Europe,Europe
-Bulgaria,n9,BGR,27,Europe,UM,Temp,Europe,BGR,RestEU,Europe,Europe
-Croatia,o0,HRV,98,Europe,H,Temp,Europe,HRV,RestofWorld,Europe,Europe
-Czech Republic,o1,CZE,167,Europe,H,Temp,Europe,CZE,RestEU,Europe,Europe
-Denmark,o2,DNK,54,Europe,H,Temp,Europe,DNK,RestEU,Europe,Europe
-Finland,o3,FIN,67,Europe,H,Bor,Europe,FIN,RestEU,Europe,Europe
-France,o4,FRA,68,Europe,H,Temp,Europe,FRA,fra,Europe,Europe
-Germany,o5,DEU,79,Europe,H,Temp,Europe,DEU,deu,Europe,Europe
-Greece,o6,GRC,84,Europe,H,SubTrp,Europe,GRC,RestEU,Europe,Europe
-Hungary,o7,HUN,97,Europe,UM,Temp,Europe,HUN,RestEU,Europe,Europe
-Luxembourg,o8,LUX,256,Europe,H,Temp,Europe,LUX,RestEU,Europe,Europe
-Ireland,o9,IRL,104,Europe,H,Temp,Europe,IRL,RestEU,Europe,Europe
-Italy,p0,ITA,106,Europe,H,SubTrp,Europe,ITA,RestEU,Europe,Europe
-"Macedonia,The Fmr Yug Rp",p1,MKD,154,Europe,UM,Temp,Europe,xer,RestofWorld,Europe,Europe
-Montenegro,p2,MNE,273,Europe,UM,SubTrp,Europe,xer,RestofWorld,Europe,Europe
-Netherlands,p3,NLD,150,Europe,H,Temp,Europe,NLD,RestEU,Europe,Europe
-Norway,p4,NOR,162,Europe,H,Bor,Europe,NOR,RestofWorld,Europe,Europe
-Poland,p5,POL,173,Europe,H,Temp,Europe,POL,pol,Europe,Europe
-Portugal,p6,PRT,174,Europe,H,SubTrp,Europe,PRT,RestEU,Europe,Europe
-Romania,p7,ROU,183,Europe,UM,Temp,Europe,ROU,RestEU,Europe,Europe
-Slovakia,p8,SVK,199,Europe,H,Temp,Europe,SVK,RestEU,Europe,Europe
-Slovenia,p9,SVN,198,Europe,H,Temp,Europe,SVN,RestEU,Europe,Europe
-Spain,q0,ESP,203,Europe,H,SubTrp,Europe,ESP,RestEU,Europe,Europe
-Sweden,q1,SWE,210,Europe,H,Bor,Europe,SWE,RestEU,Europe,Europe
-Switzerland,q2,CHE,211,Europe,H,Temp,Europe,CHE,RestofWorld,Europe,Europe
-United Kingdom,q3,GBR,229,Europe,H,Temp,Europe,GBR,uk,Europe,Europe
-Serbia,q4,SRB,272,Europe,UM,Temp,Europe,xer,RestofWorld,Europe,Europe
-Armenia,q5,ARM,1,Former USSR,LM,SubTrp,Asia,ARM,RestCIS,Western and Central Asia,Former Soviet Union
-"Azerbaijan, Republic of",q6,AZE,52,Former USSR,UM,Temp,Asia,AZE,RestCIS,Western and Central Asia,Former Soviet Union
-Belarus,q7,BLR,57,Former USSR,UM,Temp,Europe,BLR,RestCIS,Europe,Europe
-Estonia,q8,EST,63,Former USSR,H,Temp,Europe,EST,RestEU,Europe,Europe
-Georgia,q9,GEO,73,Former USSR,LM,SubTrp,Asia,GEO,RestofWorld,Western and Central Asia,Former Soviet Union
-Kazakhstan,r0,KAZ,108,Former USSR,UM,Temp,Asia,KAZ,RestCIS,Western and Central Asia,Former Soviet Union
-Kyrgyzstan,r1,KGZ,113,Former USSR,LM,Temp,Asia,KGZ,RestCIS,Western and Central Asia,Former Soviet Union
-Latvia,r2,LVA,119,Former USSR,H,Temp,Europe,LVA,RestEU,Europe,Europe
-Lithuania,r3,LTU,126,Former USSR,H,Temp,Europe,LTU,RestEU,Europe,Europe
-"Moldova, Republic of",r4,MDA,146,Former USSR,LM,Temp,Europe,xee,RestCIS,Europe,Europe
-Russian Federation,r5,RUS,185,Former USSR,H,Bor,Asia,RUS,rus,Russian Federation,Former Soviet Union
-Tajikistan,r6,TJK,208,Former USSR,L,Temp,Asia,xsu,RestCIS,Western and Central Asia,Former Soviet Union
-Turkmenistan,r7,TKM,213,Former USSR,UM,Temp,Asia,xsu,RestCIS,Western and Central Asia,Former Soviet Union
-Ukraine,r8,UKR,230,Former USSR,LM,Temp,Europe,UKR,ukr,Europe,Europe
-Uzbekistan,r9,UZB,235,Former USSR,LM,Temp,Asia,xsu,RestCIS,Western and Central Asia,Former Soviet Union
-Rest of World,zy,WRL,0,World,M,All,World,WRL,WRL,World,Rest of World
+Albania,n5,ALB,3,Rest of Europe,UM,SubTrp,Rest of Europe,ALB,RestofWorld,Europe,Europe
+Austria,n6,AUT,11,EU27,H,Temp,EU27,AUT,RestEU,Europe,Europe
+Belgium,n7,BEL,255,EU27,H,Temp,EU27,BEL,RestEU,Europe,Europe
+Bosnia and Herzegovina,n8,BIH,80,Rest of Europe,UM,Temp,Rest of Europe,xer,RestofWorld,Europe,Europe
+Bulgaria,n9,BGR,27,EU27,UM,Temp,EU27,BGR,RestEU,Europe,Europe
+Croatia,o0,HRV,98,EU27,H,Temp,EU27,HRV,RestofWorld,Europe,Europe
+Czech Republic,o1,CZE,167,Rest of Europe,H,Temp,Rest of Europe,CZE,RestEU,Europe,Europe
+Denmark,o2,DNK,54,EU27,H,Temp,EU27,DNK,RestEU,Europe,Europe
+Finland,o3,FIN,67,EU27,H,Bor,EU27,FIN,RestEU,Europe,Europe
+France,o4,FRA,68,EU27,H,Temp,EU27,FRA,fra,Europe,Europe
+Germany,o5,DEU,79,EU27,H,Temp,EU27,DEU,deu,Europe,Europe
+Greece,o6,GRC,84,EU27,H,SubTrp,EU27,GRC,RestEU,Europe,Europe
+Hungary,o7,HUN,97,EU27,UM,Temp,EU27,HUN,RestEU,Europe,Europe
+Luxembourg,o8,LUX,256,EU27,H,Temp,EU27,LUX,RestEU,Europe,Europe
+Ireland,o9,IRL,104,EU27,H,Temp,EU27,IRL,RestEU,Europe,Europe
+Italy,p0,ITA,106,EU27,H,SubTrp,EU27,ITA,RestEU,Europe,Europe
+"Macedonia,The Fmr Yug Rp",p1,MKD,154,Rest of Europe,UM,Temp,Rest of Europe,xer,RestofWorld,Europe,Europe
+Montenegro,p2,MNE,273,Rest of Europe,UM,SubTrp,Rest of Europe,xer,RestofWorld,Europe,Europe
+Netherlands,p3,NLD,150,EU27,H,Temp,EU27,NLD,RestEU,Europe,Europe
+Norway,p4,NOR,162,Rest of Europe,H,Bor,Rest of Europe,NOR,RestofWorld,Europe,Europe
+Poland,p5,POL,173,EU27,H,Temp,EU27,POL,pol,Europe,Europe
+Portugal,p6,PRT,174,EU27,H,SubTrp,EU27,PRT,RestEU,Europe,Europe
+Romania,p7,ROU,183,EU27,UM,Temp,EU27,ROU,RestEU,Europe,Europe
+Slovakia,p8,SVK,199,EU27,H,Temp,EU27,SVK,RestEU,Europe,Europe
+Slovenia,p9,SVN,198,EU27,H,Temp,EU27,SVN,RestEU,Europe,Europe
+Spain,q0,ESP,203,EU27,H,SubTrp,EU27,ESP,RestEU,Europe,Europe
+Sweden,q1,SWE,210,EU27,H,Bor,EU27,SWE,RestEU,Europe,Europe
+Switzerland,q2,CHE,211,Rest of Europe,H,Temp,Rest of Europe,CHE,RestofWorld,Europe,Europe
+United Kingdom,q3,GBR,229,Rest of Europe,H,Temp,Rest of Europe,GBR,uk,Europe,Europe
+Serbia,q4,SRB,272,Rest of Europe,UM,Temp,Rest of Europe,xer,RestofWorld,Europe,Europe
+Armenia,q5,ARM,1,Asia,LM,SubTrp,Asia,ARM,RestCIS,Western and Central Asia,Former Soviet Union
+"Azerbaijan, Republic of",q6,AZE,52,Asia,UM,Temp,Asia,AZE,RestCIS,Western and Central Asia,Former Soviet Union
+Belarus,q7,BLR,57,Rest of Europe,UM,Temp,Rest of Europe,BLR,RestCIS,Europe,Europe
+Estonia,q8,EST,63,EU27,H,Temp,EU27,EST,RestEU,Europe,Europe
+Georgia,q9,GEO,73,Asia,LM,SubTrp,Asia,GEO,RestofWorld,Western and Central Asia,Former Soviet Union
+Kazakhstan,r0,KAZ,108,Asia,UM,Temp,Asia,KAZ,RestCIS,Western and Central Asia,Former Soviet Union
+Kyrgyzstan,r1,KGZ,113,Asia,LM,Temp,Asia,KGZ,RestCIS,Western and Central Asia,Former Soviet Union
+Latvia,r2,LVA,119,EU27,H,Temp,EU27,LVA,RestEU,Europe,Europe
+Lithuania,r3,LTU,126,EU27,H,Temp,EU27,LTU,RestEU,Europe,Europe
+"Moldova, Republic of",r4,MDA,146,Rest of Europe,LM,Temp,Rest of Europe,xee,RestCIS,Europe,Europe
+Russian Federation,r5,RUS,185,Asia,H,Bor,Asia,RUS,rus,Russian Federation,Former Soviet Union
+Tajikistan,r6,TJK,208,Asia,L,Temp,Asia,xsu,RestCIS,Western and Central Asia,Former Soviet Union
+Turkmenistan,r7,TKM,213,Asia,UM,Temp,Asia,xsu,RestCIS,Western and Central Asia,Former Soviet Union
+Ukraine,r8,UKR,230,Rest of Europe,LM,Temp,Rest of Europe,UKR,ukr,Europe,Europe
+Uzbekistan,r9,UZB,235,Asia,LM,Temp,Asia,xsu,RestCIS,Western and Central Asia,Former Soviet Union
+Rest of World,zy,WRL,0,Rest of World,M,All,Rest of World,WRL,WRL,World,Rest of World
