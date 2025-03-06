@@ -140,7 +140,7 @@ Belgium,n7,BEL,255,EU27,H,Temp,EU27,BEL,RestEU,Europe,Europe
 Bosnia and Herzegovina,n8,BIH,80,Rest of Europe,UM,Temp,Rest of Europe,xer,RestofWorld,Europe,Europe
 Bulgaria,n9,BGR,27,EU27,UM,Temp,EU27,BGR,RestEU,Europe,Europe
 Croatia,o0,HRV,98,EU27,H,Temp,EU27,HRV,RestofWorld,Europe,Europe
-Czech Republic,o1,CZE,167,Rest of Europe,H,Temp,Rest of Europe,CZE,RestEU,Europe,Europe
+Czech Republic,o1,CZE,167,EU27,H,Temp,EU27,CZE,RestEU,Europe,Europe
 Denmark,o2,DNK,54,EU27,H,Temp,EU27,DNK,RestEU,Europe,Europe
 Finland,o3,FIN,67,EU27,H,Bor,EU27,FIN,RestEU,Europe,Europe
 France,o4,FRA,68,EU27,H,Temp,EU27,FRA,fra,Europe,Europe
