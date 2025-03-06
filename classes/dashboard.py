@@ -5,7 +5,7 @@ from dash import dcc, html
 from dash.dependencies import Input, Output, State
 import pandas as pd
 from pathlib import Path
-import plotly.express as px
+import plotly.express as px  # Importiere plotly.express
 
 PACKAGEDIR = Path(__file__).parent.parent.absolute()
 
@@ -33,19 +33,19 @@ class DashboardPlotter:
                         dbc.CardBody([
                             html.H4("Filters", className="card-title"),
                             dcc.Dropdown(id='region-dropdown',
-                                         options=[{'label': i, 'value': i} for i in ['Country'] + self.data['ISO3'].dropna().unique().tolist()],
+                                         options=[{'label': i, 'value': i} for i in ['Country'] + sorted(self.data['ISO3'].dropna().unique())],
                                          value='Country',
                                          style=dropdown_style),
                             dcc.Dropdown(id='continent-dropdown',
-                                         options=[{'label': i, 'value': i} for i in ['Continent'] + self.data['Continent'].dropna().unique().tolist()],
+                                         options=[{'label': i, 'value': i} for i in ['Continent'] + sorted(self.data['Continent'].dropna().unique())],
                                          value='Continent',
                                          style=dropdown_style),
                             dcc.Dropdown(id='domain-dropdown',
-                                         options=[{'label': i, 'value': i} for i in ['Domain'] + self.data['domain'].dropna().unique().tolist()],
+                                         options=[{'label': i, 'value': i} for i in ['Domain'] + sorted(self.data['domain'].dropna().unique())],
                                          value='Domain',
                                          style=dropdown_style),
                             dcc.Dropdown(id='commodity-dropdown',
-                                         options=[{'label': i, 'value': i} for i in ['Commodity'] + self.data['Commodity'].dropna().unique().tolist()],
+                                         options=[{'label': i, 'value': i} for i in ['Commodity'] + sorted(self.data['Commodity'].dropna().unique())],
                                          value='Commodity',
                                          style=dropdown_style),
                             dcc.Dropdown(id='commodity-group-dropdown',
@@ -58,9 +58,24 @@ class DashboardPlotter:
                     ], className="mb-4", style={'white': 'white'}),  #filter box
                     dbc.Card([
                         dbc.CardBody([
-                            dcc.Graph(id='price-plot',
-                                      config={'toImageButtonOptions': {'format': 'png', 'filename': 'price_plot'}},
-                                      style={'height': '54.5vh'})
+                                html.H5("Filter for Worldmap", className="card-title"),
+                                #html.H6("Scenario Filter", className="card-title"),  # Titel für den Scenario-Filter
+                                dcc.Dropdown(
+                                    id='scenario-filter',
+                                    options=[{'label': i, 'value': i} for i in self.data['Scenario'].unique()],
+                                    value=['Historic Data'],
+                                    style=dropdown_style
+                                ),
+                                #html.H6("Year Filter", className="card-title"),  # Titel für den Year-Filter
+                                dcc.Dropdown(
+                                    id='year-filter',
+                                    options=[{'label': i, 'value': i} for i in sorted(self.data['year'].unique())],
+                                    value=[self.get_last_historic_year()],
+                                    style=dropdown_style
+                                ),
+                                dcc.Graph(id='world-map',  # Geändert: ID auf 'world-map'
+                                          config={'toImageButtonOptions': {'format': 'png'}},
+                                          style={'height': '38.5vh','width':'46vh'})
                     ])
                 ], style={'white': 'white'})  #price box
             ], width=3),
@@ -78,16 +93,16 @@ class DashboardPlotter:
                     dbc.Col([
                         dbc.Card([
                             dbc.CardBody([
-                                dcc.Graph(id='forstock-plot',  # Geändert: ID auf 'forstock-plot'
-                                          config={'toImageButtonOptions': {'format': 'png'}},
-                                          style={'height': '40vh'})
+                                 dcc.Graph(id='price-plot',
+                                      config={'toImageButtonOptions': {'format': 'png', 'filename': 'price_plot'}},
+                                      style={'height': '50vh'})
                             ])
                         ], style={'backgroundColor': 'white', 'marginBottom': '20px'}), # Abstand hinzugefügt
                         dbc.Card([
                             dbc.CardBody([
-                                dcc.Graph(id='placeholder-plot-2',
+                                dcc.Graph(id='forstock-plot',  # Geändert: ID auf 'forstock-plot'
                                           config={'toImageButtonOptions': {'format': 'png'}},
-                                          style={'height': '40vh'})
+                                          style={'height': '30vh'})
                             ])
                         ], style={'backgroundColor': 'white'})
                     ], width=4), # Breite auf 4 gesetzt
@@ -100,8 +115,7 @@ class DashboardPlotter:
         @self.app.callback(
             [Output('quantity-plot', 'figure'),
              Output('price-plot', 'figure'),
-             Output('forstock-plot', 'figure')
-             ], # Hinzugefügt: Output für 'forstock-plot'
+             Output('forstock-plot', 'figure')],
             [Input('region-dropdown', 'value'),
              Input('continent-dropdown', 'value'),
              Input('domain-dropdown', 'value'),
@@ -110,6 +124,20 @@ class DashboardPlotter:
         )
         def update_plots(region, continent, domain, commodity, commodity_group):
             return self.update_plot_data(region, continent, domain, commodity, commodity_group)
+
+        @self.app.callback(
+            Output('world-map', 'figure'),
+            [Input('scenario-filter', 'value'),
+             Input('year-filter', 'value'),
+             Input('region-dropdown', 'value'),
+             Input('continent-dropdown', 'value'),
+             Input('domain-dropdown', 'value'),
+             Input('commodity-dropdown', 'value'),
+             Input('commodity-group-dropdown', 'value')]
+        )
+        def update_world_map(scenario, year, region, continent, domain, commodity, commodity_group):
+            return self.create_world_map(region, continent, domain, commodity, commodity_group, scenario, year)
+
         @self.app.callback(
             Output("download-dataframe-csv", "data"),
             Input("btn_csv", "n_clicks"),
@@ -179,8 +207,8 @@ class DashboardPlotter:
             legend_title='Scenario',
             template='plotly_white',
             showlegend=True,
-            legend=dict(orientation="h", yanchor="top", y=-0.2, xanchor="center", x=0.5),
-            margin=dict(l=50, r=50, t=50, b=100),  # Increased bottom margin to accommodate legend
+            legend=dict(orientation="h", yanchor="top", y=-0.25, xanchor="center", x=0.5),
+            margin=dict(l=50, r=50, t=50, b=5),
             barmode='group'
         )
 
@@ -188,35 +216,36 @@ class DashboardPlotter:
         grouped_data_stock = filtered_data.drop(columns=['domain', 'Domain', 'price','quantity','CommodityCode','Commodity','Commodity_Group'])
         grouped_data_stock = grouped_data_stock.drop_duplicates().reset_index(drop=True)
         grouped_data_stock = grouped_data_stock.groupby(['year', 'Scenario']).agg({
-            'ForStock': 'sum',  # Summe von ForStock
+            'ForStock': 'sum',
             }).reset_index()
         grouped_data_stock = grouped_data_stock[grouped_data_stock.Scenario!='Historic Data']
-        print('grouped',grouped_data_stock)
         fig_stock = go.Figure()
         for i, scenario in enumerate(grouped_data_stock['Scenario'].unique()):
             subset = grouped_data_stock[grouped_data_stock['Scenario'] == scenario]
             color = self.color_list[i % len(self.color_list)]
             fig_stock.add_trace(go.Bar(x=subset['year'], y=subset['ForStock'],
                                     name=f'{scenario}', marker_color=color))
-
-        # Angenommen, 'Period' enthält die Jahreszahlen
+            
         min_year = grouped_data_stock['year'].min() - 1
         max_year = grouped_data_stock['year'].max() + 0.5
+
+        min_val = grouped_data_stock['ForStock'].min() * 0.9
+        max_val = grouped_data_stock['ForStock'].max() * 1.1
 
         fig_stock.update_layout(
             title='ForStock by Year and Scenario',
             xaxis_title='Year',
             xaxis=dict(range=[min_year, max_year]),
+            yaxis=dict(range=[min_val, max_val]),
             yaxis_title='ForStock',
             template='plotly_white',
             showlegend=True,
-            legend=dict(orientation="h", yanchor="top", y=-0.2, xanchor="center", x=0.5),
+            legend=dict(orientation="h", yanchor="top", y=-0.35, xanchor="center", x=0.5),
+            margin=dict(l=50, r=50, t=40, b=5),
             barmode='group'
         )
 
-
-
-        return fig_quantity, fig_price, fig_stock # Hinzugefügt: fig_forstock zum Return
+        return fig_quantity, fig_price, fig_stock
 
     def generate_title(self, region, continent, domain, commodity, commodity_group):
         title_parts = []
@@ -231,6 +260,51 @@ class DashboardPlotter:
         if commodity_group != 'Commodity_Group':
             title_parts.append(f"{commodity_group}")
         return "Quantity by Period and Scenario for " + ", ".join(title_parts) if title_parts else "Quantity by Period and Scenario for all data"
+
+    def create_world_map(self, region, continent, domain, commodity, commodity_group, scenario=None, year=None):
+        filtered_data = self.filter_data(region, continent, domain, commodity, commodity_group)
+        if scenario:
+            filtered_data = filtered_data[filtered_data['Scenario'].isin([scenario])]
+        if year:
+            filtered_data = filtered_data[filtered_data['year']==year]
+        country_data = filtered_data.groupby('ISO3')['quantity'].sum().reset_index()
+        print(filtered_data)
+
+        # Erstelle die Choropleth-Karte
+        fig = px.choropleth(
+            country_data,
+            locations="ISO3",
+            color="quantity",
+            hover_name="ISO3",
+            color_continuous_scale="Greens"
+        )
+
+        # Passe das Layout an
+        fig.update_layout(
+            title='Worldmap',
+            geo=dict(
+                showcoastlines=True,
+                coastlinecolor="LightGray",
+                showocean=False,
+                oceancolor="LightBlue",
+                projection_type='natural earth',
+                # Grenzen bestimmen
+                lonaxis_range=[-360, 360],  # Längengradbereich
+                lataxis_range=[-55, 55],   # Breitengradbereich
+            ),
+            margin=dict(l=1, r=1, t=50, b=1),  # Ränder minimieren
+            coloraxis_showscale=False  # Legende entfernen
+        )
+
+        return fig
+    
+    def get_last_historic_year(self):
+        historic_data = self.data[self.data['Scenario'] == 'Historic Data']
+        if not historic_data.empty:
+            return historic_data['year'].max()
+        else:
+            return self.data['year'].max()
+
 
     def run(self):
         self.app.run_server(debug=True)

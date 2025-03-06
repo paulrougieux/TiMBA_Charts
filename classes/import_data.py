@@ -128,7 +128,7 @@ class import_pkl_data:
         forest_data = data_prev['Forest']
         forest_data = forest_data[['Scenario','RegionCode','Period','ForStock','ForArea']]
         forest_data = forest_data.drop_duplicates(subset=['Scenario', 'RegionCode', 'Period'], keep='first')
-        self.read_forest_data_gfpm(country_data)
+        #self.read_forest_data_gfpm(country_data)
         data_prev["data_periods"] = pd.merge(data_prev["data_periods"], forest_data, how='left', on=['Scenario','RegionCode','Period'])
         data_prev["data_periods"] = pd.concat([data_prev["data_periods"], data], axis=0)
         data_prev["data_periods"] = pd.merge(data_prev["data_periods"], country_data, on="RegionCode", how="left")
