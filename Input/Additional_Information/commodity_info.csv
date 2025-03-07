@@ -1,10 +1,10 @@
 FAO-Code,Commodity,NameHist,CommodityCode,aCode,Commodity_Group
 1867,Industrial Roundwood NC,IndRoundNC,78,IRWNC,Roundwood
-1632,Sawnwood C,SawnwoodC,79,SWC,Sawnwood
+1633,Sawnwood NC,SawnwoodNC,79,SWC,Sawnwood
 1864,Fuelwood,Fuelwood,80,FW,Roundwood
 1866,Industrial Roundwood C,IndRoundC,81,IRW,Roundwood
 1871,Other Industrial Roundwood,OthIndRound,82,OthIRW,Roundwood
-1633,Sawnwood NC,SawnwoodNC,83,SWNC,Sawnwood
+1632,Sawnwood C,SawnwoodC,83,SWNC,Sawnwood
 1640,Plywood,Plywood,84,PlyW,Wood-based Panels
 1646,Particle Board,ParticleB,85,ParB,Wood-based Panels
 1874,Fiberboard,FiberB,86,FibB,Wood-based Panels

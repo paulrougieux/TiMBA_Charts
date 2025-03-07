@@ -4,6 +4,7 @@ import dash_bootstrap_components as dbc
 from dash import dcc, html
 from dash.dependencies import Input, Output, State
 import pandas as pd
+import numpy as np
 from pathlib import Path
 import plotly.express as px
 import textwrap
@@ -18,7 +19,7 @@ class DashboardPlotter:
         self.start = self.data['year'].min()
         self.end = self.data['year'].max()
         self.color_list = ['darkblue','green','purple','cyan','red','yellow','orange','pink','brown','teal']
-        self.logo = PACKAGEDIR/'timba_logo_v3.png'
+        self.logo = PACKAGEDIR/'timba_dashboard_logo.png'#'timba_logo_v3.png' 
         self.create_layout()
         self.create_callbacks()
 
@@ -26,13 +27,13 @@ class DashboardPlotter:
         dropdown_style = {'height': '30px','marginBottom': '10px'}
         self.app.layout = dbc.Container([
             dbc.Row([
-                #dbc.Col(width=0),  # Leere Spalte für den linken Rand
+                dbc.Col(width=5),  # Leere Spalte für den linken Rand
                 dbc.Col(
-                    html.Img(src=self.app.get_asset_url('timba_logo_v3.png'), style={'height': '85px', 'width': 'auto'}),
+                    html.Img(src=self.app.get_asset_url('timba_dashboard_logo.png'), style={'height': '90px', 'width': 'auto'}),
                     width=1
                 ),
                 dbc.Col(
-                    html.H1("TiMBA Dashboard", className="text-center mb-4"), width=10
+                    #html.H1("TiMBA Dashboard", className="text-center mb-4"), width=10
                 )
             ]),
             dbc.Row([
@@ -177,6 +178,7 @@ class DashboardPlotter:
             filtered_data = filtered_data[filtered_data['Commodity'].isin(commodity)]
         if commodity_group and isinstance(commodity_group, list):
             filtered_data = filtered_data[filtered_data['Commodity_Group'].isin(commodity_group)]
+        filtered_data = self.remove_extreme_outliers(df=filtered_data, col='price')
         return filtered_data
 
     def update_plot_data(self, region, continent, domain, commodity, commodity_group):
@@ -208,7 +210,6 @@ class DashboardPlotter:
 
         # Price plot
         grouped_data_price = filtered_data.groupby(['year', 'Scenario']).mean().reset_index()
-
         max_year = grouped_data_price['year'].max() + 0.5
 
         fig_price = go.Figure()
@@ -217,6 +218,7 @@ class DashboardPlotter:
             color = self.color_list[i % len(self.color_list)]
             fig_price.add_trace(go.Bar(x=subset['price'], y=subset['year'], orientation='h',
                                        name=f'{scenario}', marker_color=color))
+            
         title_price = f'Price by Period and Scenario'
         fig_price.update_layout(
             title=title_price,
@@ -278,7 +280,7 @@ class DashboardPlotter:
             title_parts.append(f"{commodity}")
         if commodity_group:
             title_parts.append(f"{commodity_group}")
-        title = ", ".join(title_parts) if title_parts else " all data"
+        title = ", ".join(title_parts) if title_parts else "all data"
         clean_title = title.replace("'", "").replace("[", "").replace("]", "")
         return clean_title
 
@@ -324,7 +326,15 @@ class DashboardPlotter:
             return historic_data['year'].max()
         else:
             return self.data['year'].max()
+    
+    def remove_extreme_outliers(self,df:pd.DataFrame,col:str,threshhold:float=50):        
+        Q1 = df[col].quantile(0.25)
+        Q3 = df[col].quantile(0.75)
+        IQR = Q3 - Q1
+        outlier_threshold = threshhold * IQR
+        df[df[col] >= outlier_threshold] = np.nan
+        return df
 
 
     def run(self):
-        self.app.run_server(debug=True)
+        self.app.run_server(debug=True, dev_tools_ui=False)
