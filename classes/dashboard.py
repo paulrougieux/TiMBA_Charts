@@ -20,7 +20,18 @@ class DashboardPlotter:
         self.app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
         self.start = self.data['year'].min()
         self.end = self.data['year'].max()
-        self.color_list = ['darkblue','green','purple','cyan','red','yellow','orange','pink','brown','teal']
+        self.color_list = [
+            '#2A4D69',  # Dunkelblau
+            '#4B8BBE',  # Hellblau
+            '#D35400',  # Dunkelorange
+            '#AAB7B8',  # Grau
+            '#9B59B6',  # Lila
+            '#2980B9',  # Blau
+            '#27AE60'   # Grün
+            '#6C757D',  # Dunkelgrau
+            '#F1C40F',  # Senfgelb
+            '#E67E22',  # Orange  
+        ]
         self.logo = PACKAGEDIR/'timba_dashboard_logo.png'#'timba_logo_v3.png' 
         self.create_layout()
         self.create_callbacks()
