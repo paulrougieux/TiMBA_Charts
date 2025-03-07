@@ -1,17 +1,24 @@
-#Import packages
-import pandas as pd
-import numpy as np
 from classes.import_data import import_pkl_data
 from classes.dashboard import DashboardPlotter
-import warnings
-warnings.simplefilter(action='ignore', category=FutureWarning)
 
-#Import data
-import_pkl = import_pkl_data()
-data = import_pkl.combined_data()
+class timba_dashboard:
+    def __init__(self):
+        pass
 
-# Usage
-plotter = DashboardPlotter(data=data["data_periods"])
-plotter.run()
+    def import_data(self):
+        import warnings
+        warnings.simplefilter(action='ignore', category=FutureWarning)
+        import_pkl = import_pkl_data()
+        self.data = import_pkl.combined_data()
 
+    def call_dashboard(self):
+        DashboardPlotter(data=self.data["data_periods"]).run()
+
+    def run(self):
+        self.import_data()
+        self.call_dashboard() 
+
+if __name__ == "__main__":
+    td = timba_dashboard()
+    td.run()
 

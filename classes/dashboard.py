@@ -3,6 +3,8 @@ import dash
 import dash_bootstrap_components as dbc
 from dash import dcc, html
 from dash.dependencies import Input, Output, State
+import webbrowser
+from threading import Timer
 import pandas as pd
 import numpy as np
 from pathlib import Path
@@ -334,7 +336,11 @@ class DashboardPlotter:
         outlier_threshold = threshhold * IQR
         df[df[col] >= outlier_threshold] = np.nan
         return df
+    
+    def open_browser(self):
+        webbrowser.open_new("http://localhost:8050")
 
 
     def run(self):
-        self.app.run_server(debug=True, dev_tools_ui=False)
+        Timer(1, self.open_browser).start()
+        self.app.run_server(debug=True, dev_tools_ui=False, port=8050)
