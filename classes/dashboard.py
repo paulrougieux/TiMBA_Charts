@@ -76,7 +76,7 @@ class DashboardPlotter:
                         dbc.CardBody([
                                 dcc.Graph(id='price-plot',
                                       config={'toImageButtonOptions': {'format': 'png', 'filename': 'price_plot'}},
-                                      style={'height': '51.5vh','width':'46vh'})
+                                      style={'height': '49.5vh','width':'46vh'})
                     ])
                 ], style={'white': 'white'})  #price box
             ], width=3),
@@ -87,7 +87,7 @@ class DashboardPlotter:
                             dbc.CardBody([
                                 dcc.Graph(id='quantity-plot',
                                           config={'toImageButtonOptions': {'format': 'png', 'filename': 'quantity_plot'}},
-                                          style={'height': '86.5vh'})
+                                          style={'height': '84.5vh'})
                             ])
                         ], style={'backgroundColor': 'white'}) #mittelbox
                     ], width=8), # Breite auf 8 reduziert
@@ -118,7 +118,7 @@ class DashboardPlotter:
                                 ),
                                  dcc.Graph(id='world-map',  # Geändert: ID auf 'world-map'
                                           config={'toImageButtonOptions': {'format': 'png'}},
-                                          style={'height': '33.5vh'})
+                                          style={'height': '31.5vh'})
                             ])
                         ], style={'backgroundColor': 'white'})
                     ], width=4), # Breite auf 4 gesetzt
@@ -206,6 +206,7 @@ class DashboardPlotter:
             yaxis=dict(rangemode='nonnegative', zeroline=True, zerolinewidth=2, zerolinecolor='LightGrey'),
             legend_title='Scenario',
             legend=dict(orientation="h", yanchor="top", y=-0.1, xanchor="center", x=0.5),
+            margin=dict(l=35, r=35, t=60, b=90),
             hovermode='x unified',
             template=graphic_template
         )
@@ -229,9 +230,9 @@ class DashboardPlotter:
             yaxis=dict(range=[2020-0.5, max_year]),
             legend_title='Scenario',
             template=graphic_template,
-            showlegend=True,
-            legend=dict(orientation="h", yanchor="top", y=-0.25, xanchor="center", x=0.5),
-            margin=dict(l=50, r=50, t=50, b=5),
+            showlegend=False,
+            #legend=dict(orientation="h", yanchor="top", y=-0.25, xanchor="center", x=0.5),
+            margin=dict(l=35, r=60, t=50, b=5),
             barmode='group'
         )
 
@@ -245,7 +246,7 @@ class DashboardPlotter:
         fig_stock = go.Figure()
         for i, scenario in enumerate(grouped_data_stock['Scenario'].unique()):
             subset = grouped_data_stock[grouped_data_stock['Scenario'] == scenario]
-            color = self.color_list[i % len(self.color_list)]
+            color = self.color_list[i+1 % len(self.color_list)]
             fig_stock.add_trace(go.Bar(x=subset['year'], y=subset['ForStock'],
                                     name=f'{scenario}', marker_color=color))
             
@@ -262,8 +263,8 @@ class DashboardPlotter:
             yaxis=dict(range=[min_val, max_val]),
             yaxis_title='ForStock',
             template=graphic_template,
-            showlegend=True,
-            legend=dict(orientation="h", yanchor="top", y=-0.35, xanchor="center", x=0.5),
+            showlegend=False,
+            #legend=dict(orientation="h", yanchor="top", y=-0.35, xanchor="center", x=0.5),
             margin=dict(l=50, r=50, t=40, b=5),
             barmode='group'
         )
@@ -334,7 +335,7 @@ class DashboardPlotter:
         Q3 = df[col].quantile(0.75)
         IQR = Q3 - Q1
         outlier_threshold = threshhold * IQR
-        df[df[col] >= outlier_threshold] = np.nan
+        df.loc[df[col] >= outlier_threshold, col] = np.nan
         return df
     
     def open_browser(self):
@@ -343,4 +344,4 @@ class DashboardPlotter:
 
     def run(self):
         Timer(1, self.open_browser).start()
-        self.app.run_server(debug=True, dev_tools_ui=False, port=8050)
+        self.app.run_server(debug=False, dev_tools_ui=False, dev_tools_hot_reload=False, port=8050)
