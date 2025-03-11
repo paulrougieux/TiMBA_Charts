@@ -27,7 +27,7 @@ class DashboardPlotter:
             '#AAB7B8',  # Grau
             '#9B59B6',  # Lila
             '#2980B9',  # Blau
-            '#27AE60'   # Grün
+            '#27AE60',  # Grün
             '#6C757D',  # Dunkelgrau
             '#F1C40F',  # Senfgelb
             '#E67E22',  # Orange  
