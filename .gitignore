@@ -1,9 +1,9 @@
 .idea/
 .vscode/
 __pycache__/
-classes/__pycache__/
+/classes/__pycache__/
 /data/output/
-TiMBA/data/input/
+/Input/
 TiMBA/data/output/
 *.py[cod]
 *$py.class

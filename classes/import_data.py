@@ -71,12 +71,76 @@ class import_pkl_data:
         data.Scenario = data.Scenario.astype("category")
         data.Model = data.Model.astype("category")
         return data
+    
+    def add_consumption(self, data):
+        data["quantity"] = (data["quantity_ManufactureCost"] +
+                            data["quantity_Supply"] -
+                            data["quantity_TransportationExport"] +
+                            data["quantity_TransportationImport"])
+        data.loc[data["quantity"] < 0, "quantity"] = 0
+        data["price"] = (((data["quantity_ManufactureCost"] * data["price_ManufactureCost"]) +
+                          (data["quantity_Supply"] * data["price_Supply"]) -
+                          (data["quantity_TransportationExport"] * data["price_TransportationExport"]) +
+                          (data["quantity_TransportationImport"]* data["price_TransportationImport"]))/
+                          data["quantity"])
+        data["price"] = 0
+        data["domain"] = "Consumption"
+        return data
+    
+    def add_net_exports(self, data):
+        data["quantity"] =  (data["quantity_TransportationExport"] -
+                            data["quantity_TransportationImport"])
+        data["price"] =  data["price_TransportationExport"]
+        data["domain"] = "Net Exports"
+        return data
+    
+    def add_net_imports(self, data):
+        data["quantity"] =  (data["quantity_TransportationImport"] -
+                            data["quantity_TransportationExport"])
+        data["price"] = data["price_TransportationImport"]
+        data["domain"] = "Net Imports"
+        return data
+    
+    def add_production(self, data):
+        data["quantity"] =  (data["quantity_ManufactureCost"] + data["quantity_Supply"])
+        data["price"] = (((data["quantity_ManufactureCost"] * data["price_ManufactureCost"]) +
+                          (data["quantity_Supply"] * data["price_Supply"])) / data["quantity"])
+        # if data["price"].mean() <=0:
+        #     data["price"] = 0
+        data["domain"] = "Production"
+        return data
+    
+    def concat_calc_domains(self,origin_data:pd.DataFrame,calc_data:pd.DataFrame):
+        calc_data = calc_data[['RegionCode','CommodityCode','Period','year','domain','price','quantity']].reset_index(drop=True) 
+        result_df = pd.concat([origin_data, calc_data], axis=0).reset_index(drop=True) 
+        return result_df
+
+    def add_calculated_domains(self,data:pd.DataFrame):
+        pivoted_price = data["data_periods"].pivot(index=["RegionCode", "CommodityCode", "Period", "year"], 
+                         columns="domain", 
+                         values="price").add_prefix("price_")
+        pivoted_quantity = data["data_periods"].pivot(index=["RegionCode", "CommodityCode", "Period", "year"], 
+                                    columns="domain", 
+                                    values="quantity").add_prefix("quantity_")
+        pivoted_df = pd.concat([pivoted_price, pivoted_quantity], axis=1).reset_index()    
+
+        calculated_functions = [#"add_consumption",
+                                "add_net_exports",
+                                "add_net_imports",
+                                #"add_production",
+                                ]
+        for method_name in calculated_functions:
+            calc_df = getattr(self, method_name)(data=pivoted_df)
+            data["data_periods"] = self.concat_calc_domains(origin_data=data["data_periods"], calc_data=calc_df)
+
+        return data["data_periods"]
 
     def concat_scenarios(self, data: pd.DataFrame, sc_name:str, data_prev: pd.DataFrame, ID: int):
         """concat_scenarios, add scenario name from pkl file to data frames
         :param data: dictionary of the data container
         :param sc_name: scenario name from file name in dictionary
         """    
+        data["data_periods"] = self.add_calculated_domains(data=data)
         try:
             for key in data: #loop through all data from datacontainer
                 data[key][parameters.column_name_scenario.value] = sc_name
@@ -133,16 +197,15 @@ class import_pkl_data:
         data_prev["data_periods"] = pd.concat([data_prev["data_periods"], data], axis=0)
         data_prev["data_periods"] = pd.merge(data_prev["data_periods"], country_data, on="RegionCode", how="left")
         data_prev["data_periods"] = pd.merge(data_prev["data_periods"], commodity_data, on="CommodityCode", how="left")
-        data_prev["data_periods"]["Domain"] = data_prev["data_periods"]["domain"]
-        data_prev["data_periods"]["Domain"] = data_prev["data_periods"]["Domain"].replace({
-            'Supply': 'Production', 
-            'ManufactureCost': 'Production',
+        #data_prev["data_periods"]["Domain"] = data_prev["data_periods"]["domain"]
+        data_prev["data_periods"]["domain"] = data_prev["data_periods"]["domain"].replace({
+            'ManufactureCost': 'Manufacturing',
             'TransportationExport': 'Export',
             'TransportationImport': 'Import',
             })
         data_prev["data_periods"] = data_prev["data_periods"][['Model','Scenario','RegionCode','Continent','Country','ISO3',
                                                                'CommodityCode','Commodity','Commodity_Group','Period','year',
-                                                               'domain','Domain','price','quantity',
+                                                               'domain','price','quantity',
                                                                'ForStock','ForArea',
                                                                ]]
         return data_prev

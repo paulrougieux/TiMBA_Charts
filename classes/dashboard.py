@@ -248,7 +248,7 @@ class DashboardPlotter:
         )
 
         # ForStock plot
-        grouped_data_stock = filtered_data.drop(columns=['domain', 'Domain', 'price','quantity','CommodityCode','Commodity','Commodity_Group'])
+        grouped_data_stock = filtered_data.drop(columns=['domain', 'price','quantity','CommodityCode','Commodity','Commodity_Group'])
         grouped_data_stock = grouped_data_stock.drop_duplicates().reset_index(drop=True)
         grouped_data_stock = grouped_data_stock.groupby(['year', 'Scenario']).agg({
             'ForStock': 'sum',
