@@ -79,6 +79,11 @@ class DashboardPlotter:
                                          placeholder="Select Commodity Group...",
                                          multi=True,
                                          style=dropdown_style),
+                            dcc.Dropdown(id='scenario-filter',
+                                         options=[{'label': i, 'value': i} for i in self.data['Scenario'].unique()],
+                                         placeholder="Select Scenario...",
+                                         multi=True,
+                                         style=dropdown_style),
                             html.Button("Download CSV", id="btn_csv"),
                             dcc.Download(id="download-dataframe-csv"),
                         ])
@@ -87,7 +92,7 @@ class DashboardPlotter:
                         dbc.CardBody([
                                 dcc.Graph(id='price-plot',
                                       config={'toImageButtonOptions': {'format': 'png', 'filename': 'price_plot'}},
-                                      style={'height': '49.5vh','width':'46vh'})
+                                      style={'height': '45vh','width':'46vh'})
                     ])
                 ], style={'white': 'white'})  #price box
             ], width=3),
@@ -107,19 +112,13 @@ class DashboardPlotter:
                             dbc.CardBody([
                                 dcc.Graph(id='forstock-plot',  # Geändert: ID auf 'forstock-plot'
                                           config={'toImageButtonOptions': {'format': 'png'}},
-                                          style={'height': '35vh'})
+                                          style={'height': '39vh'})
                             ])
                         ], style={'backgroundColor': 'white', 'marginBottom': '20px'}), # Abstand hinzugefügt
                         dbc.Card([
                             dbc.CardBody([
                                 html.H5("Filter for Worldmap", className="card-title"),
                                 #html.H6("Scenario Filter", className="card-title"),  # Titel für den Scenario-Filter
-                                dcc.Dropdown(
-                                    id='scenario-filter',
-                                    options=[{'label': i, 'value': i} for i in self.data['Scenario'].unique()],
-                                    placeholder="Select Scenario...",
-                                    style=dropdown_style
-                                ),
                                 #html.H6("Year Filter", className="card-title"),  # Titel für den Year-Filter
                                 dcc.Dropdown(
                                     id='year-filter',
@@ -129,7 +128,7 @@ class DashboardPlotter:
                                 ),
                                  dcc.Graph(id='world-map',  # Geändert: ID auf 'world-map'
                                           config={'toImageButtonOptions': {'format': 'png'}},
-                                          style={'height': '31.5vh'})
+                                          style={'height': '32vh'})
                             ])
                         ], style={'backgroundColor': 'white'})
                     ], width=4), # Breite auf 4 gesetzt
@@ -147,10 +146,11 @@ class DashboardPlotter:
              Input('continent-dropdown', 'value'),
              Input('domain-dropdown', 'value'),
              Input('commodity-dropdown', 'value'),
-             Input('commodity-group-dropdown', 'value')]
+             Input('commodity-group-dropdown', 'value'),
+             Input('scenario-filter', 'value')]
         )
-        def update_plots(region, continent, domain, commodity, commodity_group):
-            return self.update_plot_data(region, continent, domain, commodity, commodity_group)
+        def update_plots(region, continent, domain, commodity, commodity_group,scenario):
+            return self.update_plot_data(region, continent, domain, commodity, commodity_group,scenario)
 
         @self.app.callback(
             Output('world-map', 'figure'),
@@ -169,17 +169,21 @@ class DashboardPlotter:
             Output("download-dataframe-csv", "data"),
             Input("btn_csv", "n_clicks"),
             [State('region-dropdown', 'value'),
-             State('continent-dropdown', 'value'),
-             State('domain-dropdown', 'value'),
-             State('commodity-dropdown', 'value'),
-             State('commodity-group-dropdown', 'value')],
+            State('continent-dropdown', 'value'),
+            State('domain-dropdown', 'value'),
+            State('commodity-dropdown', 'value'),
+            State('commodity-group-dropdown', 'value'),
+            State('scenario-filter', 'value')],  # Geändert von Input zu State
             prevent_initial_call=True
         )
-        def func(n_clicks, region, continent, domain, commodity, commodity_group):
-            filtered_data = self.filter_data(region, continent, domain, commodity, commodity_group)
+        def func(n_clicks, region, continent, domain, commodity, commodity_group, scenario):
+            if n_clicks is None:
+                raise dash.exceptions.PreventUpdate
+            filtered_data = self.filter_data(region, continent, domain, commodity, commodity_group, scenario)
             return dcc.send_data_frame(filtered_data.to_csv, "filtered_data.csv")
 
-    def filter_data(self, region, continent, domain, commodity, commodity_group):
+
+    def filter_data(self, region, continent, domain, commodity, commodity_group, scenario):
         filtered_data = self.data
         if region and isinstance(region, list):
             filtered_data = filtered_data[filtered_data['ISO3'].isin(region)]
@@ -191,12 +195,14 @@ class DashboardPlotter:
             filtered_data = filtered_data[filtered_data['Commodity'].isin(commodity)]
         if commodity_group and isinstance(commodity_group, list):
             filtered_data = filtered_data[filtered_data['Commodity_Group'].isin(commodity_group)]
+        if scenario and isinstance(scenario, list):
+            filtered_data = filtered_data[filtered_data['Scenario'].isin(scenario)]
         filtered_data = self.remove_extreme_outliers(df=filtered_data, col='price')
         return filtered_data
 
-    def update_plot_data(self, region, continent, domain, commodity, commodity_group):
+    def update_plot_data(self, region, continent, domain, commodity, commodity_group, scenario):
         graphic_template='plotly_white'#'plotly_dark'#'plotly_white'
-        filtered_data = self.filter_data(region, continent, domain, commodity, commodity_group)
+        filtered_data = self.filter_data(region, continent, domain, commodity, commodity_group, scenario)
 
         # Quantity plot
         grouped_data_quantity = filtered_data.groupby(['year', 'Scenario']).sum().reset_index()
@@ -299,9 +305,7 @@ class DashboardPlotter:
         return clean_title
 
     def create_world_map(self, region, continent, domain, commodity, commodity_group, scenario=None, year=None):
-        filtered_data = self.filter_data(region, continent, domain, commodity, commodity_group)
-        if scenario:
-            filtered_data = filtered_data[filtered_data['Scenario'].isin([scenario])]
+        filtered_data = self.filter_data(region, continent, domain, commodity, commodity_group, scenario)
         if year:
             filtered_data = filtered_data[filtered_data['year']==year]
         country_data = filtered_data.groupby('ISO3')['quantity'].sum().reset_index()
