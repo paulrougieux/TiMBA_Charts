@@ -1,5 +1,5 @@
-from classes.import_data import import_pkl_data
-from classes.dashboard import DashboardPlotter
+from Toolbox.classes.import_data import import_pkl_data
+from Toolbox.classes.dashboard import DashboardPlotter
 
 class timba_dashboard:
     def __init__(self):

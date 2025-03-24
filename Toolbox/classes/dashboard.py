@@ -359,4 +359,4 @@ class DashboardPlotter:
 
     def run(self):
         Timer(1, self.open_browser).start()
-        self.app.run_server(debug=False, dev_tools_ui=False, dev_tools_hot_reload=False, port=8050)
+        self.app.run(debug=False, dev_tools_ui=False, dev_tools_hot_reload=False, port=8050)
