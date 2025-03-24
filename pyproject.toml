@@ -57,3 +57,18 @@ dependencies = [
     "zipp==3.21.0",
     "zope.interface==7.2"
 ]
+
+requires-python = ">=3.12.6"
+license = {text = "AGPLv3+"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: Microsoft :: Windows",
+    "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
+    "Intended Audience :: Science/Research",
+]
+
+[project.urls]
+Repository = "https://github.com/TI-Forest-Sector-Modelling/Analyses_Toolbox_TiMBA_workshop"
+
+[project.scripts]
+show_dashboard = ""
