@@ -42,7 +42,6 @@ target/
 # Environments
 .env
 .venv
-venvtomltest
 env/
 venv/
 ENV/
