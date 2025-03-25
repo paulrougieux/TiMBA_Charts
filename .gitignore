@@ -2,9 +2,7 @@
 .vscode/
 __pycache__/
 /classes/__pycache__/
-/data/output/
-#/Toolbox/Input/
-TiMBA/data/output/
+/Toolbox/Input/
 *.py[cod]
 *$py.class
 test/.pytest_cache/
