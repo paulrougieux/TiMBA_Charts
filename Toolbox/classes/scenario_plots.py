@@ -40,7 +40,6 @@ class PlotDropDown:
         self.regioncode_dropdown = self.choose_dropdown("RegionCode")
         self.continentcode_dropdown = self.choose_dropdown("Continent")
         self.model_dropdown = self.choose_dropdown("Model")
-        self.id_dropdown = self.choose_dropdown("ID")
         self.domain_dropdown = self.choose_dropdown("domain")
         self.commodity_code_dropdown = self.choose_dropdown("CommodityCode")
 
@@ -48,7 +47,6 @@ class PlotDropDown:
                                                    region = self.regioncode_dropdown,
                                                    continent = self.continentcode_dropdown,
                                                    model = self.model_dropdown,
-                                                   id = self.id_dropdown,
                                                    domain= self.domain_dropdown,
                                                    commodity = self.commodity_code_dropdown)     
         display(self.interactive_plot_update)
@@ -63,11 +61,10 @@ class PlotDropDown:
             disabled=False
         )
 
-    def update_plot_data(self, region, continent, model, id, domain, commodity):
+    def update_plot_data(self, region, continent, model, domain, commodity):
         region_filter = [region] if region != 'Alle' else self.data['RegionCode'].unique()
         continent_filter = [continent] if continent != 'Alle' else self.data['Continent'].unique()
         model_filter = [model] if model != 'Alle' else self.data['Model'].unique()
-        id_filter = [id] if id != 'Alle' else self.data['ID'].unique()
         domain_filter = [domain] if domain != 'Alle' else self.data['domain'].unique()
         commodity_filter = [commodity] if commodity != 'Alle' else self.data['CommodityCode'].unique()
 
@@ -76,7 +73,6 @@ class PlotDropDown:
             (self.data['RegionCode'].isin(region_filter)) &
             (self.data['Continent'].isin(continent_filter)) &
             (self.data['Model'].isin(model_filter)) &
-            (self.data['ID'].isin(id_filter)) &
             (self.data['domain'].isin(domain_filter)) &
             (self.data['CommodityCode'].isin(commodity_filter))
         ]
@@ -93,8 +89,7 @@ class PlotDropDown:
                 plt.plot(subset['year'], subset['quantity'], label=f'M: {scenario}',color="black")
             else:
                 if self.scenario_range:
-                    scenario_group = grouped_data[['year','ID','CommodityCode','quantity']]
-                    scenario_group = scenario_group[scenario_group.ID>0]
+                    scenario_group = grouped_data[['year','CommodityCode','quantity']]
                     scenario_group = scenario_group[['year','CommodityCode','quantity']]
                     scenario_mean = scenario_group.groupby(['year','CommodityCode']).mean().reset_index()
                     scenario_max = scenario_group.groupby(['year','CommodityCode']).max().reset_index()
