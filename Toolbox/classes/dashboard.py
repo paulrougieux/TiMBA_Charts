@@ -128,7 +128,7 @@ class DashboardPlotter:
                                 ),
                                  dcc.Graph(id='world-map',  # Geändert: ID auf 'world-map'
                                           config={'toImageButtonOptions': {'format': 'png'}},
-                                          style={'height': '32vh'})
+                                          style={'height': '31.75vh'})
                             ])
                         ], style={'backgroundColor': 'white'})
                     ], width=4), # Breite auf 4 gesetzt

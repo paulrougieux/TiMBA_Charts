@@ -20,7 +20,7 @@ class parameters(Enum):
     column_name_model = "Model"
     column_name_id = "ID"
     model_name = "TiMBA"
-    csv_input = "FAO_Data.csv"
+    csv_input = "Additional_Information\\FAO_Data.csv"
     csv_input_forest = 'Input\\Additional_Information\\Forest_world500.csv'
 
 class import_pkl_data:
@@ -184,7 +184,7 @@ class import_pkl_data:
         
         data_prev["data_periods"] = self.downcasting(data_prev["data_periods"])
         try:
-            data = pd.read_csv(str(PACKAGEDIR) + self.inputfolder + "\\Additional_Information\\" + parameters.csv_input.value)
+            data = pd.read_csv(str(PACKAGEDIR) + self.inputfolder + "\\" + parameters.csv_input.value)
             data = self.downcasting(data)
         except FileNotFoundError:
             data = pd.DataFrame()
