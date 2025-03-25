@@ -1,4 +1,4 @@
-![TiMBA Logo](/Toolbox/classes/assets/timba_dashboard_logo.png)  
+![TiMBA Logo](/Toolbox/classes/assets/timba_toolbox_logo.png)  
 
 # Analyses_Toolbox_TiMBA
 
