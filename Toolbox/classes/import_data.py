@@ -154,12 +154,13 @@ class import_pkl_data:
     def combined_data(self):
         """loop trough all input files in input directory
         """
-        file_list = os.listdir(str(PACKAGEDIR) + self.inputfolder)
+        file_list = os.listdir(str(PACKAGEDIR) + self.inputfolder + "\\Scenario_Files")
         data = []
         data_prev = []
         ID = 1
         for scenario_files in file_list:
-            src_filepath = str(PACKAGEDIR) + self.inputfolder + "\\" + scenario_files
+            src_filepath = str(PACKAGEDIR) + self.inputfolder + "\\Scenario_Files\\" + scenario_files
+            print(src_filepath)
             scenario_name = scenario_files[scenario_files.rfind(parameters.seperator_scenario_name.value)+3
                                         :-4]
             try:
@@ -183,7 +184,7 @@ class import_pkl_data:
         
         data_prev["data_periods"] = self.downcasting(data_prev["data_periods"])
         try:
-            data = pd.read_csv(str(PACKAGEDIR) + self.inputfolder + "\\" + parameters.csv_input.value)
+            data = pd.read_csv(str(PACKAGEDIR) + self.inputfolder + "\\Additional_Information\\" + parameters.csv_input.value)
             data = self.downcasting(data)
         except FileNotFoundError:
             data = pd.DataFrame()
