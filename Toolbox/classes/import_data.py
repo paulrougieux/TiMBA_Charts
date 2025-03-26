@@ -24,11 +24,12 @@ class parameters(Enum):
     COMMODITYINFO = "commodity_info.csv"
     FORESTINFO = "Forest_world500.csv"
     HISTINFO = "FAO_Data.csv"
-    SCENARIOPATH = Path("Input\\Scenario_Files")
 
 class import_pkl_data:
-    def __init__(self):
-        pass
+    def __init__(self, num_files_to_read:int=10,
+                 SCENARIOPATH:Path= PACKAGEDIR / Path("Input\\Scenario_Files")):
+        self.num_files_to_read = num_files_to_read
+        self.SCENARIOPATH = SCENARIOPATH
 
     def open_pickle(self, src_filepath: str):
         """open pkl file
@@ -162,14 +163,23 @@ class import_pkl_data:
     def combined_data(self):
         """loop trough all input files in input directory
         """
-        file_list = os.listdir(PACKAGEDIR / parameters.SCENARIOPATH.value)
+        scenario_path = self.SCENARIOPATH
+        num_files_to_read = 4
+        pkl_files = [
+            Path(scenario_path) / file
+            for file in os.listdir(scenario_path)
+            if file.endswith(".pkl")
+        ]
+        sorted_files = sorted(pkl_files, key=lambda x: x.stat().st_mtime, reverse=True)
+        newest_files = sorted_files[:num_files_to_read]
+
         data = []
         data_prev = []
         ID = 1
-        for scenario_files in file_list:
-            src_filepath = PACKAGEDIR / parameters.SCENARIOPATH.value / scenario_files
+        for scenario_files in newest_files:
+            src_filepath = scenario_path / scenario_files
             print(src_filepath)
-            scenario_name = scenario_files[scenario_files.rfind(parameters.seperator_scenario_name.value)+3
+            scenario_name = str(scenario_files)[str(scenario_files).rfind(parameters.seperator_scenario_name.value)+3
                                         :-4]
             try:
                 with gzip.open(src_filepath,'rb') as f:
