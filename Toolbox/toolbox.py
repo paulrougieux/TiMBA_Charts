@@ -1,11 +1,11 @@
 from Toolbox.classes.import_data import import_pkl_data
 from Toolbox.classes.dashboard import DashboardPlotter
 from pathlib import Path
-PACKAGEDIR = Path(__file__).resolve().parent.parent
+import Toolbox.parameters.paths as toolbox_paths
 
 class timba_dashboard:
-    def __init__(self,num_files_to_read:int=10,
-                 scenario_folder_path:Path=PACKAGEDIR / Path("Input\\Scenario_Files")):
+    def __init__(self,scenario_folder_path:Path,
+                 num_files_to_read:int=10):
         self.num_files_to_read = num_files_to_read
         self.scenario_folder_path = scenario_folder_path
 
@@ -25,6 +25,6 @@ class timba_dashboard:
 
 if __name__ == "__main__":
     td = timba_dashboard(num_files_to_read=4,
-                         scenario_folder_path = PACKAGEDIR / Path("Input\\Scenario_Files"))
+                         scenario_folder_path=toolbox_paths.SCINPUTPATH)
     td.run()
 

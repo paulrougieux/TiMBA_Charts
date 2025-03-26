@@ -6,28 +6,12 @@ import os
 from enum import Enum
 import pickle
 import gzip
-
-def package_directory():
-    PACKAGEDIR = Path(__file__).resolve().parent.parent
-    return PACKAGEDIR
-PACKAGEDIR = package_directory()
-
-class parameters(Enum):
-    SCINPUTPATH = Path("Input")
-    seperator_scenario_name = "Sc_"
-    column_name_scenario = "Scenario"
-    column_name_model = "Model"
-    column_name_id = "ID"
-    model_name = "TiMBA"
-    ADDINFOPATH = Path("Input\\Additional_Information")
-    COUNTRYINFO = "country_info.csv"
-    COMMODITYINFO = "commodity_info.csv"
-    FORESTINFO = "Forest_world500.csv"
-    HISTINFO = "FAO_Data.csv"
+import Toolbox.parameters.paths as toolbox_paths
+import Toolbox.parameters.default_parameters as toolbox_parameters
 
 class import_pkl_data:
     def __init__(self, num_files_to_read:int=10,
-                 SCENARIOPATH:Path= PACKAGEDIR / Path("Input\\Scenario_Files")):
+                 SCENARIOPATH:Path= toolbox_paths.SCINPUTPATH):
         self.num_files_to_read = num_files_to_read
         self.SCENARIOPATH = SCENARIOPATH
 
@@ -45,7 +29,7 @@ class import_pkl_data:
         """read data additional information for country data
         :return: country data
         """
-        country_data = pd.read_csv(PACKAGEDIR / parameters.ADDINFOPATH.value / parameters.COUNTRYINFO.value, encoding = "ISO-8859-1")
+        country_data = pd.read_csv(toolbox_paths.PACKAGEDIR / toolbox_paths.ADDINFOPATH / toolbox_paths.COUNTRYINFO, encoding = "ISO-8859-1")
         country_data = country_data[["Country-Code", "ContinentNew", "Country","ISO-Code"]]
         country_data.columns = ["RegionCode","Continent", "Country","ISO3"]
         country_data.Country = country_data.Country.astype("category")
@@ -57,7 +41,7 @@ class import_pkl_data:
         """read data additional information for commodity data
         :return: commodity data
         """
-        commodity_data = pd.read_csv(PACKAGEDIR / parameters.ADDINFOPATH.value / parameters.COMMODITYINFO.value , encoding = "ISO-8859-1")
+        commodity_data = pd.read_csv(toolbox_paths.PACKAGEDIR / toolbox_paths.ADDINFOPATH / toolbox_paths.COMMODITYINFO , encoding = "ISO-8859-1")
         commodity_data = commodity_data[["Commodity","CommodityCode","Commodity_Group"]]
         commodity_data.Commodity = commodity_data.Commodity.astype("category")
         commodity_data.CommodityCode = commodity_data.CommodityCode.astype("category")
@@ -65,7 +49,7 @@ class import_pkl_data:
         return commodity_data
     
     def read_historic_data(self):
-        data = pd.read_csv(PACKAGEDIR / parameters.ADDINFOPATH.value / parameters.HISTINFO.value)
+        data = pd.read_csv(toolbox_paths.PACKAGEDIR / toolbox_paths.ADDINFOPATH / toolbox_paths.HISTINFO)
         data = self.downcasting(data)
         return data
         
@@ -152,8 +136,8 @@ class import_pkl_data:
         data["data_periods"] = self.add_calculated_domains(data=data)
         try:
             for key in data: #loop through all data from datacontainer
-                data[key][parameters.column_name_scenario.value] = sc_name
-                data[key][parameters.column_name_model.value] = parameters.model_name.value
+                data[key][toolbox_parameters.column_name_scenario] = sc_name
+                data[key][toolbox_parameters.column_name_model] = toolbox_parameters.model_name
                 #data[key][parameters.column_name_id.value] = ID
                 if data_prev != []:
                     data[key] = pd.concat([data_prev[key], data[key]], axis=0)
@@ -164,7 +148,7 @@ class import_pkl_data:
         """loop trough all input files in input directory
         """
         scenario_path = self.SCENARIOPATH
-        num_files_to_read = 4
+        num_files_to_read = self.num_files_to_read
         pkl_files = [
             Path(scenario_path) / file
             for file in os.listdir(scenario_path)
@@ -179,7 +163,7 @@ class import_pkl_data:
         for scenario_files in newest_files:
             src_filepath = scenario_path / scenario_files
             print(src_filepath)
-            scenario_name = str(scenario_files)[str(scenario_files).rfind(parameters.seperator_scenario_name.value)+3
+            scenario_name = str(scenario_files)[str(scenario_files).rfind(toolbox_parameters.seperator_scenario_name)+3
                                         :-4]
             try:
                 with gzip.open(src_filepath,'rb') as f:
@@ -226,7 +210,7 @@ class import_pkl_data:
         return data_prev
 
     def read_forest_data_gfpm(self, country_data:pd.DataFrame):
-        for_data_gfpm = pd.read_csv(PACKAGEDIR / parameters.ADDINFOPATH.value / parameters.FORESTINFO.value, encoding = "ISO-8859-1")
+        for_data_gfpm = pd.read_csv(toolbox_paths.PACKAGEDIR / toolbox_paths.ADDINFOPATH / toolbox_paths.FORESTINFO, encoding = "ISO-8859-1")
         
         rearranged_for_data = pd.melt(for_data_gfpm, id_vars=['domain','Country'], var_name='Year',value_name='for')
         rearranged_for_data = rearranged_for_data.dropna()
@@ -247,7 +231,7 @@ class import_pkl_data:
         forest_data['Period'] = forest_data['Year'].map(period_mapping)
 
         forest_gfpm = forest_data[['RegionCode', 'Period', 'ForStock', 'ForArea']]
-        forest_gfpm[parameters.column_name_scenario.value]= 'world500'
+        forest_gfpm[toolbox_parameters.column_name_scenario]= 'world500'
         forest_data['Model'] = 'GFPM'
         return forest_gfpm
     
