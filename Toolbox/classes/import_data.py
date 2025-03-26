@@ -8,24 +8,27 @@ import pickle
 import gzip
 
 def package_directory():
-    PACKAGEDIR = Path(__file__).parent.parent.absolute()
+    PACKAGEDIR = Path(__file__).resolve().parent.parent
     return PACKAGEDIR
 PACKAGEDIR = package_directory()
 
 class parameters(Enum):
-    input_folder_sc = "\\Input"
-    input_folder = "\\Input"
+    SCINPUTPATH = Path("Input")
     seperator_scenario_name = "Sc_"
     column_name_scenario = "Scenario"
     column_name_model = "Model"
     column_name_id = "ID"
     model_name = "TiMBA"
-    csv_input = "Additional_Information\\FAO_Data.csv"
-    csv_input_forest = 'Input\\Additional_Information\\Forest_world500.csv'
+    ADDINFOPATH = Path("Input\\Additional_Information")
+    COUNTRYINFO = "country_info.csv"
+    COMMODITYINFO = "commodity_info.csv"
+    FORESTINFO = "Forest_world500.csv"
+    HISTINFO = "FAO_Data.csv"
+    SCENARIOPATH = Path("Input\\Scenario_Files")
 
 class import_pkl_data:
-    def __init__(self, inputfolder:str='\\Input'):
-        self.inputfolder = inputfolder
+    def __init__(self):
+        pass
 
     def open_pickle(self, src_filepath: str):
         """open pkl file
@@ -41,7 +44,7 @@ class import_pkl_data:
         """read data additional information for country data
         :return: country data
         """
-        country_data = pd.read_csv(str(PACKAGEDIR) + parameters.input_folder.value + "\\Additional_Information\\country_info.csv", encoding = "ISO-8859-1")
+        country_data = pd.read_csv(PACKAGEDIR / parameters.ADDINFOPATH.value / parameters.COUNTRYINFO.value, encoding = "ISO-8859-1")
         country_data = country_data[["Country-Code", "ContinentNew", "Country","ISO-Code"]]
         country_data.columns = ["RegionCode","Continent", "Country","ISO3"]
         country_data.Country = country_data.Country.astype("category")
@@ -53,12 +56,17 @@ class import_pkl_data:
         """read data additional information for commodity data
         :return: commodity data
         """
-        commodity_data = pd.read_csv(str(PACKAGEDIR) + parameters.input_folder.value + "\\Additional_Information\\commodity_info.csv", encoding = "ISO-8859-1")
+        commodity_data = pd.read_csv(PACKAGEDIR / parameters.ADDINFOPATH.value / parameters.COMMODITYINFO.value , encoding = "ISO-8859-1")
         commodity_data = commodity_data[["Commodity","CommodityCode","Commodity_Group"]]
         commodity_data.Commodity = commodity_data.Commodity.astype("category")
         commodity_data.CommodityCode = commodity_data.CommodityCode.astype("category")
         commodity_data.Commodity_Group = commodity_data.Commodity_Group.astype("category")
         return commodity_data
+    
+    def read_historic_data(self):
+        data = pd.read_csv(PACKAGEDIR / parameters.ADDINFOPATH.value / parameters.HISTINFO.value)
+        data = self.downcasting(data)
+        return data
         
     def downcasting(self, data: pd.DataFrame):
         data.RegionCode = data.RegionCode.astype("category")
@@ -154,17 +162,16 @@ class import_pkl_data:
     def combined_data(self):
         """loop trough all input files in input directory
         """
-        file_list = os.listdir(str(PACKAGEDIR) + self.inputfolder + "\\Scenario_Files")
+        file_list = os.listdir(PACKAGEDIR / parameters.SCENARIOPATH.value)
         data = []
         data_prev = []
         ID = 1
         for scenario_files in file_list:
-            src_filepath = str(PACKAGEDIR) + self.inputfolder + "\\Scenario_Files\\" + scenario_files
+            src_filepath = PACKAGEDIR / parameters.SCENARIOPATH.value / scenario_files
             print(src_filepath)
             scenario_name = scenario_files[scenario_files.rfind(parameters.seperator_scenario_name.value)+3
                                         :-4]
             try:
-                #data = self.open_pickle(src_filepath)
                 with gzip.open(src_filepath,'rb') as f:
                     if type(f) == gzip.GzipFile:
                         data = pickle.load(f)
@@ -184,8 +191,7 @@ class import_pkl_data:
         
         data_prev["data_periods"] = self.downcasting(data_prev["data_periods"])
         try:
-            data = pd.read_csv(str(PACKAGEDIR) + self.inputfolder + "\\" + parameters.csv_input.value)
-            data = self.downcasting(data)
+            data = self.read_historic_data()
         except FileNotFoundError:
             data = pd.DataFrame()
         country_data = self.read_country_data()
@@ -193,12 +199,10 @@ class import_pkl_data:
         forest_data = data_prev['Forest']
         forest_data = forest_data[['Scenario','RegionCode','Period','ForStock','ForArea']]
         forest_data = forest_data.drop_duplicates(subset=['Scenario', 'RegionCode', 'Period'], keep='first')
-        #self.read_forest_data_gfpm(country_data)
         data_prev["data_periods"] = pd.merge(data_prev["data_periods"], forest_data, how='left', on=['Scenario','RegionCode','Period'])
         data_prev["data_periods"] = pd.concat([data_prev["data_periods"], data], axis=0)
         data_prev["data_periods"] = pd.merge(data_prev["data_periods"], country_data, on="RegionCode", how="left")
         data_prev["data_periods"] = pd.merge(data_prev["data_periods"], commodity_data, on="CommodityCode", how="left")
-        #data_prev["data_periods"]["Domain"] = data_prev["data_periods"]["domain"]
         data_prev["data_periods"]["domain"] = data_prev["data_periods"]["domain"].replace({
             'ManufactureCost': 'Manufacturing',
             'TransportationExport': 'Export',
@@ -212,7 +216,7 @@ class import_pkl_data:
         return data_prev
 
     def read_forest_data_gfpm(self, country_data:pd.DataFrame):
-        for_data_gfpm = pd.read_csv(str(PACKAGEDIR) + '\\' + parameters.csv_input_forest.value, encoding = "ISO-8859-1")
+        for_data_gfpm = pd.read_csv(PACKAGEDIR / parameters.ADDINFOPATH.value / parameters.FORESTINFO.value, encoding = "ISO-8859-1")
         
         rearranged_for_data = pd.melt(for_data_gfpm, id_vars=['domain','Country'], var_name='Year',value_name='for')
         rearranged_for_data = rearranged_for_data.dropna()
