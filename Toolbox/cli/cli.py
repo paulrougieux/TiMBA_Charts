@@ -2,16 +2,20 @@ import click
 import warnings
 from Toolbox.toolbox import timba_dashboard
 import Toolbox.parameters.paths as toolbox_paths
+from pathlib import Path
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
 @click.command()
-# @click.option('-Y', '--year', default=default_year, 
-#               show_default=True, required=True, type=int, 
-#               help="Starting year.")
+@click.option('-NF', '--num_files', default=10, 
+              show_default=True, required=True, type=int, 
+              help="Specify the number of most recent .pkl files to read. Limits output to prevent overcrowding.")
+@click.option('-FP', '--sc_folderpath', default=toolbox_paths.SCINPUTPATH, 
+              show_default=True, required=True, type=Path, 
+              help="Define the folder where the code will look for .pkl files containing the scenarios.")
 
-def cli():    
-    td = timba_dashboard(num_files_to_read=4,
-                         scenario_folder_path=toolbox_paths.SCINPUTPATH)
+def cli(num_files,sc_folderpath):    
+    td = timba_dashboard(num_files_to_read=num_files,
+                         scenario_folder_path=sc_folderpath)
     td.run()
 
 if __name__ == '__main__':
