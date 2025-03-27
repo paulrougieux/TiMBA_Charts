@@ -35,3 +35,15 @@ you might need to update the pip version you use with:
 ## Start the dashbord
 After installing the package the user could simply start the dashboard board typing the following CLI command:
 > show_dashboard
+
+To show all possible options that could be changed with the CLI the user could type:
+> show_dashboard --help
+
+At the moment there are two options that coud be changed. The specification of the number of most recent .pkl files to read and 
+the definition of the folder path where the scenario results are stored.
+
+The first option, about the number of scenarios, can be changed by:
+> show_dashboard -NF=4
+
+To change the folder path the user can type, e.g.:
+> show_dashboard -FP='E:\P_TiMBA\TiMBA\data\output'
