@@ -1,9 +1,9 @@
 name: Multi-OS Python Tests
 on:
   push:
-    branches: [main]
+    branches: [main_dashboard_cm]
   pull_request:
-    branches: [main]
+    branches: [main_dashboard_cm]
   workflow_dispatch:
 
 jobs:
