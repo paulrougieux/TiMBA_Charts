@@ -206,7 +206,7 @@ class DashboardPlotter:
 
         # Quantity plot
         grouped_data_quantity = filtered_data.groupby(['year', 'Scenario']).sum().reset_index()
-        grouped_data_quantity = grouped_data_quantity[(grouped_data_quantity["year"] >= self.start) & (grouped_data_quantity["year"] < self.end)]
+        grouped_data_quantity = grouped_data_quantity[(grouped_data_quantity["year"] >= self.start) & (grouped_data_quantity["year"] <= self.end)]
         fig_quantity = go.Figure()
         for i, scenario in enumerate(grouped_data_quantity['Scenario'].unique()):
             subset = grouped_data_quantity[grouped_data_quantity['Scenario'] == scenario]
