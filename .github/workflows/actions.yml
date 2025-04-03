@@ -28,4 +28,4 @@ jobs:
           pip install .
 
       - name: Validate package
-        run: python -c "import your_package_name"
+        run: show_dashboard
