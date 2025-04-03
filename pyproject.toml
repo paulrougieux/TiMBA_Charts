@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "Analyses_Toolbox_TiMBA_workshop"  # Ersetzen Sie dies mit dem tatsächlichen Namen
 version = "0.1.0"  # Geben Sie eine gültige Version an (z.B. 0.1.0)
-requires-python = ">=3.12.6"
+requires-python = ">=3.6"
 license = "AGPL-3.0-or-later"
 classifiers = [
     "Programming Language :: Python :: 3",
