@@ -1,4 +1,4 @@
-name: Multi-OS Python Tests
+name: build
 on:
   push:
     branches: [main]
