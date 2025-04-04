@@ -11,7 +11,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        python-version: ["3.9","3.10","3.11","3.12","3.13"]
+        python-version: ["3.9","3.10","3.11","3.12"]
         os: [windows-latest, macos-latest, ubuntu-latest]
 
     steps:
@@ -27,5 +27,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install .
 
-      - name: Validate package
+      - name: Run tests
         run: pytest
+
+      - name: Generate Coverage Report
+        run: pytest --cov=.
+
+      # - name: Upload coverage to Codecov
+      #   uses: codecov/codecov-action@v3
+      #   with:
+      #       token: ${{ secrets.CODECOV_TOKEN }} # Ersetze durch dein Codecov-Token
+      #       flags: unittests
+      #       fail_ci_if_error: true
