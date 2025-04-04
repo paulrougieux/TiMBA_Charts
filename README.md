@@ -2,6 +2,8 @@
 
 # Analyses_Toolbox_TiMBA
 
+[![Build Status](https://github.com/TI-Forest-Sector-Modelling/Analyses_Toolbox_TiMBA_workshop/actions/workflows/actions.yml/badge.svg?branch=main_dashboard_cm)](https://github.com/TI-Forest-Sector-Modelling/Analyses_Toolbox_TiMBA_workshop/actions/workflows/actions.yml)
+
 This package can be used as a toolbox for analysing **TiMBA** results. TiMBA is a partial economic equilibrium model for the global forest products market. The toolbox generates a dashboard which let the user interact with some of the main TiMBA results, like development in prices, production, consumption, trade and forests. It also provides information about historic developments which are covered by the FAO.
 
 ## Install the Toolbox
