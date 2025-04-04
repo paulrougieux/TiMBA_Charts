@@ -48,3 +48,6 @@ venv.bak/
 
 # Jupyter Notebook
 .ipynb_checkpoints
+
+# Coverage data
+.coverage
