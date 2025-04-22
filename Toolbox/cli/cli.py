@@ -1,6 +1,6 @@
 import click
 import warnings
-from Toolbox.toolbox import timba_dashboard, bilateral_trade_dashboard
+from Toolbox.toolbox import timba_dashboard, bilateral_trade_dashboard,validation_dashboard
 import Toolbox.parameters.paths as toolbox_paths
 from pathlib import Path
 warnings.simplefilter(action='ignore', category=FutureWarning)
@@ -22,9 +22,20 @@ def dashboard_cli(num_files, sc_folderpath):
     td.run()
 
 #Validation Command
+@click.option('-NF', '--num_files', default=10, 
+              show_default=True, required=True, type=int, 
+              help="Number of .pkl files to read")
+@click.option('-FP', '--sc_folderpath', default=toolbox_paths.SCINPUTPATH, 
+              show_default=True, required=True, type=Path, 
+              help="Folder path for scenarios")
 @click.command()
-def validation_cli():    
+def validation_cli(num_files, sc_folderpath):    
     click.echo("Validation is started")
+    validb = validation_dashboard(
+        num_files_to_read=num_files,
+        scenario_folder_path=sc_folderpath
+    )
+    validb.run()
 
 #bilateral trade Command
 @click.option('-NF', '--num_files', default=10, 
