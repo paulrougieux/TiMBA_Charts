@@ -51,4 +51,7 @@ dependencies = [
 Repository = "https://github.com/TI-Forest-Sector-Modelling/Analyses_Toolbox_TiMBA_workshop"
 
 [project.scripts]
-show_dashboard = "Toolbox.cli.cli:cli"
+dashboard = "Toolbox.cli.cli:dashboard_cli"
+validation = "Toolbox.cli.cli:validation_cli"
+bilateral_trade = "Toolbox.cli.cli:bilateral_trade_cli"  
+scenario_comparision = "Toolbox.cli.cli:scenario_comparision_cli"
