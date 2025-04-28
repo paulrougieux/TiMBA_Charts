@@ -37,87 +37,181 @@ class BT_DashboardPlotter:
         self.create_callbacks()
 
     def create_layout(self):
-        dropdown_style = {'height': '30px','marginBottom': '10px'}
-        self.app.layout = dbc.Container([
-            dbc.Row([
-                dbc.Col(width=5),
-                dbc.Col(
-                    html.Img(src=self.app.get_asset_url('timba_dashboard_logo.png'), style={'height': '90px', 'width': 'auto'}),
-                    width=1
-                ),
-                dbc.Col()
-            ]),
-            dbc.Row([
-                dbc.Col([
-                    dbc.Card([
-                        dbc.CardBody([
-                            html.H4("Filters", className="card-title"),
-                            dcc.Dropdown(id='region-dropdown',
-                                         options=[{'label': i, 'value': i} for i in sorted(self.data['ISO3'].dropna().unique())],
-                                         multi=True,
-                                         placeholder="Select Country...",
-                                         style=dropdown_style),
-                            dcc.Dropdown(id='continent-dropdown',
-                                         options=[{'label': i, 'value': i} for i in sorted(self.data['Continent'].dropna().unique())],
-                                         placeholder="Select Continent...",
-                                         multi=True,
-                                         style=dropdown_style),
-                            dcc.Dropdown(id='domain-dropdown',
-                                         options=[{'label': i, 'value': i} for i in sorted(self.data['domain'].dropna().unique())],
-                                         placeholder="Select Domain...",
-                                         multi=True,
-                                         style=dropdown_style),
-                            dcc.Dropdown(id='commodity-dropdown',
-                                         options=[{'label': i, 'value': i} for i in sorted(self.data['Commodity'].dropna().unique())],
-                                         placeholder="Select Commodity...",
-                                         multi=True,
-                                         style=dropdown_style),
-                            dcc.Dropdown(id='commodity-group-dropdown',
-                                         options=[{'label': i, 'value': i} for i in self.data['Commodity_Group'].dropna().unique().tolist()],
-                                         placeholder="Select Commodity Group...",
-                                         multi=True,
-                                         style=dropdown_style),
-                            dcc.Dropdown(id='scenario-filter',
-                                         options=[{'label': i, 'value': i} for i in self.data['Scenario'].unique()],
-                                         placeholder="Select Scenario...",
-                                         multi=True,
-                                         style=dropdown_style),
-                            html.Button("Download CSV", id="btn_csv"),
-                            dcc.Download(id="download-dataframe-csv"),
-                        ])
-                    ], className="mb-4", style={'white': 'white'}),
-                    dbc.Card([
-                        dbc.CardBody([
-                                dcc.Graph(style={'height': '45vh','width':'46vh'})
-                    ])
-                ], style={'white': 'white'})  #price box
-            ], width=3),
-            dbc.Col([
+        dropdown_style = {
+            'height': '30px',
+            'marginRight': '10px',
+            'flex': '1 1 200px',
+            'minWidth': '200px'
+        }
+
+        self.app.layout = dbc.Container(
+            fluid=True,
+            style={'backgroundColor': 'white', 'padding': '15px'},
+            children=[
+                # 1. Filterzeile (volle Breite oben)
                 dbc.Row([
                     dbc.Col([
-                        dbc.Card([
-                            dbc.CardBody([
-                                dcc.Graph(style={'height': '84.5vh'})
+                        dbc.Card(
+                            className="border-0 shadow-sm",
+                            style={'backgroundColor': '#f8f9fa'},
+                            children=[
+                                dbc.CardBody(
+                                    style={'padding': '15px'},
+                                    children=[
+                                        html.Div(
+                                            style={
+                                                'display': 'flex',
+                                                'flexWrap': 'wrap',
+                                                'gap': '10px',
+                                                'alignItems': 'center'
+                                            },
+                                            children=[
+                                                # Logo
+                                                html.Img(
+                                                    src=self.app.get_asset_url('timba_trade_dashboard_logo.png'),
+                                                    style={'height': '50px', 'marginRight': '20px'}
+                                                ),
+                                                
+                                                # Filter-Dropdowns
+                                dcc.Dropdown(id='region-dropdown',
+                                             options=[{'label': i, 'value': i}
+                                                      for i in sorted(self.data['ISO3'].dropna().unique())],
+                                             multi=True,
+                                             placeholder="Select Country...",
+                                             style=dropdown_style),
+                                dcc.Dropdown(id='continent-dropdown',
+                                             options=[{'label': i, 'value': i}
+                                                      for i in sorted(self.data['Continent'].dropna().unique())],
+                                             placeholder="Select Continent...",
+                                             multi=True,
+                                             style=dropdown_style),
+                                dcc.Dropdown(id='domain-dropdown',
+                                             options=[{'label': i, 'value': i}
+                                                      for i in sorted(self.data['domain'].dropna().unique())],
+                                             placeholder="Select Domain...",
+                                             multi=True,
+                                             style=dropdown_style),
+                                dcc.Dropdown(id='commodity-dropdown',
+                                             options=[{'label': i, 'value': i}
+                                                      for i in sorted(self.data['Commodity'].dropna().unique())],
+                                             placeholder="Select Commodity...",
+                                             multi=True,
+                                             style=dropdown_style),
+                                dcc.Dropdown(id='commodity-group-dropdown',
+                                             options=[{'label': i, 'value': i} for i in
+                                                      self.data['Commodity_Group'].dropna().unique().tolist()],
+                                             placeholder="Select Commodity Group...",
+                                             multi=True,
+                                             style=dropdown_style),
+                                dcc.Dropdown(id='scenario-filter',
+                                             options=[{'label': i, 'value': i} for i in self.data['Scenario'].unique()],
+                                             placeholder="Select Scenario...",
+                                             multi=True,
+                                             style=dropdown_style),
+                                                
+                                                # Download-Button
+                                                html.Button(
+                                                    "⬇️ CSV Export",
+                                                    id="btn_csv",
+                                                    style={
+                                                        'height': '30px',
+                                                        'marginLeft': 'auto',
+                                                        'padding': '0 15px',
+                                                        'borderRadius': '4px',
+                                                        'border': '1px solid #ddd',
+                                                        'whiteSpace': 'nowrap'
+                                                    }
+                                                )
+                                            ]
+                                        )
+                                    ]
+                                )
+                            ]
+                        )
+                    ])
+                ], className="mb-4"),  # Abstand nach unten
+
+                # 2. Hauptinhalt (4 Boxen)
+                dbc.Row(
+                    className="g-3",
+                    children=[
+                        # Erste Zeile
+                        dbc.Row([
+                            dbc.Col(md=6, children=[
+                                dbc.Card(
+                                    className="h-100 shadow-sm",
+                                    children=[
+                                        dbc.CardBody(
+                                            style={'padding': '15px'},
+                                            children=[
+                                                dcc.Graph(
+                                                    id='graph-1',
+                                                    style={'height': '35vh'}
+                                                )
+                                            ]
+                                        )
+                                    ]
+                                )
+                            ]),
+                            dbc.Col(md=6, children=[
+                                dbc.Card(
+                                    className="h-100 shadow-sm",
+                                    children=[
+                                        dbc.CardBody(
+                                            style={'padding': '15px'},
+                                            children=[
+                                                dcc.Graph(
+                                                    id='graph-2',
+                                                    style={'height': '35vh'}
+                                                )
+                                            ]
+                                        )
+                                    ]
+                                )
                             ])
-                        ], style={'backgroundColor': 'white'}) 
-                    ], width=8),
-                    dbc.Col([
-                        dbc.Card([
-                            dbc.CardBody([
-                                dcc.Graph(style={'height': '39vh'})
+                        ]),
+                        
+                        # Zweite Zeile
+                        dbc.Row([
+                            dbc.Col(md=6, children=[
+                                dbc.Card(
+                                    className="h-100 shadow-sm",
+                                    children=[
+                                        dbc.CardBody(
+                                            style={'padding': '15px'},
+                                            children=[
+                                                dcc.Graph(
+                                                    id='graph-3',
+                                                    style={'height': '35vh'}
+                                                )
+                                            ]
+                                        )
+                                    ]
+                                )
+                            ]),
+                            dbc.Col(md=6, children=[
+                                dbc.Card(
+                                    className="h-100 shadow-sm",
+                                    children=[
+                                        dbc.CardBody(
+                                            style={'padding': '15px'},
+                                            children=[
+                                                dcc.Graph(
+                                                    id='graph-4',
+                                                    style={'height': '35vh'}
+                                                )
+                                            ]
+                                        )
+                                    ]
+                                )
                             ])
-                        ], style={'backgroundColor': 'white', 'marginBottom': '20px'}), # Abstand hinzugefügt
-                        dbc.Card([
-                            dbc.CardBody([
-                                dcc.Dropdown(),
-                                 dcc.Graph(style={'height': '31.75vh'})
-                            ])
-                        ], style={'backgroundColor': 'white'})
-                    ], width=4),
-                ]),
-            ], width=9)
-        ])
-    ], fluid=True, style={'backgroundColor': 'white'}) #gesamthintergrund
+                        ])
+                    ]
+                )
+            ]
+        )
+
+
 
     def create_callbacks(self):
         @self.app.callback(

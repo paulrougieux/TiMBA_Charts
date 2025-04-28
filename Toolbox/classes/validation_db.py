@@ -60,7 +60,7 @@ class Vali_DashboardPlotter:
                             }, children=[
                                 # Logo links
                                 html.Img(
-                                    src=self.app.get_asset_url('timba_dashboard_logo.png'),
+                                    src=self.app.get_asset_url('timba_validation_logo.png'),
                                     style={'height': '50px', 'marginRight': '20px'}
                                 ),
 
