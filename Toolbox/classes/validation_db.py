@@ -33,7 +33,7 @@ class Vali_DashboardPlotter:
             '#F1C40F',  # Senfgelb
             '#E67E22',  # Orange  ...         
             ]
-        self.logo = PACKAGEDIR / 'timba_dashboard_logo.png'
+        self.logo = PACKAGEDIR / 'timba_validation_logo.png'
         self.create_layout()
         self.create_callbacks()
 
