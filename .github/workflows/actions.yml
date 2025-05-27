@@ -27,15 +27,20 @@ jobs:
           python -m pip install --upgrade pip
           pip install .
 
-      - name: Run tests
-        run: pytest
+      - name: Run tests and generate coverage
+        run: pytest --cov=. --cov-report=xml
 
-      - name: Generate Coverage Report
-        run: pytest --cov=.
+      #- name: Override Coverage Source Path for SonarCloud
+      #  run: sed -i 's@'$GITHUB_WORKSPACE'@/github/workspace/@g' coverage.xml
 
-      # - name: Upload coverage to Codecov
-      #   uses: codecov/codecov-action@v3
-      #   with:
-      #       token: ${{ secrets.CODECOV_TOKEN }} # Ersetze durch dein Codecov-Token
-      #       flags: unittests
-      #       fail_ci_if_error: true
+      - name: SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@v2
+        with:
+          args: >
+            -Dsonar.organization=ti-forest-sector-modelling
+            -Dsonar.projectKey=TI-Forest-Sector-Modelling_TiMBA
+            -Dsonar.projectName=TiMBA
+            -Dsonar.projectVersion=1.0.3
+            -Dsonar.python.coverage.reportPaths=coverage.xml
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

@@ -1,6 +1,6 @@
-![TiMBA Logo](/Toolbox/classes/assets/timba_toolbox_logo.png)  
+![TiMBA Logo](https://raw.githubusercontent.com/TI-Forest-Sector-Modelling/TiMBA/main/timba_logo_v3.png)
 
-# Analyses_Toolbox_TiMBA
+# TiMBA ToolBox
 
 [![Build Status](https://github.com/TI-Forest-Sector-Modelling/Analyses_Toolbox_TiMBA_workshop/actions/workflows/actions.yml/badge.svg)](https://github.com/TI-Forest-Sector-Modelling/Analyses_Toolbox_TiMBA_workshop/actions/workflows/actions.yml)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)

@@ -5,15 +5,18 @@ import Toolbox.parameters.paths as toolbox_paths
 
 class timba_dashboard:
     def __init__(self,scenario_folder_path:Path,
+                 additional_info_folderpath:Path,
                  num_files_to_read:int=10):
         self.num_files_to_read = num_files_to_read
         self.scenario_folder_path = scenario_folder_path
+        self.additional_info_folderpath = additional_info_folderpath
 
     def import_data(self):
         import warnings
         warnings.simplefilter(action='ignore', category=FutureWarning)
         import_pkl = import_pkl_data(num_files_to_read=self.num_files_to_read,
-                                     SCENARIOPATH=self.scenario_folder_path)
+                                     SCENARIOPATH=self.scenario_folder_path,
+                                     ADDINFOPATH=self.additional_info_folderpath)
         self.data = import_pkl.combined_data()
 
     def call_dashboard(self):
