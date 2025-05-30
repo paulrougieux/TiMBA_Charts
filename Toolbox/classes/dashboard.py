@@ -32,7 +32,6 @@ class DashboardPlotter:
             '#F1C40F',  # Senfgelb
             '#E67E22',  # Orange  
         ]
-        self.logo = PACKAGEDIR/'timba_dashboard_logo.png'#'timba_logo_v3.png' 
         self.create_layout()
         self.create_callbacks()
 
@@ -42,7 +41,8 @@ class DashboardPlotter:
             dbc.Row([
                 dbc.Col(width=5),  # Leere Spalte für den linken Rand
                 dbc.Col(
-                    html.Img(src=self.app.get_asset_url('timba_dashboard_logo.png'), style={'height': '90px', 'width': 'auto'}),
+                    html.Img(src="https://raw.githubusercontent.com/TI-Forest-Sector-Modelling/TiMBA/ToolBox_implementation_cm/images/timba_dashboard_logo.png",
+                             style={'height': '90px', 'width': 'auto'}),
                     width=1
                 ),
                 dbc.Col(
