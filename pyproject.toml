@@ -3,10 +3,10 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "TiMBA-ToolBox"
-version = "0.2.3"
+name = "TiMBAToolBox"
+version = "0.1.0"
 description = """
-This package is a toolbox for analysing results from the TiMBA model.
+A toolbox for analysing results from the TiMBA model.
 """
 readme = "README.md"
 requires-python = ">=3.9"
