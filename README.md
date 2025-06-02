@@ -9,6 +9,9 @@ This package can be used as a toolbox for analysing **TiMBA** results after simu
 
 In principle, the toolbox can be easily adapted and used for the analysis of any data sets as long as the data resembles the format of the TiMBA output. 
 
+## Cite the Toolbox
+xxx -> Todo Morland, C. et al. (2025) TiMBA_Toolbox (Toolbox for analysis of Timber market Model for policy-Based Analysis)
+
 ## Install the Toolbox
 
 The package is developed and tested with Python 3.12.6 on Windows. Please ensure that Python is installed on your system. It can be downloaded and installed
@@ -52,3 +55,26 @@ The first option, about the number of scenarios, can be changed by:
 
 To change the folder path the user can type, e.g.:
 > show_dashboard -FP='E:\P_TiMBA\TiMBA\data\output'
+
+## Description of the figures
+The interactive dashboard provides a flexible interface for exploring model outputs across multiple dimensions. Users can apply filters by region (country or continent), scenario, domain (e.g. Demand, Supply, Trade, Net Trade, and Manufacturing), commodity (ranging from 16 to 20, depending on the input scenario), and commodity group via a control panel. Please note that certain filter combinations are interdependent and may not return any results. For instance, selecting Roundwood under demand domain will yield no output, as roundwood is a primary good for which only supply is modeled. Likewise, applying both the commodity and commodity group filters simultaneously will not narrow the selection further, as these categories are not hierarchically structured.
+Based on the selected inputs, four visualizations are updated dynamically to support intuitive analysis and comparison of model results:  
+
+The central time series plot displays the development of selected quantities over time. Historical data are represented by solid lines, while scenario-based projections appear as dashed lines. This visualization facilitates an understanding of long-term trends and the dynamics of different scenarios across commodities or commodity groups.  
+
+The bar chart in the bottom left presents world market  prices by year and scenario. It offers a concise overview of price developments across time periods and enables straightforward temporal comparisons.  
+
+The top-right chart depicts changes in forest stock over time and across scenarios. Each bar represents a specific year or period, illustrating how stock levels evolve under different assumptions.  
+
+The world map in the bottom right provides a spatial representation of the selected indicator for a given year. Countries are color-coded using a gradient scale (with deeper green indicating higher values). Users can explore different domain –product combinations, such as the product Roundwood and the domain Supply, which reveal which countries exhibit the highest levels of roundwood production. This logic applies to any domain –product selection. A specific year can also be chosen within the map filter to examine spatial patterns in more detail. 
+Users have the option to export the filtered dataset as a CSV file for further analysis or documentation.  
+
+## Authors and Contribution 
+xxx-> Todo
+
+## License and copyright note
+
+
+![image](https://github.com/user-attachments/assets/18bfa886-1e28-4fea-9d59-9602797bae04)
+
+
