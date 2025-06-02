@@ -5,6 +5,10 @@ import Toolbox.parameters.paths as toolbox_paths
 from pathlib import Path
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
+@click.group()
+def cli():
+    pass
+
 #Dashboard Command
 @click.command()
 @click.option('-NF', '--num_files', default=10, 
