@@ -1,41 +1,39 @@
 ![TiMBA Logo](https://raw.githubusercontent.com/TI-Forest-Sector-Modelling/TiMBA/ToolBox_implementation_cm/images/timba_toolbox_logo.png)
 
-# TiMBA-ToolBox
+# TiMBA Charts
 
-[![Build Status](https://github.com/TI-Forest-Sector-Modelling/Analyses_Toolbox_TiMBA_workshop/actions/workflows/actions.yml/badge.svg)](https://github.com/TI-Forest-Sector-Modelling/Analyses_Toolbox_TiMBA_workshop/actions/workflows/actions.yml)
+[![Build Status](https://github.com/TI-Forest-Sector-Modelling/TiMBA_Charts/actions/workflows/actions.yml/badge.svg)](https://github.com/TI-Forest-Sector-Modelling/TiMBA_Charts/actions/workflows/actions.yml)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 
-This package can be used as a toolbox for analysing **TiMBA** results after simulation. TiMBA is a partial economic equilibrium model for the global forest product market. The toolbox provides a dashboard which let the user interact with the main TiMBA results. This includes the development of prices, production, consumption, and trade of forest products as well as forest stock development. It also gives information about historic developments as reported by the FAOSTAT.
+This package can be used as a toolkit for analysing **TiMBA** results after simulation. TiMBA is a partial economic equilibrium model for the global forest product market. The package provides a dashboard which let the user interact with the main TiMBA results. This includes the development of prices, production, consumption, and trade of forest products as well as forest stock development. It also gives information about historic developments as reported by the FAOSTAT. In principle, this toolkit can be easily adapted and used for the analysis of any forest sector model as long as the data resembles the format of the TiMBA output. 
 
-In principle, the toolbox can be easily adapted and used for the analysis of any data sets as long as the data resembles the format of the TiMBA output. 
+## Cite the package
+We are happy that you consider to use TiMBA Charts for your research. When publishing your work in articles, working paper, presentations or elsewhere, please cite the package as:
 
-## Cite the Toolbox
-We are happy that you use TiMBA for your research. When publishing your work in articles, working paper, presentations or elsewhere, please cite the model as:
+Morland, C., Tandetzki, J., Honkomp, T. (2025) TiMBA Charts v.0.1.0
 
-Morland, C., Tandetzki, J., Honkomp, T. (2025) TiMBA_Toolbox (Toolbox for analysis of Timber market Model for policy-Based Analysis)
-
-## Install the Toolbox
+## Install TiMBA Charts
 
 The package is developed and tested with Python 3.12.6 on Windows. Please ensure that Python is installed on your system. It can be downloaded and installed
 from [Python.org](https://www.python.org/downloads/release/python-3126/).
 
 1. Clone the repository
 Begin by cloning the repository to your local machine using the following command: 
-    >git clone https://github.com/TI-Forest-Sector-Modelling/Analyses_Toolbox_TiMBA_workshop
+    >git clone https://github.com/TI-Forest-Sector-Modelling/TiMBA_Charts
    > 
-2. Switch to the TiMBA directory  
-Navigate into the TiMBA project folder on your local machine.
-   >cd Toolbox
+2. Switch to the TiMBA Charts directory  
+Navigate into the project folder on your local machine.
+   >cd TiMBA_Charts
    >
 3. Create a virtual environment  
-It is recommended to set up a virtual environment for TiMBA to manage dependencies. If you are using only a single version of Python on your computer:
+It is recommended to set up a virtual environment for TiMBA Charts to manage dependencies. If you are using only a single version of Python on your computer:
    >python -m venv .venv
    >
 1. Activate the virtual environment  
-Enable the virtual environment to isolate TiMBA dependencies. 
+Enable the virtual environment to isolate TiMBA Charts dependencies. 
    >.venv\Scripts\activate
    >
-1. Install TiMBA in the editable mode  
+1. Install TiMBA Charts in the editable mode  
    >pip install -e .
 
 If the following error occurs: "ERROR: File "setup.py" or "setup.cfg" not found."
@@ -97,7 +95,5 @@ Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public
 License along with this program.  If not, see
 <https://www.gnu.org/licenses/>.
-
-![image](https://github.com/user-attachments/assets/18bfa886-1e28-4fea-9d59-9602797bae04)
 
 

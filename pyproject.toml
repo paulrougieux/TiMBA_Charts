@@ -3,10 +3,10 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "TiMBAToolBox"
-version = "0.1.0"
+name = "TiMBA_Charts"
+version = "v0.1.0"
 description = """
-A toolbox for analysing results from the TiMBA model.
+A toolbox for analysing forest sector model results.
 """
 readme = "README.md"
 requires-python = ">=3.9"
@@ -52,7 +52,7 @@ dependencies = [
 ]
 
 [project.urls]
-Repository = "https://github.com/TI-Forest-Sector-Modelling/Analyses_Toolbox_TiMBA_workshop"
+Repository = "https://github.com/TI-Forest-Sector-Modelling/TiMBA_Charts"
 
 [project.scripts]
 show_dashboard = "Toolbox.cli.cli:cli"

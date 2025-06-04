@@ -2,7 +2,7 @@
 # Visit https://bit.ly/cffinit to generate yours today!
 
 cff-version: 1.2.0
-title: Analysis Toolbox for TiMBA 
+title: TiMBA Charts
 type: software
 authors:
   - given-names: Christian
@@ -26,11 +26,12 @@ identifiers:
     description: ''
 repository-code: ''
 abstract: |-
-  This package can be used as a toolbox for analysing TiMBA results. TiMBA is a partial economic 
-  equilibrium model for the global forest products market. The toolbox generates a dashboard 
-  which let the user interact with some of the main TiMBA results, like development in prices, 
-  production, consumption, trade and forests. It also provides information about historic developments 
-  which are covered by the FAO.
+  This package can be used as a toolkit for analysing TiMBA results after simulation.
+  The package provides a dashboard which let the user interact with the main TiMBA results. 
+  This includes the development of prices, production, consumption, and trade of forest products 
+  as well as forest stock development. It also gives information about historic developments as 
+  reported by the FAOSTAT. In principle, the toolkit can be easily adapted and used for the 
+  analysis of any forest sector model as long as the data resembles the format of the TiMBA output. 
 keywords:
   - research
   - Forest sector model
