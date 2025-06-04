@@ -1,4 +1,4 @@
-![TiMBA Logo](https://raw.githubusercontent.com/TI-Forest-Sector-Modelling/TiMBA_Charts/blob/main/Toolbox/classes/assets/timba_charts_logo.png)
+![TiMBA Logo](https://raw.githubusercontent.com/TI-Forest-Sector-Modelling/TiMBA_Charts/main/Toolbox/classes/assets/timba_charts_logo.png)
 
 # TiMBA Charts
 
