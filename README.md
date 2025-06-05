@@ -5,7 +5,7 @@
 [![Build Status](https://github.com/TI-Forest-Sector-Modelling/TiMBA_Charts/actions/workflows/actions.yml/badge.svg)](https://github.com/TI-Forest-Sector-Modelling/TiMBA_Charts/actions/workflows/actions.yml)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 
-This package can be used as a toolkit for analysing **TiMBA** results after simulation. TiMBA is a partial economic equilibrium model for the global forest product market. The package provides a dashboard which let the user interact with the main TiMBA results. This includes the development of prices, production, consumption, and trade of forest products as well as forest stock development. It also gives information about historic developments as reported by the FAOSTAT. In principle, this toolkit can be easily adapted and used for the analysis of any forest sector model as long as the data resembles the format of the TiMBA output. 
+This package serves as a toolkit for analysing **TiMBA's** simulation results. TiMBA is a partial economic equilibrium model for the global forest product market. The package provides a dashboard allowing the user to explore TiMBA’s main results. This includes the development of prices, production, consumption, and trade of forest products as well as forest stock development. It further provides information about historic developments as reported by the FAOSTAT. In principle, this toolkit can be easily adapted and used for the analysis of any forest sector model as long as the data resembles the format of the TiMBA output. 
 
 ## Cite the package
 We are happy that you consider to use TiMBA Charts for your research. When publishing your work in articles, working paper, presentations or elsewhere, please cite the package as:
@@ -41,16 +41,16 @@ you might need to update the pip version you use with:
 >python.exe -m pip install --upgrade pip
 
 ## Start the dashbord
-After installing the package the user could simply start the dashboard board typing the following CLI command:
+After installing the package, the user can start the dashboard board with the following CLI command:
 > show_dashboard
 
-To show all possible options that could be changed with the CLI the user could type:
+Following CLI command can be used to show all changeable options with the CLI:
 > show_dashboard --help
 
-At the moment there are two options that coud be changed. The specification of the number of most recent .pkl files to read and 
+At the moment, two options can be changed. The specification of the number of most recent .pkl files to read and 
 the definition of the folder path where the scenario results are stored.
 
-The first option, about the number of scenarios, can be changed by:
+The number of scenarios can be changed as follows:
 > show_dashboard -NF=4
 
 To change the folder path the user can type, e.g.:
@@ -65,13 +65,13 @@ Based on the selected inputs, four visualizations are updated dynamically to sup
 
 1. The central time series plot displays the development of selected quantities over time. Historical data are represented by solid lines, while scenario-based projections appear as dashed lines. This visualization facilitates an understanding of long-term trends and the dynamics of different scenarios across commodities or commodity groups.  
 
-2. The bar chart in the bottom left presents world market  prices by year and scenario. It offers a concise overview of price developments across time periods and enables straightforward temporal comparisons.  
+2. The bar chart in the bottom left presents world market prices by year and scenario. It offers a concise overview of price developments across time periods and enables straightforward temporal comparisons.  
 
 3. The top-right chart depicts changes in forest stock over time and across scenarios. Each bar represents a specific year or period, illustrating how stock levels evolve under different assumptions.  
 
-4. The world map in the bottom right provides a spatial representation of the selected indicator for a given year. Countries are color-coded using a gradient scale (with deeper green indicating higher values). Users can explore different domain –product combinations, such as the product Roundwood and the domain Supply, which reveal which countries exhibit the highest levels of roundwood production. This logic applies to any domain –product selection. A specific year can also be chosen within the map filter to examine spatial patterns in more detail. Please note that this map will always show an aggregate over all scenarios. If the user wanted to show only historical data or a specific scenario this can be chosen by the scenario filter.
+4. The world map in the bottom right provides a spatial representation of the selected indicator for a given year. Countries are color-coded using a gradient scale (with deeper green indicating higher values). Users can explore different domain–product combinations, such as the product Roundwood and the domain Supply, which reveal which countries exhibit the highest levels of roundwood production. This logic applies to any domain–product selection. A specific year can also be chosen within the map filter to examine spatial patterns in more detail. Please note that this map will always show an aggregate over all scenarios. If the user wanted to show only historical data or a specific scenario this can be chosen by the scenario filter.
    
-For any combination of filters users will have the option to export the filtered dataset as a CSV file or the different graphs as png files for further analysis or documentation.  
+For any combination of filters users will have the option to export the filtered dataset as a csv file or the different graphs as png files for further analysis or documentation.  
 
 ## Authors
 - [Christian Morland](https://www.thuenen.de/de/fachinstitute/waldwirtschaft/personal/wissenschaftliches-personal/ehemalige-liste/christian-morland-msc) [(ORCID 0000-0001-6600-570X)](https://orcid.org/0000-0001-6600-570X), 
