@@ -30,6 +30,12 @@ jobs:
       - name: Run tests and generate coverage
         run: pytest --cov=. --cov-report=xml
 
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage.xml
+
+
       #- name: Override Coverage Source Path for SonarCloud
       #  run: sed -i 's@'$GITHUB_WORKSPACE'@/github/workspace/@g' coverage.xml
 
