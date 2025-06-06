@@ -25,7 +25,7 @@ class sc_plot():
         plt.ylabel('Quantity')
         plt.legend()
         plt.grid(True)
-        plt.show()
+        #plt.show()
     
 class PlotDropDown:
     def __init__(self,data,unique_color:bool = False,color:str="darkblue",legend:bool=True,
@@ -112,7 +112,7 @@ class PlotDropDown:
         if self.legend:
             plt.legend()
         plt.grid(True)
-        plt.show() 
+        #plt.show() 
 
 class HeatmapDropDown:
     def __init__(self, data): 
@@ -266,7 +266,7 @@ class InteractivePrice:
             plt.xlabel('Period')
             plt.ylabel('Price')
             plt.grid(True)
-            plt.show()
+            #plt.show()
 
         with self.output_table:
             clear_output(wait=True)
@@ -365,7 +365,7 @@ class interactiveModelComparison():
             plt.ylabel(f'{parameter}')
             #plt.legend()
             plt.grid(True)
-            plt.show()
+            #plt.show()
 
         with self.output_table:
             clear_output(wait=True)
