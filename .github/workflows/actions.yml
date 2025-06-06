@@ -28,7 +28,7 @@ jobs:
           pip install .
 
       - name: Run tests and generate coverage
-        run: pytest --cov=. --cov-report=xml:coverage.xml
+        run: pytest --cov --cov-branch --cov-report=xml
       
       # - name: List files
       #   run: ls -la
