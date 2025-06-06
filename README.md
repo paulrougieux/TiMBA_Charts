@@ -3,6 +3,7 @@
 # TiMBA Charts
 
 [![Build Status](https://github.com/TI-Forest-Sector-Modelling/TiMBA_Charts/actions/workflows/actions.yml/badge.svg)](https://github.com/TI-Forest-Sector-Modelling/TiMBA_Charts/actions/workflows/actions.yml)
+[![codecov](https://codecov.io/gh/TI-Forest-Sector-Modelling/TiMBA_Charts/graph/badge.svg?token=S4TDJI4CC3)](https://codecov.io/gh/TI-Forest-Sector-Modelling/TiMBA_Charts)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 
 This package serves as a toolkit for analysing **TiMBA's** simulation results. TiMBA is a partial economic equilibrium model for the global forest product market. The package provides a dashboard allowing the user to explore TiMBA’s main results. This includes the development of prices, production, consumption, and trade of forest products as well as forest stock development. It further provides information about historic developments as reported by the FAOSTAT. In principle, this toolkit can be easily adapted and used for the analysis of any forest sector model as long as the data resembles the format of the TiMBA output. 
