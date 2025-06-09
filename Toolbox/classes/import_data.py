@@ -234,7 +234,82 @@ class import_pkl_data:
         forest_gfpm[toolbox_parameters.column_name_scenario]= 'world500'
         forest_data['Model'] = 'GFPM'
         return forest_gfpm
-    
+
+
+class import_formip_data:
+    def __init__(self,
+                 FORMIPPATH:Path= toolbox_paths.FORMIPPATH,
+                 timba_data:pd.DataFrame=pd.DataFrame()):
+        self.FORMIPPATH = FORMIPPATH
+        self.formip_data = self.read_formip_data()
+        self.timba_data = timba_data
+
+    def read_formip_data(self):
+        """
+        Reads in data from the Forest sector model intercomparison (ForMIP) project (Daigneault et al. 2022)
+        :return: ForMIP data
+        """
+        formip_data = pd.read_csv(self.FORMIPPATH)
+        return formip_data
+
+    def process_formip_data(self):
+        """
+        Processes ForMIP data for further visualization. Data for missing years are linearly interpolated.
+        :return: Processed FORMIP data
+        """
+        formip_data = self.formip_data
+        formip_data_info = formip_data.iloc[:, :6].copy()
+        formip_data = formip_data.iloc[:, 6:].copy()
+        year_list = formip_data.columns.tolist()
+
+        year_runner = 0
+        for year_next in year_list[1:]:
+            year_prev = year_list[year_runner]
+
+            data_next = formip_data[year_next]
+            data_prev = formip_data[year_prev]
+            data_diff = (data_next - data_prev) / (int(year_next) - int(year_prev))
+
+            year_to_fill = range(int(year_prev) + 1, int(year_next))
+
+            for year in year_to_fill:
+                formip_data[str(year)] = formip_data[str(year - 1)] + data_diff
+
+            year_runner += 1
+
+        formip_data_new = pd.DataFrame()
+        for year in formip_data.columns:
+            formip_data_tmp = formip_data[year]
+            formip_data_info_tmp = formip_data_info.copy()
+            formip_data_info_tmp["Year"] = int(year)
+            formip_data_info_tmp["Data"] = formip_data_tmp
+            formip_data_new = pd.concat([formip_data_new, formip_data_info_tmp], axis=0).reset_index(drop=True)
+
+        formip_data_new = formip_data_new.sort_values(by=["Model", "RCP-SSP", "Region", "Year"],
+                                                      ascending=True).reset_index(drop=True)
+
+        return formip_data_new
+
+    def process_timba_data(self):
+        """
+        Processes TiMBA scenario results to match ForMIP data structure.
+        :return:
+        """
+        pass
+
+    def align_formip_data(self):
+        """
+        Extracts, aligns, and merges TiMBA scenario results and FORMIP data.
+        :return: Merged TiMBA and FORMIP data
+        """
+        pass
+
+    def load_formip_data(self):
+        self.formip_data = self.process_formip_data()
+        self.timba_data = self.process_timba_data()
+        self.formip_data = self.align_formip_data()
+        return self.formip_data
+
 if __name__ == "__main__":
     import_pkl = import_pkl_data()
     data = import_pkl.combined_data()
