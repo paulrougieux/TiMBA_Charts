@@ -15,11 +15,6 @@ authors:
     email: julia.tandetzki@ec.europa.eu
     affiliation: European Commission - Joint Research Centre
     orcid: 'https://orcid.org/0000-0002-0630-9434'
-  - given-names: Tomke
-    family-names: Honkomp
-    email: tomke.honkomp@thuenen.de
-    affiliation: Thünen Institue of Forestry
-    orcid: 'https://orcid.org/0000-0002-6719-0190'
 identifiers:
   - type: doi
     value: ''
@@ -39,5 +34,5 @@ keywords:
   - optimization
   - wood markets
 license: AGPL-3.0-or-later
-version: 1.0.0
-date-released: '2025-04-30'
+version: v.0.1.0
+date-released: '2025-06-10'

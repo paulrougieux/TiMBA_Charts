@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "TiMBA_Charts"
-version = "v0.1.0"
+version = "v.0.1.0"
 description = """
 A toolbox for analysing forest sector model results.
 """
