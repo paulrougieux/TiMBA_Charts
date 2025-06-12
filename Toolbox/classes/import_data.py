@@ -8,6 +8,7 @@ import pickle
 import gzip
 import Toolbox.parameters.paths as toolbox_paths
 import Toolbox.parameters.default_parameters as toolbox_parameters
+from Toolbox.parameters.defines_geo import CountryGroups
 
 class import_pkl_data:
     def __init__(self, num_files_to_read:int=10,
