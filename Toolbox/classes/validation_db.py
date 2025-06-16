@@ -571,10 +571,9 @@ class Vali_DashboardPlotter:
             fig_formip_main = self.plot_ssp_fsm_all(data=filtered_data)
 
         title_formip_main = self.generate_title(region, estimate, scenario, model)
-        title = title_formip_main
 
         fig_formip_main.update_layout(
-            title='<br>'.join(textwrap.wrap(title, width=150)),
+            title='<br>'.join(textwrap.wrap(title_formip_main, width=150)),
             xaxis_title='Year',
             yaxis_title=f'{estimate[0]}',
             xaxis=dict(gridcolor='white'),
@@ -588,12 +587,30 @@ class Vali_DashboardPlotter:
         )
 
         # ForMIP secondary plot (relative value comparison)
-        fig_formip_second = go.Figure()
+        fig_formip_second = self.bar_plot_fsm(data=filtered_data,
+                                              value_type=value_type,
+                                              start_year=start_year,
+                                              end_year=end_year)
 
-        # ForMIP teriary plot
-        fig_formip_third = go.Figure()
+        title_formip_second = self.generate_title(region, estimate, scenario, model)
+        if value_type == "absolute values":
+            yaxis_title = f'Difference in {estimate[0]}'
+        if value_type == "relative values":
+            yaxis_title = f'Difference in {' '.join(estimate[0].split(' ')[:-1])} (%)'
 
-        return fig_formip_main, fig_formip_second, fig_formip_third
+        fig_formip_second.update_layout(
+            title='<br>'.join(textwrap.wrap(title_formip_second, width=150)),
+            yaxis_title=yaxis_title,
+            xaxis=dict(gridcolor='white'),
+            yaxis=dict(zeroline=True, zerolinewidth=2, zerolinecolor='LightGrey', gridcolor='white'),
+            legend=dict(orientation="h", yanchor="top", y=-0.1, xanchor="center", x=0.5),
+            margin=dict(l=35, r=35, t=135, b=100),
+            hovermode='x unified',
+            template=graphic_template,
+            plot_bgcolor='rgb(229, 236, 246)'
+        )
+
+        return fig_formip_main, fig_formip_second
 
 
     def generate_title(self, region, estimate, scenario, model):
