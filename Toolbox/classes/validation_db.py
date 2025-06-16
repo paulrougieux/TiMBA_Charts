@@ -236,7 +236,6 @@ class Vali_DashboardPlotter:
                 subset_tmp_max = pd.DataFrame([subset_tmp["Data"].max()], columns=['max'])
                 subset_tmp_min = pd.DataFrame([subset_tmp["Data"].min()], columns=['min'])
 
-    def generate_title(self, region, continent, domain, commodity, commodity_group):
                 subset_tmp_new = pd.concat(
                     [subset_tmp_info, subset_tmp_mean, subset_tmp_max, subset_tmp_min], axis=1).reset_index(drop=True)
                 subset_new = pd.concat([subset_new, subset_tmp_new], axis=0)
@@ -501,18 +500,17 @@ class Vali_DashboardPlotter:
         return fig_formip_main, fig_formip_second, fig_formip_third
 
 
+    def generate_title(self, region, estimate, scenario, model):
         title_parts = []
+        if estimate:
+            title_parts.append(f"{estimate}")
         if region:
-            title_parts.append(f"{region}")
-        if continent:
-            title_parts.append(f"{continent}")
-        if domain:
-            title_parts.append(f"{domain}")
-        if commodity:
-            title_parts.append(f"{commodity}")
-        if commodity_group:
-            title_parts.append(f"{commodity_group}")
-        title = ", ".join(title_parts) if title_parts else "all data"
+            title_parts.append(f" for {region}<br>")
+        if scenario:
+            title_parts.append(f"Scenarios: {scenario}<br>")
+        if model:
+            title_parts.append(f"Models: {model}")
+        title = "".join(title_parts) if title_parts else "all data"
         clean_title = title.replace("'", "").replace("[", "").replace("]", "")
         return clean_title
 
