@@ -397,6 +397,8 @@ class import_formip_data:
 
         formip_data = pd.concat([formip_data, timba_data], axis=0).reset_index(drop=True)
 
+        formip_data = formip_data.rename(columns={"RCP-SSP" : "Scenario"})
+
         return formip_data
 
     def load_formip_data(self):
