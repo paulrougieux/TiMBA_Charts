@@ -10,6 +10,7 @@ import numpy as np
 from pathlib import Path
 import plotly.express as px
 import textwrap
+import re
 
 PACKAGEDIR = Path(__file__).parent.parent.absolute()
 
@@ -33,9 +34,23 @@ class Vali_DashboardPlotter:
             '#F1C40F',  # Senfgelb
             '#E67E22',  # Orange  ...         
             ]
+        self.model_colors = self.get_colors()
         self.logo = PACKAGEDIR / 'timba_validation_logo.png'
         self.create_layout()
         self.create_callbacks()
+
+    def get_colors(self):
+        color_palette = px.colors.qualitative.Bold
+        model_colors = {
+            "TiMBA": tuple(map(int, re.findall(r'\d+', color_palette[1]))),
+            "GLOBIOM": tuple(map(int, re.findall(r'\d+', color_palette[4]))),
+            "GFPM": tuple(map(int, re.findall(r'\d+', color_palette[3]))),
+            "GTM": tuple(map(int, re.findall(r'\d+', color_palette[2]))),
+            "Max": tuple(map(int, re.findall(r'\d+', color_palette[6]))),
+            "Min": tuple(map(int, re.findall(r'\d+', color_palette[8]))),
+        }
+
+        return model_colors
 
     def create_layout(self):
         dropdown_style = {
