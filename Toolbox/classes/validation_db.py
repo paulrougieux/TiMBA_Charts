@@ -191,21 +191,21 @@ class Vali_DashboardPlotter:
             filtered_data = self.filter_data(region, estimate, scenario, model)
             return dcc.send_data_frame(filtered_data.to_csv, "filtered_data.csv")
 
-    def filter_data(self, region, continent, domain, commodity, commodity_group, scenario):
-        filtered_data = self.data
-        if region and isinstance(region, list):
-            filtered_data = filtered_data[filtered_data['ISO3'].isin(region)]
-        if continent and isinstance(continent, list):
-            filtered_data = filtered_data[filtered_data['Continent'].isin(continent)]
-        if domain and isinstance(domain, list):
-            filtered_data = filtered_data[filtered_data['domain'].isin(domain)]
-        if commodity and isinstance(commodity, list):
-            filtered_data = filtered_data[filtered_data['Commodity'].isin(commodity)]
-        if commodity_group and isinstance(commodity_group, list):
-            filtered_data = filtered_data[filtered_data['Commodity_Group'].isin(commodity_group)]
-        if scenario and isinstance(scenario, list):
-            filtered_data = filtered_data[filtered_data['Scenario'].isin(scenario)]
-        filtered_data = self.remove_extreme_outliers(df=filtered_data, col='price')
+    def filter_data(self, region, estimate, scenario, model):
+        data = self.data.copy()
+
+        region_filter = region if region != ['All'] else data['Region'].unique()
+        model_filter = model if model != ['All'] else data['Model'].unique()
+        var_filter = estimate if estimate != 'All' else data['Estimate'].unique()
+        sc_filter = scenario if scenario != ['All'] else data['Scenario'].unique()
+
+        filtered_data = data[
+            (data['Region'].isin(region_filter)) &
+            (data['Model'].isin(model_filter)) &
+            (data['Estimate'].isin(var_filter)) &
+            (data['Scenario'].isin(sc_filter))
+            ].reset_index(drop=True)
+
         return filtered_data
 
     def update_plot_data(self, region, continent, domain, commodity, commodity_group, scenario):
