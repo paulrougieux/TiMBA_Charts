@@ -50,7 +50,7 @@ class Vali_DashboardPlotter:
 
         self.app.layout = dbc.Container(fluid=True, style={'backgroundColor': 'white'}, children=[
 
-            # 1. Filterzeile (volle Breite oben)
+            # 1. filter options (bottom line)
             dbc.Row([
                 dbc.Col([
                     dbc.Card(className="border-0 shadow-sm", children=[
@@ -70,37 +70,26 @@ class Vali_DashboardPlotter:
                                 # Filter-Dropdowns
                                 dcc.Dropdown(id='region-dropdown',
                                              options=[{'label': i, 'value': i}
-                                                      for i in sorted(self.data['ISO3'].dropna().unique())],
+                                                      for i in sorted(self.data['Region'].dropna().unique())],
                                              multi=True,
-                                             placeholder="Select Country...",
+                                             placeholder="Select Region...",
                                              style=dropdown_style),
-                                dcc.Dropdown(id='continent-dropdown',
+                                dcc.Dropdown(id='estimate-dropdown',
                                              options=[{'label': i, 'value': i}
-                                                      for i in sorted(self.data['Continent'].dropna().unique())],
-                                             placeholder="Select Continent...",
+                                                      for i in sorted(self.data['Estimate'].dropna().unique())],
+                                             placeholder="Select Estimate...",
                                              multi=True,
                                              style=dropdown_style),
-                                dcc.Dropdown(id='domain-dropdown',
+                                dcc.Dropdown(id='scenario-dropdown',
                                              options=[{'label': i, 'value': i}
-                                                      for i in sorted(self.data['domain'].dropna().unique())],
-                                             placeholder="Select Domain...",
-                                             multi=True,
-                                             style=dropdown_style),
-                                dcc.Dropdown(id='commodity-dropdown',
-                                             options=[{'label': i, 'value': i}
-                                                      for i in sorted(self.data['Commodity'].dropna().unique())],
-                                             placeholder="Select Commodity...",
-                                             multi=True,
-                                             style=dropdown_style),
-                                dcc.Dropdown(id='commodity-group-dropdown',
-                                             options=[{'label': i, 'value': i} for i in
-                                                      self.data['Commodity_Group'].dropna().unique().tolist()],
-                                             placeholder="Select Commodity Group...",
-                                             multi=True,
-                                             style=dropdown_style),
-                                dcc.Dropdown(id='scenario-filter',
-                                             options=[{'label': i, 'value': i} for i in self.data['Scenario'].unique()],
+                                                      for i in sorted(self.data['Scenario'].dropna().unique())],
                                              placeholder="Select Scenario...",
+                                             multi=True,
+                                             style=dropdown_style),
+                                dcc.Dropdown(id='model-dropdown',
+                                             options=[{'label': i, 'value': i}
+                                                      for i in sorted(self.data['Model'].dropna().unique())],
+                                             placeholder="Select Model...",
                                              multi=True,
                                              style=dropdown_style),
                                 # Download-Button
@@ -118,42 +107,51 @@ class Vali_DashboardPlotter:
                                 )
                             ])
                         ])
-                    ], style={'backgroundColor': '#f8f9fa'})  # Leicht abgesetzter Hintergrund
+                    ], style={'backgroundColor': '#f8f9fa'})
                 ])
-            ], className="mb-4"),  # Abstand nach unten
+            ], className="mb-4"),  # Distance to bottom
 
-            # 2. Hauptinhalt
+            # 2. Main content
             dbc.Row([
-                # Linke Spalte (Große Box)
-                dbc.Col(md=6, children=[
+                # Left column
+                dbc.Col(children=[
                     dbc.Card(className="h-100 shadow-sm", children=[
-                        dbc.CardBody(style={'padding': '15px'}, children=[
+                        dbc.CardBody(children=[
+                            html.H5("Figure filter", className="card-title"),
+                            dcc.Dropdown(
+                                id='figure-type-dropdown',
+                                options=[{'label': i, 'value': i}
+                                                      for i in ['range', 'min_max', 'ssp_fsm_range', 'ssp_fsm_all']],
+                                placeholder="Select Figure Type...",
+                                style=dropdown_style
+                            ),
                             dcc.Graph(
-                                id='main-graph',
-                                style={'height': '75vh'},
-                                config={'displayModeBar': True}
+                                id='formip-plot',
+                                config={'toImageButtonOptions': {'format': 'png'},
+                                        'displayModeBar': True},
+                                style={'height': '75vh'}
                             )
                         ])
-                    ])
-                ]),
+                    ], style={'backgroundColor': 'white', 'padding': '15px'})
+                ], width=8),
 
-                # Rechte Spalte (Zwei übereinander)
+                # Secondary content
                 dbc.Col(md=6, children=[
-                    # Obere rechte Box
+                    # Right column
                     dbc.Card(className="mb-3 shadow-sm", children=[
                         dbc.CardBody(style={'padding': '15px'}, children=[
                             dcc.Graph(
-                                id='secondary-graph',
+                                id='formip-plot-second',
                                 style={'height': '35vh'}
                             )
                         ])
                     ]),
 
                     # Untere rechte Box
-                    dbc.Card(className="shadow-sm", children=[
+                    dbc.Card(className="mb-3 shadow-sm", children=[
                         dbc.CardBody(style={'padding': '15px'}, children=[
                             dcc.Graph(
-                                id='tertiary-graph',
+                                id='formip-plot-third',
                                 style={'height': '35vh'}
                             )
                         ])
