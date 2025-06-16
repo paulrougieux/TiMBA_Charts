@@ -4,7 +4,10 @@
 
 [![Build Status](https://github.com/TI-Forest-Sector-Modelling/TiMBA_Charts/actions/workflows/actions.yml/badge.svg)](https://github.com/TI-Forest-Sector-Modelling/TiMBA_Charts/actions/workflows/actions.yml)
 [![codecov](https://codecov.io/gh/TI-Forest-Sector-Modelling/TiMBA_Charts/graph/badge.svg?token=S4TDJI4CC3)](https://codecov.io/gh/TI-Forest-Sector-Modelling/TiMBA_Charts)
+![PyPI](https://img.shields.io/pypi/v/TiMBA_Charts)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+[![DOI](https://zenodo.org/badge/883749241.svg)](https://zenodo.org/badge/latestdoi/883749241)
+[![PyPI Downloads](https://static.pepy.tech/badge/timba-charts)](https://pepy.tech/projects/timba-charts)
 
 This package serves as a toolkit for analysing **TiMBA's** simulation results. TiMBA is a partial economic equilibrium model for the global forest product market. The package provides a dashboard allowing the user to explore TiMBA’s main results. This includes the development of prices, production, consumption, and trade of forest products as well as forest stock development. It further provides information about historic developments as reported by the FAOSTAT. In principle, this toolkit can be easily adapted and used for the analysis of any forest sector model as long as the data resembles the format of the TiMBA output. 
 
@@ -18,9 +21,11 @@ Morland, C. and Tandetzki, J. (2025) TiMBA Charts v.0.1.1
 The package is developed and tested with Python 3.12.6 on Windows. Please ensure that Python is installed on your system. It can be downloaded and installed
 from [Python.org](https://www.python.org/downloads/release/python-3126/).
 
+### Install via GitHub
+
 1. Clone the repository
 Begin by cloning the repository to your local machine using the following command: 
-    >git clone https://github.com/TI-Forest-Sector-Modelling/TiMBA_Charts
+   >git clone https://github.com/TI-Forest-Sector-Modelling/TiMBA_Charts
    > 
 2. Switch to the TiMBA Charts directory  
 Navigate into the project folder on your local machine.
@@ -40,6 +45,9 @@ Enable the virtual environment to isolate TiMBA Charts dependencies.
 If the following error occurs: "ERROR: File "setup.py" or "setup.cfg" not found."
 you might need to update the pip version you use with: 
 >python.exe -m pip install --upgrade pip
+
+### Install via Pypi
+   >pip install timba-charts
 
 ## Start the dashbord
 After installing the package, the user can start the dashboard board with the following CLI command:

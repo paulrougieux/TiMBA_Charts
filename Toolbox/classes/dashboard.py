@@ -31,6 +31,9 @@ class DashboardPlotter:
             '#6C757D',  # Dunkelgrau
             '#F1C40F',  # Senfgelb
             '#E67E22',  # Orange  
+            "#14B150",
+            "#270A3A",
+            "#662308",
         ]
         self.create_layout()
         self.create_callbacks()
@@ -205,6 +208,7 @@ class DashboardPlotter:
         filtered_data = self.filter_data(region, continent, domain, commodity, commodity_group, scenario)
 
         # Quantity plot
+        max_year = filtered_data['year'].max()
         grouped_data_quantity = filtered_data.groupby(['year', 'Scenario']).sum().reset_index()
         grouped_data_quantity = grouped_data_quantity[(grouped_data_quantity["year"] >= self.start) & (grouped_data_quantity["year"] <= self.end)]
         fig_quantity = go.Figure()
@@ -220,6 +224,7 @@ class DashboardPlotter:
             title='<br>'.join(textwrap.wrap(title, width=90)),
             xaxis_title='Year',
             yaxis_title='Quantity',
+            xaxis=dict(range=[2015.5, max_year]),
             yaxis=dict(rangemode='nonnegative', zeroline=True, zerolinewidth=2, zerolinecolor='LightGrey'),
             legend_title='Scenario',
             legend=dict(orientation="h", yanchor="top", y=-0.1, xanchor="center", x=0.5),
