@@ -118,13 +118,13 @@ class Vali_DashboardPlotter:
                     dbc.Card(className="h-100 shadow-sm", children=[
                         dbc.CardBody(children=[
                             html.H5("Figure filter", className="card-title"),
-                            dcc.Dropdown(
+                            html.Div([dcc.Dropdown(
                                 id='figure-type-dropdown',
                                 options=[{'label': i, 'value': i}
                                                       for i in ['range', 'min_max', 'ssp_fsm_range', 'ssp_fsm_all']],
                                 placeholder="Select Figure Type...",
                                 style=dropdown_style
-                            ),
+                            )], style={'marginBottom': '15px'}),
                             dcc.Graph(
                                 id='formip-plot',
                                 config={'toImageButtonOptions': {'format': 'png'},
@@ -133,30 +133,50 @@ class Vali_DashboardPlotter:
                             )
                         ])
                     ], style={'backgroundColor': 'white', 'padding': '15px'})
-                ], width=8),
+                ], width=6),
 
-                # Secondary content
                 dbc.Col(md=6, children=[
                     # Right column
-                    dbc.Card(className="mb-3 shadow-sm", children=[
+                    dbc.Card(className="h-100 shadow-sm", children=[
                         dbc.CardBody(style={'padding': '15px'}, children=[
-                            dcc.Graph(
-                                id='formip-plot-second',
-                                style={'height': '35vh'}
-                            )
-                        ])
-                    ]),
+                            html.H5("Figure filter", className="card-title"),
+                            html.Div([
+                                dcc.Dropdown(
+                                    id='value-type-dropdown',
+                                    options=[{'label': i, 'value': i} for i in ['relative values', 'absolute values']],
+                                    placeholder="Select Value Type...",
+                                    style=dropdown_style
+                                )
+                            ], style={'marginBottom': '15px'}),
 
-                    # Untere rechte Box
-                    dbc.Card(className="mb-3 shadow-sm", children=[
-                        dbc.CardBody(style={'padding': '15px'}, children=[
+                            html.Div([
+                                dcc.Dropdown(
+                                    id='start-year-dropdown',
+                                    options=[{'label': i, 'value': i} for i in
+                                             sorted(self.data['Year'].dropna().unique())],
+                                    placeholder="Select Start Year ...",
+                                    style=dropdown_style
+                                )
+                            ], style={'marginBottom': '15px'}),
+
+                            html.Div([
+                                dcc.Dropdown(
+                                    id='end-year-dropdown',
+                                    options=[{'label': i, 'value': i} for i in
+                                             sorted(self.data['Year'].dropna().unique())],
+                                    placeholder="Select End Year ...",
+                                    style=dropdown_style
+                                )
+                            ], style={'marginBottom': '15px'}),
                             dcc.Graph(
-                                id='formip-plot-third',
-                                style={'height': '35vh'}
+                                id='formip-bar',
+                                config={'toImageButtonOptions': {'format': 'png'},
+                                        'displayModeBar': True},
+                                style={'height': '75vh'}
                             )
                         ])
-                    ])
-                ])
+                    ], style={'backgroundColor': 'white', 'padding': '15px'})
+                ], width=6)
             ])
         ])
 
