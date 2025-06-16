@@ -183,17 +183,20 @@ class Vali_DashboardPlotter:
     def create_callbacks(self):
         @self.app.callback([
                 Output('formip-plot', 'figure'),
-                Output('formip-plot-second', 'figure'),
-                Output('formip-plot-third', 'figure')],
+                Output('formip-bar', 'figure')],
             [
                 Input('region-dropdown', 'value'),
                 Input('estimate-dropdown', 'value'),
                 Input('scenario-dropdown', 'value'),
                 Input('model-dropdown', 'value'),
-                Input('figure-type-dropdown', 'value')]
+                Input('figure-type-dropdown', 'value'),
+                Input('value-type-dropdown', 'value'),
+                Input('start-year-dropdown', 'value'),
+                Input('end-year-dropdown', 'value')]
         )
-        def update_plots(region, estimate, scenario, model, figure_type):
-            return self.update_plot_validation(region, estimate, scenario, model, figure_type)
+        def update_plots(region, estimate, scenario, model, figure_type, value_type, start_year, end_year):
+            return self.update_plot_validation(region, estimate, scenario, model, figure_type, value_type, start_year,
+                                               end_year)
 
         @self.app.callback(
             Output("download-dataframe-csv", "data"),
