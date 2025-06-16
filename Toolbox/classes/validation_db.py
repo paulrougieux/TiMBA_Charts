@@ -117,7 +117,7 @@ class Vali_DashboardPlotter:
                 dbc.Col(children=[
                     dbc.Card(className="h-100 shadow-sm", children=[
                         dbc.CardBody(children=[
-                            html.H5("Figure filter", className="card-title"),
+                            # html.H5("Figure filter", className="card-title"),
                             html.Div([dcc.Dropdown(
                                 id='figure-type-dropdown',
                                 options=[{'label': i, 'value': i}
@@ -139,7 +139,7 @@ class Vali_DashboardPlotter:
                     # Right column
                     dbc.Card(className="h-100 shadow-sm", children=[
                         dbc.CardBody(style={'padding': '15px'}, children=[
-                            html.H5("Figure filter", className="card-title"),
+                            # html.H5("Figure filter", className="card-title"),
                             html.Div([
                                 dcc.Dropdown(
                                     id='value-type-dropdown',
@@ -570,7 +570,8 @@ class Vali_DashboardPlotter:
         if figure_type == "ssp_fsm_all":
             fig_formip_main = self.plot_ssp_fsm_all(data=filtered_data)
 
-        title_formip_main = self.generate_title(region, estimate, scenario, model)
+        title_formip_main = self.generate_title(
+            region=region, estimate=estimate, scenario=scenario, model=model, plot="plot", value_type=value_type)
 
         fig_formip_main.update_layout(
             title='<br>'.join(textwrap.wrap(title_formip_main, width=150)),
@@ -592,7 +593,8 @@ class Vali_DashboardPlotter:
                                               start_year=start_year,
                                               end_year=end_year)
 
-        title_formip_second = self.generate_title(region, estimate, scenario, model)
+        title_formip_second = self.generate_title(
+            region=region, estimate=estimate, scenario=scenario, model=model, plot="bar_plot", value_type=value_type)
         if value_type == "absolute values":
             yaxis_title = f'Difference in {estimate[0]}'
         if value_type == "relative values":
@@ -613,9 +615,14 @@ class Vali_DashboardPlotter:
         return fig_formip_main, fig_formip_second
 
 
-    def generate_title(self, region, estimate, scenario, model):
+    def generate_title(self, region, estimate, scenario, model, plot, value_type):
         title_parts = []
-        if estimate:
+        if plot=="bar_plot":
+            if value_type == "absolute values":
+                title_parts.append(f'Difference in {estimate[0]}')
+            if value_type == "relative values":
+                title_parts.append(f'Difference in {' '.join(estimate[0].split(' ')[:-1])} (%)')
+        else:
             title_parts.append(f"{estimate}")
         if region:
             title_parts.append(f" for {region}<br>")
