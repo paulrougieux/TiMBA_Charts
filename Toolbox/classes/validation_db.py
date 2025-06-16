@@ -161,49 +161,34 @@ class Vali_DashboardPlotter:
         ])
 
     def create_callbacks(self):
-        @self.app.callback(
-            [Output('quantity-plot', 'figure'),
-             Output('price-plot', 'figure'),
-             Output('forstock-plot', 'figure')],
-            [Input('region-dropdown', 'value'),
-             Input('continent-dropdown', 'value'),
-             Input('domain-dropdown', 'value'),
-             Input('commodity-dropdown', 'value'),
-             Input('commodity-group-dropdown', 'value'),
-             Input('scenario-filter', 'value')]
+        @self.app.callback([
+                Output('formip-plot', 'figure'),
+                Output('formip-plot-second', 'figure'),
+                Output('formip-plot-third', 'figure')],
+            [
+                Input('region-dropdown', 'value'),
+                Input('estimate-dropdown', 'value'),
+                Input('scenario-dropdown', 'value'),
+                Input('model-dropdown', 'value'),
+                Input('figure-type-dropdown', 'value')]
         )
-        def update_plots(region, continent, domain, commodity, commodity_group, scenario):
-            return self.update_plot_data(region, continent, domain, commodity, commodity_group, scenario)
-
-        @self.app.callback(
-            Output('world-map', 'figure'),
-            [Input('scenario-filter', 'value'),
-             Input('year-filter', 'value'),
-             Input('region-dropdown', 'value'),
-             Input('continent-dropdown', 'value'),
-             Input('domain-dropdown', 'value'),
-             Input('commodity-dropdown', 'value'),
-             Input('commodity-group-dropdown', 'value')]
-        )
-        def update_world_map(scenario, year, region, continent, domain, commodity, commodity_group):
-            return self.create_world_map(region, continent, domain, commodity, commodity_group, scenario, year)
+        def update_plots(region, estimate, scenario, model, figure_type):
+            return self.update_plot_validation(region, estimate, scenario, model, figure_type)
 
         @self.app.callback(
             Output("download-dataframe-csv", "data"),
             Input("btn_csv", "n_clicks"),
             [State('region-dropdown', 'value'),
-             State('continent-dropdown', 'value'),
-             State('domain-dropdown', 'value'),
-             State('commodity-dropdown', 'value'),
-             State('commodity-group-dropdown', 'value'),
-             State('scenario-filter', 'value')],  # Geändert von Input zu State
+             State('estimate-dropdown', 'value'),
+             State('scenario-dropdown', 'value'),
+             State('model-dropdown', 'value')],
             prevent_initial_call=True
         )
-        def func(n_clicks, region, continent, domain, commodity, commodity_group, scenario):
+        def func(n_clicks, region, estimate, scenario, model):
             if n_clicks is None:
                 raise dash.exceptions.PreventUpdate
 
-            filtered_data = self.filter_data(region, continent, domain, commodity, commodity_group, scenario)
+            filtered_data = self.filter_data(region, estimate, scenario, model)
             return dcc.send_data_frame(filtered_data.to_csv, "filtered_data.csv")
 
     def filter_data(self, region, continent, domain, commodity, commodity_group, scenario):
