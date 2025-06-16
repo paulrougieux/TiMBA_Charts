@@ -65,7 +65,7 @@ class validation_dashboard:
 
 
     def call_dashboard(self):
-        Vali_DashboardPlotter(data=self.data["data_periods"]).run()
+        Vali_DashboardPlotter(data=self.formip_data).run()
 
     def run(self):
         self.import_data()
