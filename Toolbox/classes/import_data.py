@@ -355,6 +355,25 @@ class import_formip_data:
         except UnboundLocalError:
             pass
 
+        # Add world
+        timba_data_prod_world = timba_data_prod.groupby(
+            ["Model", "Scenario", "year", "Commodity"])["quantity"].sum().reset_index()
+        timba_data_prod_world["Region"] = "World"
+        timba_data_prod = pd.concat([timba_data_prod, timba_data_prod_world], axis=0).reset_index(drop=True)
+
+        timba_data_forest_world = timba_data_forest.groupby(
+            ["Model", "Scenario", "year"])["ForStock", "ForArea"].sum().reset_index()
+        timba_data_forest_world["Region"] = "World"
+        timba_data_forest = pd.concat([timba_data_forest, timba_data_forest_world], axis=0).reset_index(drop=True)
+
+        try:
+            timba_data_carbon_world = timba_data_carbon.groupby(
+                ["Model", "Scenario", "year"])["CarbonStockBiomass [MtCO2]"].sum().reset_index()
+            timba_data_carbon_world["Region"] = "World"
+            timba_data_carbon = pd.concat([timba_data_carbon, timba_data_carbon_world], axis=0).reset_index(drop=True)
+        except UnboundLocalError:
+            pass
+
         # Roundwood harvest (= industrial roundwood + other industrial roundwood) (in Mio m³)
         rnd_harvest = timba_data_prod[(timba_data_prod["Commodity"] == "Industrial Roundwood NC") |
                                       (timba_data_prod["Commodity"] == "Industrial Roundwood C") |
