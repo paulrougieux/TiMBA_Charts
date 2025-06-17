@@ -223,15 +223,25 @@ class Vali_DashboardPlotter:
 
     def filter_data(self, region, estimate, scenario, model):
         filtered_data = self.data.copy()
-        if region and isinstance(region, list):
-            filtered_data = filtered_data[filtered_data['Region'].isin(region)]
-        if model and isinstance(model, list):
-            if "All" not in model:
+        if isinstance(region, list):
+            if not region:
+                filtered_data = filtered_data.iloc[0:0]
+            else:
+                filtered_data = filtered_data[filtered_data['Region'].isin(region)]
+        if isinstance(model, list):
+            if not model:
+                filtered_data = filtered_data.iloc[0:0]
+            elif "All" not in model:
                 filtered_data = filtered_data[filtered_data['Model'].isin(model)]
-        if estimate and isinstance(estimate, list):
-            filtered_data = filtered_data[filtered_data['Estimate'].isin(estimate)]
-        if scenario and isinstance(scenario, list):
-            if "All" not in scenario:
+        if isinstance(estimate, list):
+            if not estimate:
+                filtered_data = filtered_data.iloc[0:0]
+            else:
+                filtered_data = filtered_data[filtered_data['Estimate'].isin(estimate)]
+        if isinstance(scenario, list):
+            if not scenario:
+                filtered_data = filtered_data.iloc[0:0]
+            elif "All" not in scenario:
                 filtered_data = filtered_data[filtered_data['Scenario'].isin(scenario)]
         return filtered_data
 
