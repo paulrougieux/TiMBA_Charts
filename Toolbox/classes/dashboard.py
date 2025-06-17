@@ -94,7 +94,9 @@ class DashboardPlotter:
                     dbc.Card([
                         dbc.CardBody([
                                 dcc.Graph(id='price-plot',
-                                      config={'toImageButtonOptions': {'format': 'png', 'filename': 'price_plot'}},
+                                      config={'toImageButtonOptions': {'format': 'png',
+                                                                       'filename': 'price_plot',
+                                                                       'scale': 5}},
                                       style={'height': '45vh','width':'46vh'})
                     ])
                 ], style={'white': 'white'})  #price box
@@ -105,7 +107,9 @@ class DashboardPlotter:
                         dbc.Card([
                             dbc.CardBody([
                                 dcc.Graph(id='quantity-plot',
-                                          config={'toImageButtonOptions': {'format': 'png', 'filename': 'quantity_plot'}},
+                                          config={'toImageButtonOptions': {'format': 'png',
+                                                                           'filename': 'quantity_plot',
+                                                                           'scale': 5}},
                                           style={'height': '84.5vh'})
                             ])
                         ], style={'backgroundColor': 'white'}) #mittelbox
@@ -113,8 +117,10 @@ class DashboardPlotter:
                     dbc.Col([
                         dbc.Card([
                             dbc.CardBody([
-                                dcc.Graph(id='forstock-plot',  # Geändert: ID auf 'forstock-plot'
-                                          config={'toImageButtonOptions': {'format': 'png'}},
+                                dcc.Graph(id='forstock-plot', 
+                                          config={'toImageButtonOptions': {'format': 'png',
+                                                                           'filename': 'forstock_plot',
+                                                                           'scale': 5}},
                                           style={'height': '39vh'})
                             ])
                         ], style={'backgroundColor': 'white', 'marginBottom': '20px'}), # Abstand hinzugefügt
@@ -130,7 +136,9 @@ class DashboardPlotter:
                                     style=dropdown_style
                                 ),
                                  dcc.Graph(id='world-map',  # Geändert: ID auf 'world-map'
-                                          config={'toImageButtonOptions': {'format': 'png'}},
+                                          config={'toImageButtonOptions': {'format': 'png',
+                                                                           'filename': 'world_map',
+                                                                           'scale': 5}},
                                           style={'height': '31.75vh'})
                             ])
                         ], style={'backgroundColor': 'white'})
