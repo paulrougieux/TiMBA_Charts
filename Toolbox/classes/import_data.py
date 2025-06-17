@@ -294,6 +294,13 @@ class import_formip_data:
             scenario_filter = ["Baseline-SSP1", "Baseline-SSP2", "Baseline-SSP3", "Baseline-SSP4", "Baseline-SSP5"]
             formip_data_new = formip_data_new[formip_data_new["RCP-SSP"].isin(scenario_filter)].reset_index(drop=True)
 
+        if "Carbon" not in self.timba_data.keys():
+            formip_data_new = formip_data_new[
+                formip_data_new["Estimate"] != "Total Forest Non-soil C Stock (MtC)"].reset_index(drop=True)
+
+        formip_data_new = formip_data_new[(formip_data_new["Estimate"] != "Carbon Price (/tCO2e)") &
+                                          (formip_data_new["Estimate"] != "Wt Avg Roundwood Price (/m3)")].reset_index(drop=True)
+
         return formip_data_new
 
     def process_timba_data(self):
