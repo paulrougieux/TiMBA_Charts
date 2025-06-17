@@ -48,9 +48,11 @@ class bilateral_trade_dashboard:
 class validation_dashboard:
     def __init__(self,
                  scenario_folder_path:Path,
-                 num_files_to_read:int=10):
+                 num_files_to_read:int=10,
+                 only_baseline_sc:bool=True):
         self.num_files_to_read = num_files_to_read
         self.scenario_folder_path = scenario_folder_path
+        self.only_baseline_sc = only_baseline_sc
 
     def import_data(self):
         import warnings
@@ -60,7 +62,7 @@ class validation_dashboard:
                                      SCENARIOPATH=self.scenario_folder_path)
         self.data = import_pkl.combined_data()
 
-        import_formip_data = import_formip_data(timba_data=self.data)
+        import_formip_data = import_formip_data(timba_data=self.data, only_baseline_sc=self.only_baseline_sc)
         self.formip_data = import_formip_data.load_formip_data()
 
 
@@ -77,5 +79,6 @@ if __name__ == "__main__":
     td.run()"""
 
     vd = validation_dashboard(num_files_to_read=5,
-                              scenario_folder_path=toolbox_paths.SCINPUTPATH)
+                              scenario_folder_path=toolbox_paths.SCINPUTPATH,
+                              only_baseline_sc=True)
     vd.run()

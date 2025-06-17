@@ -240,10 +240,12 @@ class import_pkl_data:
 class import_formip_data:
     def __init__(self,
                  FORMIPPATH:Path= toolbox_paths.FORMIPPATH,
-                 timba_data:pd.DataFrame=pd.DataFrame()):
+                 timba_data:pd.DataFrame=pd.DataFrame(),
+                 only_baseline_sc:bool=True):
         self.FORMIPPATH = FORMIPPATH
         self.formip_data = self.read_formip_data()
         self.timba_data = timba_data
+        self.only_baseline_sc = only_baseline_sc
 
     def read_formip_data(self):
         """
@@ -288,6 +290,9 @@ class import_formip_data:
 
         formip_data_new = formip_data_new.sort_values(by=["Model", "RCP-SSP", "Region", "Year"],
                                                       ascending=True).reset_index(drop=True)
+        if self.only_baseline_sc:
+            scenario_filter = ["Baseline-SSP1", "Baseline-SSP2", "Baseline-SSP3", "Baseline-SSP4", "Baseline-SSP5"]
+            formip_data_new = formip_data_new[formip_data_new["RCP-SSP"].isin(scenario_filter)].reset_index(drop=True)
 
         return formip_data_new
 
