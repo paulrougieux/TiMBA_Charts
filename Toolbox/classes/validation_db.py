@@ -467,27 +467,6 @@ class Vali_DashboardPlotter:
     def bar_plot_fsm(self, data, value_type, start_year, end_year):
         fig_formip_second = go.Figure()
 
-        """for (model, region, scenario), subset in data.groupby(['Model', 'Region', 'Scenario']):
-            color = self.model_colors.get(model, (0, 0, 0))
-
-            data_start_year = float(subset[subset['Year'] == start_year]['Data'])
-            data_end_year = float(subset[subset['Year'] == end_year]['Data'])
-
-            if value_type == 'absolute values':
-                data_info = f'abs_diff_{model}_{scenario}'
-                data_diff = data_end_year - data_start_year
-            if value_type == 'relative values':
-                data_info = f'rel_diff_{model}_{scenario}'
-                data_diff = (data_end_year - data_start_year) / data_end_year * 100
-
-            data_diff = pd.DataFrame([[data_info, data_diff]], columns=['Data_info', 'Data'])
-
-
-            fig_formip_second.add_trace(go.Bar(x=data_diff['Data_info'],
-                                               y=data_diff['Data'],
-                                               name=data_info,
-                                               marker_color=f"rgba({color[0]}, {color[1]}, {color[2]}, 1)"))"""
-
         data_grouped = data.groupby(['Model', 'Region'])
 
         for (model, region), subset in data_grouped:
