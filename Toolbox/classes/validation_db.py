@@ -125,6 +125,7 @@ class Vali_DashboardPlotter:
                                 options=[{'label': i, 'value': i}
                                                       for i in ['range', 'min_max', 'ssp_fsm_range', 'ssp_fsm_all']],
                                 placeholder="Select Figure Type...",
+                                value='ssp_fsm_range',
                                 style=dropdown_style
                             )], style={'marginBottom': '15px'}),
                             dcc.Graph(
@@ -147,6 +148,7 @@ class Vali_DashboardPlotter:
                                     id='value-type-dropdown',
                                     options=[{'label': i, 'value': i} for i in ['relative values', 'absolute values']],
                                     placeholder="Select Value Type...",
+                                    value='relative values',
                                     style=dropdown_style
                                 )
                             ], style={'marginBottom': '15px'}),
@@ -157,6 +159,7 @@ class Vali_DashboardPlotter:
                                     options=[{'label': i, 'value': i} for i in
                                              sorted(self.data['Year'].dropna().unique())],
                                     placeholder="Select Start Year ...",
+                                    value=2020,
                                     style=dropdown_style
                                 )
                             ], style={'marginBottom': '15px'}),
@@ -167,6 +170,7 @@ class Vali_DashboardPlotter:
                                     options=[{'label': i, 'value': i} for i in
                                              sorted(self.data['Year'].dropna().unique())],
                                     placeholder="Select End Year ...",
+                                    value=2100,
                                     style=dropdown_style
                                 )
                             ], style={'marginBottom': '15px'}),
