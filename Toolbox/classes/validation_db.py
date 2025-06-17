@@ -620,9 +620,6 @@ class Vali_DashboardPlotter:
         clean_title = title.replace("'", "").replace("[", "").replace("]", "")
         return clean_title
 
-    def create_world_map(self, region, continent, domain, commodity, commodity_group, scenario=None, year=None):
-        pass
-
     def open_browser(self):
         webbrowser.open_new("http://localhost:8050")
 
