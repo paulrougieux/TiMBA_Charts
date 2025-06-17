@@ -543,15 +543,18 @@ class Vali_DashboardPlotter:
                 data_fin = pd.concat([timba_data, fsm_data_max, fsm_data_min], axis=0).reset_index(drop=True)
                 fig_formip_main = self.plot_min_max(data=data_fin)
 
-            if figure_type == 'range':
+            else:
                 data_fin = pd.concat([fsm_data_max, fsm_data_min], axis=0).reset_index(drop=True)
                 fig_formip_main = self.plot_range(formip_data=data_fin, timba_data=timba_data)
 
-        if figure_type == "ssp_fsm_range":
+        elif figure_type == "ssp_fsm_range":
             fig_formip_main = self.plot_ssp_fsm_range(data=filtered_data)
 
-        if figure_type == "ssp_fsm_all":
+        elif figure_type == "ssp_fsm_all":
             fig_formip_main = self.plot_ssp_fsm_all(data=filtered_data)
+
+        else:
+            fig_formip_main = go.Figure()
 
         title_formip_main = self.generate_title(
             region=region, estimate=estimate, scenario=scenario, model=model, plot="plot", value_type=value_type)
