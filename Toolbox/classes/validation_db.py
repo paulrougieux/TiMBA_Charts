@@ -106,7 +106,8 @@ class Vali_DashboardPlotter:
                                         'borderRadius': '4px',
                                         'border': '1px solid #ddd'
                                     }
-                                )
+                                ),
+                                dcc.Download(id="download-dataframe-csv")
                             ])
                         ])
                     ], style={'backgroundColor': '#f8f9fa'})
@@ -218,7 +219,7 @@ class Vali_DashboardPlotter:
                 raise dash.exceptions.PreventUpdate
 
             filtered_data = self.filter_data(region, estimate, scenario, model)
-            return dcc.send_data_frame(filtered_data.to_csv, "filtered_data.csv")
+            return dcc.send_data_frame(filtered_data.to_csv, "filtered_external_validation_data.csv", index=False)
 
     def filter_data(self, region, estimate, scenario, model):
         filtered_data = self.data.copy()
