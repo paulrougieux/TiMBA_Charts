@@ -72,24 +72,26 @@ class Vali_DashboardPlotter:
                                              options=[{'label': i, 'value': i}
                                                       for i in sorted(self.data['Region'].dropna().unique())],
                                              multi=True,
-                                             placeholder="Select Region...",
+                                             placeholder='Select Region...',
                                              style=dropdown_style),
                                 dcc.Dropdown(id='estimate-dropdown',
                                              options=[{'label': i, 'value': i}
                                                       for i in sorted(self.data['Estimate'].dropna().unique())],
-                                             placeholder="Select Estimate...",
+                                             placeholder='Select Estimate...',
                                              multi=True,
                                              style=dropdown_style),
                                 dcc.Dropdown(id='scenario-dropdown',
-                                             options=[{'label': i, 'value': i}
+                                             options=[{'label': 'All', 'value': 'All'}] +
+                                                     [{'label': i, 'value': i}
                                                       for i in sorted(self.data['Scenario'].dropna().unique())],
-                                             placeholder="Select Scenario...",
+                                             placeholder='Select Scenario...',
                                              multi=True,
                                              style=dropdown_style),
                                 dcc.Dropdown(id='model-dropdown',
-                                             options=[{'label': i, 'value': i}
+                                             options=[{'label': 'All', 'value': 'All'}] +
+                                                     [{'label': i, 'value': i}
                                                       for i in sorted(self.data['Model'].dropna().unique())],
-                                             placeholder="Select Model...",
+                                             placeholder='Select Model...',
                                              multi=True,
                                              style=dropdown_style),
                                 # Download-Button
@@ -215,20 +217,17 @@ class Vali_DashboardPlotter:
             return dcc.send_data_frame(filtered_data.to_csv, "filtered_data.csv")
 
     def filter_data(self, region, estimate, scenario, model):
-        data = self.data.copy()
-
-        region_filter = region if region != ['All'] else data['Region'].unique()
-        model_filter = model if model != ['All'] else data['Model'].unique()
-        var_filter = estimate if estimate != 'All' else data['Estimate'].unique()
-        sc_filter = scenario if scenario != ['All'] else data['Scenario'].unique()
-
-        filtered_data = data[
-            (data['Region'].isin(region_filter)) &
-            (data['Model'].isin(model_filter)) &
-            (data['Estimate'].isin(var_filter)) &
-            (data['Scenario'].isin(sc_filter))
-            ].reset_index(drop=True)
-
+        filtered_data = self.data.copy()
+        if region and isinstance(region, list):
+            filtered_data = filtered_data[filtered_data['Region'].isin(region)]
+        if model and isinstance(model, list):
+            if "All" not in model:
+                filtered_data = filtered_data[filtered_data['Model'].isin(model)]
+        if estimate and isinstance(estimate, list):
+            filtered_data = filtered_data[filtered_data['Estimate'].isin(estimate)]
+        if scenario and isinstance(scenario, list):
+            if "All" not in scenario:
+                filtered_data = filtered_data[filtered_data['Scenario'].isin(scenario)]
         return filtered_data
 
     def plot_min_max(self, data):
