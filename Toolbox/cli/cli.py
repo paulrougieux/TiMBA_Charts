@@ -1,6 +1,6 @@
 import click
 import warnings
-from Toolbox.toolbox import timba_dashboard, bilateral_trade_dashboard,validation_dashboard
+from Toolbox.toolbox import timba_dashboard,validation_dashboard
 import Toolbox.parameters.paths as toolbox_paths
 from pathlib import Path
 warnings.simplefilter(action='ignore', category=FutureWarning)
@@ -21,7 +21,7 @@ def cli():
               show_default=True, required=True, type=Path, 
               help="Define the folder where the code will look for additional infos, like historic data or country information.")
 
-def cli(num_files,sc_folderpath,additional_info_folderpath):    
+def dashboard_cli(num_files,sc_folderpath,additional_info_folderpath):    
     td = timba_dashboard(num_files_to_read=num_files,
                          scenario_folder_path=sc_folderpath,
                          additional_info_folderpath=additional_info_folderpath)
