@@ -354,9 +354,9 @@ class DashboardPlotter:
         return df
     
     def open_browser(self):
-        webbrowser.open_new("http://localhost:8050")
+        webbrowser.open_new("http://localhost:8051")
 
 
     def run(self):
         Timer(1, self.open_browser).start()
-        self.app.run(host='localhost', debug=False, dev_tools_ui=False, dev_tools_hot_reload=False, port=8050)
+        self.app.run(host='localhost', debug=False, dev_tools_ui=False, dev_tools_hot_reload=False, port=8051)

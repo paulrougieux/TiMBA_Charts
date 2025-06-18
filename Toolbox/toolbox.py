@@ -25,25 +25,25 @@ class timba_dashboard:
         self.import_data()
         self.call_dashboard() 
 
-class bilateral_trade_dashboard:
-    def __init__(self,scenario_folder_path:Path,
-                 num_files_to_read:int=10):
-        self.num_files_to_read = num_files_to_read
-        self.scenario_folder_path = scenario_folder_path
+# class bilateral_trade_dashboard:
+#     def __init__(self,scenario_folder_path:Path,
+#                  num_files_to_read:int=10):
+#         self.num_files_to_read = num_files_to_read
+#         self.scenario_folder_path = scenario_folder_path
 
-    def import_data(self):
-        import warnings
-        warnings.simplefilter(action='ignore', category=FutureWarning)
-        import_pkl = import_pkl_data(num_files_to_read=self.num_files_to_read,
-                                     SCENARIOPATH=self.scenario_folder_path)
-        self.data = import_pkl.combined_data()
+#     def import_data(self):
+#         import warnings
+#         warnings.simplefilter(action='ignore', category=FutureWarning)
+#         import_pkl = import_pkl_data(num_files_to_read=self.num_files_to_read,
+#                                      SCENARIOPATH=self.scenario_folder_path)
+#         self.data = import_pkl.combined_data()
 
-    def call_dashboard(self):
-        BT_DashboardPlotter(data=self.data["data_periods"]).run()
+#     def call_dashboard(self):
+#         BT_DashboardPlotter(data=self.data["data_periods"]).run()
 
-    def run(self):
-        self.import_data()
-        self.call_dashboard() 
+#     def run(self):
+#         self.import_data()
+#         self.call_dashboard() 
 
 class validation_dashboard:
     def __init__(self,
@@ -74,11 +74,11 @@ class validation_dashboard:
         self.call_dashboard() 
 
 if __name__ == "__main__":
-    """td = timba_dashboard(num_files_to_read=4,
+    td = timba_dashboard(num_files_to_read=4,
                          scenario_folder_path=toolbox_paths.SCINPUTPATH)
-    td.run()"""
+    td.run()
 
-    vd = validation_dashboard(num_files_to_read=5,
-                              scenario_folder_path=toolbox_paths.SCINPUTPATH,
-                              only_baseline_sc=True)
-    vd.run()
+    # vd = validation_dashboard(num_files_to_read=5,
+    #                           scenario_folder_path=toolbox_paths.SCINPUTPATH,
+    #                           only_baseline_sc=True)
+    # vd.run()
