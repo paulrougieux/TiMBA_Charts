@@ -77,7 +77,7 @@ class validation():
                 axes[i].get_xaxis().set_visible(False)
         
         fig.tight_layout(pad=1.0)
-        plt.show()
+        #plt.show()
 
 
             # courses = data_plot.columns

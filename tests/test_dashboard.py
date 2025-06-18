@@ -44,21 +44,22 @@ def test_filter_data(dashboard, mock_data):
     filtered_data = dashboard.filter_data(region=None, continent=None, domain=None, commodity=None, commodity_group=None, scenario=None)
     assert len(filtered_data) == len(mock_data)
 
-# def test_update_plot_data(dashboard):
-#     fig_quantity, fig_price, fig_stock = dashboard.update_plot_data(region=None, continent=None, domain=None, commodity=None, commodity_group=None, scenario=None)
-#     assert isinstance(fig_quantity, go.Figure)
-#     assert isinstance(fig_price, go.Figure)
-#     assert isinstance(fig_stock, go.Figure)
-#     assert len(fig_quantity.data) > 0
-#     assert len(fig_price.data) > 0
-#     assert len(fig_stock.data) > 0
+@pytest.mark.skip(reason="Fehler im test")
+def test_update_plot_data(dashboard):
+    fig_quantity, fig_price, fig_stock = dashboard.update_plot_data(region=None, continent=None, domain=None, commodity=None, commodity_group=None, scenario=None)
+    assert isinstance(fig_quantity, go.Figure)
+    assert isinstance(fig_price, go.Figure)
+    assert isinstance(fig_stock, go.Figure)
+    assert len(fig_quantity.data) > 0
+    assert len(fig_price.data) > 0
+    assert len(fig_stock.data) > 0
 
-# def test_generate_title(dashboard):
-#     title = dashboard.generate_title(region=['USA'], continent=['North America'], domain=['Consumption'], commodity=['Sawnwood C'], commodity_group=['Sawnwood'])
-#     assert title == "['USA'], ['North America'], ['Consumption'], ['Sawnwood C'], ['Sawnwood']"
-
-#     title = dashboard.generate_title(region=None, continent=None, domain=None, commodity=None, commodity_group=None)
-#     assert title == "all data"
+@pytest.mark.skip(reason="Fehler im test")
+def test_generate_title(dashboard):
+    title = dashboard.generate_title(region=['USA'], continent=['North America'], domain=['Consumption'], commodity=['Sawnwood C'], commodity_group=['Sawnwood'])
+    assert title == "['USA'], ['North America'], ['Consumption'], ['Sawnwood C'], ['Sawnwood']"
+    title = dashboard.generate_title(region=None, continent=None, domain=None, commodity=None, commodity_group=None)
+    assert title == "all data"
 
 def test_create_layout(dashboard):
     dashboard.create_layout()

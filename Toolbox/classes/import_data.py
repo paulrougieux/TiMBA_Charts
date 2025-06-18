@@ -12,9 +12,11 @@ from Toolbox.parameters.defines_geo import CountryGroups
 
 class import_pkl_data:
     def __init__(self, num_files_to_read:int=10,
-                 SCENARIOPATH:Path= toolbox_paths.SCINPUTPATH):
+                 SCENARIOPATH:Path= toolbox_paths.SCINPUTPATH,
+                 ADDINFOPATH:Path= toolbox_paths.AIINPUTPATH):
         self.num_files_to_read = num_files_to_read
         self.SCENARIOPATH = SCENARIOPATH
+        self.ADDINFOPATH = ADDINFOPATH
 
     def open_pickle(self, src_filepath: str):
         """open pkl file
@@ -30,7 +32,7 @@ class import_pkl_data:
         """read data additional information for country data
         :return: country data
         """
-        country_data = pd.read_csv(toolbox_paths.PACKAGEDIR / toolbox_paths.ADDINFOPATH / toolbox_paths.COUNTRYINFO, encoding = "ISO-8859-1")
+        country_data = pd.read_csv(self.ADDINFOPATH / toolbox_paths.COUNTRYINFO, encoding = "ISO-8859-1")
         country_data = country_data[["Country-Code", "ContinentNew", "Country","ISO-Code"]]
         country_data.columns = ["RegionCode","Continent", "Country","ISO3"]
         country_data.Country = country_data.Country.astype("category")
@@ -42,7 +44,7 @@ class import_pkl_data:
         """read data additional information for commodity data
         :return: commodity data
         """
-        commodity_data = pd.read_csv(toolbox_paths.PACKAGEDIR / toolbox_paths.ADDINFOPATH / toolbox_paths.COMMODITYINFO , encoding = "ISO-8859-1")
+        commodity_data = pd.read_csv(self.ADDINFOPATH / toolbox_paths.COMMODITYINFO , encoding = "ISO-8859-1")
         commodity_data = commodity_data[["Commodity","CommodityCode","Commodity_Group"]]
         commodity_data.Commodity = commodity_data.Commodity.astype("category")
         commodity_data.CommodityCode = commodity_data.CommodityCode.astype("category")
@@ -50,7 +52,7 @@ class import_pkl_data:
         return commodity_data
     
     def read_historic_data(self):
-        data = pd.read_csv(toolbox_paths.PACKAGEDIR / toolbox_paths.ADDINFOPATH / toolbox_paths.HISTINFO)
+        data = pd.read_csv(self.ADDINFOPATH / toolbox_paths.HISTINFO)
         data = self.downcasting(data)
         return data
         
@@ -211,7 +213,7 @@ class import_pkl_data:
         return data_prev
 
     def read_forest_data_gfpm(self, country_data:pd.DataFrame):
-        for_data_gfpm = pd.read_csv(toolbox_paths.PACKAGEDIR / toolbox_paths.ADDINFOPATH / toolbox_paths.FORESTINFO, encoding = "ISO-8859-1")
+        for_data_gfpm = pd.read_csv(self.ADDINFOPATH / toolbox_paths.FORESTINFO, encoding = "ISO-8859-1")
         
         rearranged_for_data = pd.melt(for_data_gfpm, id_vars=['domain','Country'], var_name='Year',value_name='for')
         rearranged_for_data = rearranged_for_data.dropna()

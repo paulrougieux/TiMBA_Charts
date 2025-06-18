@@ -31,8 +31,10 @@ class DashboardPlotter:
             '#6C757D',  # Dunkelgrau
             '#F1C40F',  # Senfgelb
             '#E67E22',  # Orange  
+            "#14B150",
+            "#270A3A",
+            "#662308",
         ]
-        self.logo = PACKAGEDIR/'timba_dashboard_logo.png'#'timba_logo_v3.png' 
         self.create_layout()
         self.create_callbacks()
 
@@ -42,7 +44,8 @@ class DashboardPlotter:
             dbc.Row([
                 dbc.Col(width=5),  # Leere Spalte für den linken Rand
                 dbc.Col(
-                    html.Img(src=self.app.get_asset_url('timba_dashboard_logo.png'), style={'height': '90px', 'width': 'auto'}),
+                    html.Img(src="https://raw.githubusercontent.com/TI-Forest-Sector-Modelling/TiMBA/ToolBox_implementation_cm/images/timba_dashboard_logo.png",
+                             style={'height': '90px', 'width': 'auto'}),
                     width=1
                 ),
                 dbc.Col(
@@ -91,7 +94,9 @@ class DashboardPlotter:
                     dbc.Card([
                         dbc.CardBody([
                                 dcc.Graph(id='price-plot',
-                                      config={'toImageButtonOptions': {'format': 'png', 'filename': 'price_plot'}},
+                                      config={'toImageButtonOptions': {'format': 'png',
+                                                                       'filename': 'price_plot',
+                                                                       'scale': 5}},
                                       style={'height': '45vh','width':'46vh'})
                     ])
                 ], style={'white': 'white'})  #price box
@@ -102,7 +107,9 @@ class DashboardPlotter:
                         dbc.Card([
                             dbc.CardBody([
                                 dcc.Graph(id='quantity-plot',
-                                          config={'toImageButtonOptions': {'format': 'png', 'filename': 'quantity_plot'}},
+                                          config={'toImageButtonOptions': {'format': 'png',
+                                                                           'filename': 'quantity_plot',
+                                                                           'scale': 5}},
                                           style={'height': '84.5vh'})
                             ])
                         ], style={'backgroundColor': 'white'}) #mittelbox
@@ -110,8 +117,10 @@ class DashboardPlotter:
                     dbc.Col([
                         dbc.Card([
                             dbc.CardBody([
-                                dcc.Graph(id='forstock-plot',  # Geändert: ID auf 'forstock-plot'
-                                          config={'toImageButtonOptions': {'format': 'png'}},
+                                dcc.Graph(id='forstock-plot', 
+                                          config={'toImageButtonOptions': {'format': 'png',
+                                                                           'filename': 'forstock_plot',
+                                                                           'scale': 5}},
                                           style={'height': '39vh'})
                             ])
                         ], style={'backgroundColor': 'white', 'marginBottom': '20px'}), # Abstand hinzugefügt
@@ -127,7 +136,9 @@ class DashboardPlotter:
                                     style=dropdown_style
                                 ),
                                  dcc.Graph(id='world-map',  # Geändert: ID auf 'world-map'
-                                          config={'toImageButtonOptions': {'format': 'png'}},
+                                          config={'toImageButtonOptions': {'format': 'png',
+                                                                           'filename': 'world_map',
+                                                                           'scale': 5}},
                                           style={'height': '31.75vh'})
                             ])
                         ], style={'backgroundColor': 'white'})
@@ -205,6 +216,7 @@ class DashboardPlotter:
         filtered_data = self.filter_data(region, continent, domain, commodity, commodity_group, scenario)
 
         # Quantity plot
+        max_year = filtered_data['year'].max()
         grouped_data_quantity = filtered_data.groupby(['year', 'Scenario']).sum().reset_index()
         grouped_data_quantity = grouped_data_quantity[(grouped_data_quantity["year"] >= self.start) & (grouped_data_quantity["year"] <= self.end)]
         fig_quantity = go.Figure()
@@ -220,6 +232,7 @@ class DashboardPlotter:
             title='<br>'.join(textwrap.wrap(title, width=90)),
             xaxis_title='Year',
             yaxis_title='Quantity',
+            xaxis=dict(range=[2015.5, max_year]),
             yaxis=dict(rangemode='nonnegative', zeroline=True, zerolinewidth=2, zerolinecolor='LightGrey'),
             legend_title='Scenario',
             legend=dict(orientation="h", yanchor="top", y=-0.1, xanchor="center", x=0.5),

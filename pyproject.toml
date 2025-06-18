@@ -3,8 +3,12 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "Analyses_Toolbox_TiMBA_workshop"  # Ersetzen Sie dies mit dem tatsächlichen Namen
-version = "0.1.0"  # Geben Sie eine gültige Version an (z.B. 0.1.0)
+name = "TiMBA_Charts"
+version = "0.1.1"
+description = """
+A toolbox for analysing forest sector model results.
+"""
+readme = "README.md"
 requires-python = ">=3.9"
 license = "AGPL-3.0-or-later"
 classifiers = [
@@ -13,42 +17,20 @@ classifiers = [
     "Intended Audience :: Science/Research",
 ]
 dependencies = [
-    "blinker==1.9.0",
-    "certifi==2025.1.31",
-    "charset-normalizer==3.4.1",
-    "click==8.1.8",
-    "colorama==0.4.6",
+    "click",
     "dash==3.0.0",
     "dash-bootstrap-components==2.0.0",
-    "Flask==3.0.3",
-    "idna==3.10",
-    "importlib_metadata==8.6.1",
-    "itsdangerous==2.2.0",
-    "Jinja2==3.1.6",
-    "MarkupSafe==3.0.2",
-    "narwhals==1.31.0",
-    "nest-asyncio==1.6.0",
+    "ipywidgets==8.1.7",
     "numpy==1.26.4",
-    "packaging==24.2",
     "pandas==1.5.3",
     "plotly==6.0.1",
     "pytest==8.3.5",
-    "pytest-cov==6.1.0",
-    "python-dateutil==2.9.0.post0",
-    "pytz==2025.1",
-    "requests==2.32.3",
-    "retrying==1.3.4",
-    "setuptools==77.0.3",
-    "six==1.17.0",
-    "stringcase==1.2.0",
-    "typing_extensions==4.12.2",
-    "urllib3==2.3.0",
-    "Werkzeug==3.0.6",
-    "zipp==3.21.0"
+    "pytest-cov==6.2.1",
+    "seaborn==0.13.2"
 ]
 
 [project.urls]
-Repository = "https://github.com/TI-Forest-Sector-Modelling/Analyses_Toolbox_TiMBA_workshop"
+Repository = "https://github.com/TI-Forest-Sector-Modelling/TiMBA_Charts"
 
 [project.scripts]
 show_dashboard = "Toolbox.cli.cli:dashboard_cli"
