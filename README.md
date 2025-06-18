@@ -65,7 +65,7 @@ The number of scenarios can be changed as follows:
 To change the folder path the user can type, e.g.:
 > show_dashboard -FP='E:\P_TiMBA\TiMBA\data\output'
 
-## Description of the figures
+### Description of the figures
 The interactive dashboard provides a flexible interface for exploring model outputs across multiple dimensions. Users can apply filters by region (country or continent), scenario, domain (e.g. Demand, Supply, Trade, Net Trade, and Manufacturing), commodity (ranging from 16 to 20, depending on the input scenario), and commodity group via a control panel. 
 
 Please note that certain filter combinations are interdependent and may not return any results. For instance, selecting Roundwood under demand domain will yield no output, as roundwood is a primary good for which only supply is modeled. Likewise, applying both the commodity and commodity group filters simultaneously will not narrow the selection further, as these categories are not hierarchically structured.
@@ -82,11 +82,11 @@ Based on the selected inputs, four visualizations are updated dynamically to sup
    
 For any combination of filters users will have the option to export the filtered dataset as a csv file or the different graphs as png files for further analysis or documentation.  
 
-## Start the default dashbord
+## Start the validation dashbord
 After installing the package, the user can start the dashboard board with the following CLI command:
 > show_validation
 
-## Description of the figures
+### Description of the figures
 
 ## Authors
 - [Christian Morland](https://www.thuenen.de/de/fachinstitute/waldwirtschaft/personal/wissenschaftliches-personal/ehemalige-liste/christian-morland-msc) [(ORCID 0000-0001-6600-570X)](https://orcid.org/0000-0001-6600-570X),
