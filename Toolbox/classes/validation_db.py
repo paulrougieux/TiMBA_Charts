@@ -592,7 +592,7 @@ class Vali_DashboardPlotter:
         title_formip_second = self.generate_title(
             region=region, estimate=estimate, scenario=scenario, model=model, plot="bar_plot", value_type=value_type)
         if value_type == "absolute values":
-            yaxis_title = f'Difference in {estimate[0]}'
+            pass#yaxis_title = f'Difference in {estimate[0]}'
         if value_type == "relative values":
             yaxis_title = f'Difference in {' '.join(estimate[0].split(' ')[:-1])} (%)'
 
@@ -615,7 +615,7 @@ class Vali_DashboardPlotter:
         title_parts = []
         if plot=="bar_plot":
             if value_type == "absolute values":
-                title_parts.append(f'Difference in {estimate[0]}')
+                pass#title_parts.append(f'Difference in {estimate[0]}')
             if value_type == "relative values":
                 title_parts.append(f'Difference in {' '.join(estimate[0].split(' ')[:-1])} (%)')
         else:
