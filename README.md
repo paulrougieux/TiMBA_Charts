@@ -14,7 +14,7 @@ This package serves as a toolkit for analysing **TiMBA's** simulation results. T
 ## Cite the package
 We are happy that you consider to use TiMBA Charts for your research. When publishing your work in articles, working paper, presentations or elsewhere, please cite the package as:
 
-Morland, C. and Tandetzki, J. (2025) TiMBA Charts v.0.1.1
+Morland, C., Tandetzki, J. and Honkomp, T. (2025) TiMBA Charts v.0.2.0
 
 ## Install TiMBA Charts
 
@@ -49,7 +49,7 @@ you might need to update the pip version you use with:
 ### Install via Pypi
    >pip install timba-charts
 
-## Start the dashbord
+## Start the default dashbord
 After installing the package, the user can start the dashboard board with the following CLI command:
 > show_dashboard
 
@@ -82,13 +82,20 @@ Based on the selected inputs, four visualizations are updated dynamically to sup
    
 For any combination of filters users will have the option to export the filtered dataset as a csv file or the different graphs as png files for further analysis or documentation.  
 
+## Start the default dashbord
+After installing the package, the user can start the dashboard board with the following CLI command:
+> show_validation
+
+## Description of the figures
+
 ## Authors
-- [Christian Morland](https://www.thuenen.de/de/fachinstitute/waldwirtschaft/personal/wissenschaftliches-personal/ehemalige-liste/christian-morland-msc) [(ORCID 0000-0001-6600-570X)](https://orcid.org/0000-0001-6600-570X) and
-- [Julia Tandetzki](https://www.thuenen.de/de/fachinstitute/waldwirtschaft/personal/wissenschaftliches-personal/julia-tandetzki-msc) [(ORCID 0000-0002-0630-9434)](https://orcid.org/0000-0002-0630-9434)
+- [Christian Morland](https://www.thuenen.de/de/fachinstitute/waldwirtschaft/personal/wissenschaftliches-personal/ehemalige-liste/christian-morland-msc) [(ORCID 0000-0001-6600-570X)](https://orcid.org/0000-0001-6600-570X),
+- [Julia Tandetzki](https://www.thuenen.de/de/fachinstitute/waldwirtschaft/personal/wissenschaftliches-personal/julia-tandetzki-msc) [(ORCID 0000-0002-0630-9434)](https://orcid.org/0000-0002-0630-9434) and 
+- [Tomke Honkomp](https://www.thuenen.de/de/fachinstitute/waldwirtschaft/personal/wissenschaftliches-personal/tomke-honkomp-msc) [(ORCID 0000-0002-6719-0190)](https://orcid.org/0000-0002-6719-0190). 
 
 ## License and copyright note
 Copyright ©, 2025, Thuenen Institute, Christian Morland, Julia Tandetzki, 
-wf-timba@thuenen.de
+Tomke Honkomp, wf-timba@thuenen.de
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
