@@ -41,29 +41,6 @@ def validation_cli(num_files, sc_folderpath):
     )
     validb.run()
 
-# #bilateral trade Command
-# @click.command()
-# @click.option('-NF', '--num_files', default=10, 
-#               show_default=True, required=True, type=int, 
-#               help="Number of .pkl files to read")
-# @click.option('-FP', '--sc_folderpath', default=toolbox_paths.SCINPUTPATH, 
-#               show_default=True, required=True, type=Path, 
-#               help="Folder path for scenarios")
-# def bilateral_trade_cli(num_files, sc_folderpath):    
-#     click.echo("Bilateral Trade dashboard is started")
-#     btdb = bilateral_trade_dashboard(
-#         num_files_to_read=num_files,
-#         scenario_folder_path=sc_folderpath
-#     )
-#     btdb.run()
-
-# #scenario comparision Command
-# @click.command()
-# def scenario_comparision_cli():    
-#     click.echo("Scenario comparion is started")
-
 cli.add_command(dashboard_cli, name="dashboard")
 cli.add_command(validation_cli, name="validation")
-# cli.add_command(bilateral_trade_cli, name="bilateral-trade")
-# cli.add_command(scenario_comparision_cli, name="scenario-comparison")
 

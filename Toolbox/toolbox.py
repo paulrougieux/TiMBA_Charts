@@ -1,6 +1,5 @@
 from Toolbox.classes.import_data import import_pkl_data
 from Toolbox.classes.dashboard import DashboardPlotter
-from Toolbox.classes.bilateral_trade_db import BT_DashboardPlotter
 from Toolbox.classes.validation_db import Vali_DashboardPlotter
 from pathlib import Path
 import Toolbox.parameters.paths as toolbox_paths
