@@ -594,11 +594,11 @@ class Vali_DashboardPlotter:
         if value_type == "absolute values":
             pass#yaxis_title = f'Difference in {estimate[0]}'
         if value_type == "relative values":
-            yaxis_title = f'Difference in {' '.join(estimate[0].split(' ')[:-1])} (%)'
+            pass#yaxis_title = f'Difference in {' '.join(estimate[0].split(' ')[:-1])} (%)'
 
         fig_formip_second.update_layout(
             title='<br>'.join(textwrap.wrap(title_formip_second, width=150)),
-            yaxis_title=yaxis_title,
+            #yaxis_title=yaxis_title,
             xaxis=dict(gridcolor='white'),
             yaxis=dict(zeroline=True, zerolinewidth=2, zerolinecolor='LightGrey', gridcolor='white'),
             legend=dict(orientation="h", yanchor="top", y=-0.1, xanchor="center", x=0.5),
@@ -617,7 +617,7 @@ class Vali_DashboardPlotter:
             if value_type == "absolute values":
                 pass#title_parts.append(f'Difference in {estimate[0]}')
             if value_type == "relative values":
-                title_parts.append(f'Difference in {' '.join(estimate[0].split(' ')[:-1])} (%)')
+                pass#title_parts.append(f'Difference in {' '.join(estimate[0].split(' ')[:-1])} (%)')
         else:
             title_parts.append(f"{estimate}")
         if region:
