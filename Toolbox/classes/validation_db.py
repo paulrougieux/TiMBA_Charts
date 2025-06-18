@@ -572,7 +572,7 @@ class Vali_DashboardPlotter:
         fig_formip_main.update_layout(
             title='<br>'.join(textwrap.wrap(title_formip_main, width=150)),
             xaxis_title='Year',
-            yaxis_title=f'{estimate[0]}',
+            #yaxis_title=f'{estimate[0]}',
             xaxis=dict(gridcolor='white'),
             yaxis=dict(rangemode='nonnegative', zeroline=True, zerolinewidth=2, zerolinecolor='LightGrey',
                        gridcolor='white'),
