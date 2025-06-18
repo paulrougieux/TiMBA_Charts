@@ -8,6 +8,7 @@ import pickle
 import gzip
 import Toolbox.parameters.paths as toolbox_paths
 import Toolbox.parameters.default_parameters as toolbox_parameters
+from Toolbox.parameters.defines_geo import CountryGroups
 
 class import_pkl_data:
     def __init__(self, num_files_to_read:int=10,
@@ -236,7 +237,226 @@ class import_pkl_data:
         forest_gfpm[toolbox_parameters.column_name_scenario]= 'world500'
         forest_data['Model'] = 'GFPM'
         return forest_gfpm
-    
+
+
+class import_formip_data:
+    def __init__(self,
+                 FORMIPPATH:Path= toolbox_paths.FORMIPPATH,
+                 timba_data:pd.DataFrame=pd.DataFrame(),
+                 only_baseline_sc:bool=True):
+        self.FORMIPPATH = FORMIPPATH
+        self.formip_data = self.read_formip_data()
+        self.timba_data = timba_data
+        self.only_baseline_sc = only_baseline_sc
+
+    def read_formip_data(self):
+        """
+        Reads in data from the Forest sector model intercomparison (ForMIP) project (Daigneault et al. 2022)
+        :return: ForMIP data
+        """
+        formip_data = pd.read_csv(self.FORMIPPATH)
+        return formip_data
+
+    def process_formip_data(self):
+        """
+        Processes ForMIP data for further visualization. Data for missing years are linearly interpolated.
+        :return: Processed FORMIP data
+        """
+        formip_data = self.formip_data
+        formip_data_info = formip_data.iloc[:, :6].copy()
+        formip_data = formip_data.iloc[:, 6:].copy()
+        year_list = formip_data.columns.tolist()
+
+        year_runner = 0
+        for year_next in year_list[1:]:
+            year_prev = year_list[year_runner]
+
+            data_next = formip_data[year_next]
+            data_prev = formip_data[year_prev]
+            data_diff = (data_next - data_prev) / (int(year_next) - int(year_prev))
+
+            year_to_fill = range(int(year_prev) + 1, int(year_next))
+
+            for year in year_to_fill:
+                formip_data[str(year)] = formip_data[str(year - 1)] + data_diff
+
+            year_runner += 1
+
+        formip_data_new = pd.DataFrame()
+        for year in formip_data.columns:
+            formip_data_tmp = formip_data[year]
+            formip_data_info_tmp = formip_data_info.copy()
+            formip_data_info_tmp["Year"] = int(year)
+            formip_data_info_tmp["Data"] = formip_data_tmp
+            formip_data_new = pd.concat([formip_data_new, formip_data_info_tmp], axis=0).reset_index(drop=True)
+
+        formip_data_new = formip_data_new.sort_values(by=["Model", "RCP-SSP", "Region", "Year"],
+                                                      ascending=True).reset_index(drop=True)
+        if self.only_baseline_sc:
+            scenario_filter = ["Baseline-SSP1", "Baseline-SSP2", "Baseline-SSP3", "Baseline-SSP4", "Baseline-SSP5"]
+            formip_data_new = formip_data_new[formip_data_new["RCP-SSP"].isin(scenario_filter)].reset_index(drop=True)
+
+        if "Carbon" not in self.timba_data.keys():
+            formip_data_new = formip_data_new[
+                formip_data_new["Estimate"] != "Total Forest Non-soil C Stock (MtC)"].reset_index(drop=True)
+
+        formip_data_new = formip_data_new[(formip_data_new["Estimate"] != "Carbon Price (/tCO2e)") &
+                                          (formip_data_new["Estimate"] != "Wt Avg Roundwood Price (/m3)")].reset_index(drop=True)
+
+        return formip_data_new
+
+    def process_timba_data(self):
+        """
+        Processes TiMBA scenario results to match ForMIP data structure.
+        :return:
+        """
+
+        geo_data = pd.read_csv(toolbox_paths.PACKAGEDIR / toolbox_paths.ADDINFOPATH / toolbox_paths.COUNTRYINFO,
+                               encoding = "ISO-8859-1")
+        geo_data = geo_data[["Country-Code", "ISO-Code"]]
+
+        timba_data_prod = self.timba_data["data_periods"].copy().reset_index(drop=True)
+        timba_data_forest = self.timba_data["Forest"].copy().reset_index(drop=True)
+        try:
+            timba_data_carbon = self.timba_data["Carbon"].copy().reset_index(drop=True)
+        except KeyError:
+            pass
+
+        timba_data_prod = timba_data_prod[(timba_data_prod["domain"] == "Supply") &
+                                          (timba_data_prod["Model"] == "TiMBA")].reset_index(drop=True)
+
+        period_structure = timba_data_prod[["Period", "year"]].drop_duplicates().reset_index(drop=True)
+        timba_data_forest = timba_data_forest.merge(geo_data, left_on="RegionCode", right_on="Country-Code",
+                                                    how="left")
+        timba_data_forest = timba_data_forest[
+            ["Model", "RegionCode", "ISO-Code", "Scenario", "Period", "ForStock", "ForArea"]].drop_duplicates()
+        timba_data_forest = timba_data_forest.merge(
+            period_structure, left_on=["Period"], right_on=["Period"], how="left")
+
+        try:
+            timba_data_carbon = timba_data_carbon.merge(
+                period_structure, left_on=["Period"], right_on=["Period"], how="left")
+        except UnboundLocalError:
+            pass
+
+        for region in CountryGroups.formip_regions.value.keys():
+            region_iso = CountryGroups.formip_regions.value[region]
+
+            region_iso_index_forest = pd.DataFrame([x in region_iso for x in timba_data_forest["ISO-Code"]])
+            region_iso_index_forest = region_iso_index_forest[region_iso_index_forest[0] == True].index
+            timba_data_forest.loc[region_iso_index_forest, "Region"] = region
+
+            region_iso_index_prod = pd.DataFrame([x in region_iso for x in timba_data_prod["ISO3"]])
+            region_iso_index_prod = region_iso_index_prod[region_iso_index_prod[0] == True].index
+            timba_data_prod.loc[region_iso_index_prod, "Region"] = region
+
+            try:
+                region_iso_index_carbon = pd.DataFrame([x in region_iso for x in timba_data_carbon["ISO-Code"]])
+                region_iso_index_carbon = region_iso_index_carbon[region_iso_index_carbon[0] == True].index
+                timba_data_carbon.loc[region_iso_index_carbon, "Region"] = region
+            except UnboundLocalError:
+                pass
+
+        timba_data_forest = timba_data_forest.groupby(
+            ["Model", "Scenario", "Region", "year"])[["ForStock", "ForArea"]].sum().reset_index()
+
+        timba_data_prod = timba_data_prod.groupby(
+            ["Model", "Scenario", "Region", "year", "Commodity"])["quantity"].sum().reset_index()
+
+        try:
+            timba_data_carbon = timba_data_carbon.groupby(
+                ["Model", "Scenario", "Region", "year"])["CarbonStockBiomass [MtCO2]"].sum().reset_index()
+        except UnboundLocalError:
+            pass
+
+        # Add world
+        timba_data_prod_world = timba_data_prod.groupby(
+            ["Model", "Scenario", "year", "Commodity"])["quantity"].sum().reset_index()
+        timba_data_prod_world["Region"] = "World"
+        timba_data_prod = pd.concat([timba_data_prod, timba_data_prod_world], axis=0).reset_index(drop=True)
+
+        timba_data_forest_world = timba_data_forest.groupby(
+            ["Model", "Scenario", "year"])["ForStock", "ForArea"].sum().reset_index()
+        timba_data_forest_world["Region"] = "World"
+        timba_data_forest = pd.concat([timba_data_forest, timba_data_forest_world], axis=0).reset_index(drop=True)
+
+        try:
+            timba_data_carbon_world = timba_data_carbon.groupby(
+                ["Model", "Scenario", "year"])["CarbonStockBiomass [MtCO2]"].sum().reset_index()
+            timba_data_carbon_world["Region"] = "World"
+            timba_data_carbon = pd.concat([timba_data_carbon, timba_data_carbon_world], axis=0).reset_index(drop=True)
+        except UnboundLocalError:
+            pass
+
+        # Roundwood harvest (= industrial roundwood + other industrial roundwood) (in Mio m³)
+        rnd_harvest = timba_data_prod[(timba_data_prod["Commodity"] == "Industrial Roundwood NC") |
+                                      (timba_data_prod["Commodity"] == "Industrial Roundwood C") |
+                                      (timba_data_prod["Commodity"] == "Other Industrial Roundwood")].reset_index(drop=True)
+        rnd_harvest = rnd_harvest.groupby(["Model", "Scenario", "Region", "year"])["quantity"].sum().reset_index()
+        rnd_harvest["quantity"] = rnd_harvest["quantity"] / 1000  # Conversion Tsd. to Mio m³
+        rnd_harvest["Estimate"] = "Roundwood Harvest (Mm3/yr)"
+        rnd_harvest = rnd_harvest.rename(columns={"quantity": "Data", "Scenario": "RCP-SSP", "year": "Year"})
+
+        # Total harvest (roudwood harvest + fuelwood) (in Mio m³)
+        total_harvest = timba_data_prod[(timba_data_prod["Commodity"] == "Fuelwood") |
+                                        (timba_data_prod["Commodity"] == "Industrial Roundwood NC") |
+                                        (timba_data_prod["Commodity"] == "Industrial Roundwood C") |
+                                        (timba_data_prod["Commodity"] == "Other Industrial Roundwood")].reset_index(drop=True)
+        total_harvest = total_harvest.groupby(["Model", "Scenario", "Region", "year"])["quantity"].sum().reset_index()
+        total_harvest["quantity"] = total_harvest["quantity"] / 1000  # Conversion Tsd. to Mio m³
+        total_harvest["Estimate"] = "Total Harvest (Mm3/yr)"
+        total_harvest = total_harvest.rename(columns={"quantity": "Data", "Scenario": "RCP-SSP", "year": "Year"})
+
+        # Forest area (Mha)
+        forest_area = timba_data_forest[["Model", "Scenario", "Region", "year", "ForArea"]].copy()
+        forest_area["ForArea"] = forest_area["ForArea"] / 1000
+        forest_area["Estimate"] = "Forest Area (Mha)"
+        forest_area = forest_area.rename(columns={"ForArea": "Data", "Scenario": "RCP-SSP", "year": "Year"})
+
+        # Total forest non-soil C stock (MtC)
+        try:
+            carbon_biomass = timba_data_carbon[["Model", "Scenario", "Region", "year", "CarbonStockBiomass [MtCO2]"]].copy()
+            carbon_biomass["CarbonStockBiomass [MtCO2]"] = carbon_biomass["CarbonStockBiomass [MtCO2]"] / (44 / 12)
+            carbon_biomass["Model"] = "TiMBA"
+            carbon_biomass["Estimate"] = "Total Forest Non-soil C Stock (MtC)"
+            carbon_biomass = carbon_biomass.rename(
+                columns={"CarbonStockBiomass [MtCO2]": "Data", "Scenario": "RCP-SSP", "year": "Year"})
+        except UnboundLocalError:
+            pass
+        try:
+            timba_data_new = pd.concat(
+                [rnd_harvest, total_harvest, forest_area, carbon_biomass], axis=0).reset_index(drop=True)
+        except UnboundLocalError:
+            timba_data_new = pd.concat(
+                [rnd_harvest, total_harvest, forest_area], axis=0).reset_index(drop=True)
+
+        return timba_data_new
+
+    def align_formip_data(self):
+        """
+        Alignes and merges TiMBA scenario results and FORMIP data.
+        :return: Merged TiMBA and FORMIP data
+        """
+        formip_data = self.formip_data.copy()
+        timba_data = self.timba_data.copy()
+
+        year_structure_timba = timba_data["Year"].unique()
+
+        formip_data = formip_data[
+            [x in year_structure_timba for x in formip_data["Year"]]].reset_index(drop=True)
+
+        formip_data = pd.concat([formip_data, timba_data], axis=0).reset_index(drop=True)
+
+        formip_data = formip_data.rename(columns={"RCP-SSP" : "Scenario"})
+
+        return formip_data
+
+    def load_formip_data(self):
+        self.formip_data = self.process_formip_data()
+        self.timba_data = self.process_timba_data()
+        self.formip_data = self.align_formip_data()
+        return self.formip_data
+
 if __name__ == "__main__":
     import_pkl = import_pkl_data()
     data = import_pkl.combined_data()
