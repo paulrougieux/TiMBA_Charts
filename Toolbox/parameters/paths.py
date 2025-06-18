@@ -8,3 +8,6 @@ COUNTRYINFO = "country_info.csv"
 COMMODITYINFO = "commodity_info.csv"
 FORESTINFO = "Forest_world500.csv"
 HISTINFO = "FAO_Data.csv"
+FORMIP = "external_model_data.csv"
+
+FORMIPPATH = PACKAGEDIR / ADDINFOPATH / FORMIP
