@@ -10,33 +10,42 @@ import numpy as np
 from pathlib import Path
 import plotly.express as px
 import textwrap
+from Toolbox.parameters.default_parameters import default_plot_settings, printing_plot_settings
 
 PACKAGEDIR = Path(__file__).parent.parent.absolute()
 
 class DashboardPlotter:
 
-    def __init__(self, data):
+    def __init__(self, data, print_settings:bool=False):
         self.data = data
         self.app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
         self.start = self.data['year'].min()
         self.end = self.data['year'].max()
         self.color_list = [
             '#2A4D69',  # Dunkelblau
-            '#4B8BBE',  # Hellblau
-            '#D35400',  # Dunkelorange
-            '#AAB7B8',  # Grau
-            '#9B59B6',  # Lila
+            "#000000",
             '#2980B9',  # Blau
             '#27AE60',  # Grün
-            '#6C757D',  # Dunkelgrau
+            '#D35400',  # Dunkelorange
+            '#9B59B6',  # Lila
             '#F1C40F',  # Senfgelb
+            '#E67E22',  # Orange 
+            '#AAB7B8',  # Grau
             '#E67E22',  # Orange  
+            '#4B8BBE',  # Hellblau
+            '#6C757D',  # Dunkelgrau
             "#14B150",
-            "#270A3A",
+            "#000000",
             "#662308",
         ]
         self.create_layout()
         self.create_callbacks()
+        if print_settings:
+            self.plot_settings = printing_plot_settings
+        else:
+            self.plot_settings = default_plot_settings
+        print(self.plot_settings)
+        print(self.plot_settings["line_witdh"])
 
     def create_layout(self):
         dropdown_style = {'height': '30px','marginBottom': '10px'}
@@ -224,18 +233,21 @@ class DashboardPlotter:
             subset = grouped_data_quantity[grouped_data_quantity['Scenario'] == scenario]
             color = self.color_list[i % len(self.color_list)]
             dash = 'solid' if scenario in ['Historic Data'] else 'dash'
-            fig_quantity.add_trace(go.Scatter(x=subset['year'], y=subset['quantity'], mode='lines',
-                                              name=f'{scenario}', line=dict(color=color, dash=dash)))
+            fig_quantity.add_trace(go.Scatter(x=subset['year'], y=subset['quantity']*1000, mode='lines',
+                                              name=f'{scenario}', line=dict(color=color, dash=dash, width=self.plot_settings["line_witdh"])))
         title_quantity = self.generate_title(region, continent, domain, commodity, commodity_group)
-        title= "Quantity by Period and Scenario for " + title_quantity
+        title= "Quantity by Year and Scenario for " + title_quantity
         fig_quantity.update_layout(
-            title='<br>'.join(textwrap.wrap(title, width=90)),
+            title=dict(text='<br>'.join(textwrap.wrap(title, width=90)),font=dict(size=self.plot_settings["title_font_size"])),
             xaxis_title='Year',
             yaxis_title='Quantity',
-            xaxis=dict(range=[2015.5, max_year]),
-            yaxis=dict(rangemode='nonnegative', zeroline=True, zerolinewidth=2, zerolinecolor='LightGrey'),
+            xaxis=dict(range=[2015.5, max_year], title=dict(text='Year', font=dict(size=self.plot_settings["font_size"])), 
+                       tickfont=dict(size=self.plot_settings["tick_font_size"])),
+            yaxis=dict(rangemode='nonnegative', zeroline=True, zerolinewidth=1, zerolinecolor='LightGrey', title=dict(text='Quantity', 
+                                                                                                                      font=dict(size=self.plot_settings["font_size"])), 
+                                                                                                                      tickfont=dict(size=self.plot_settings["tick_font_size"])),
             legend_title='Scenario',
-            legend=dict(orientation="h", yanchor="top", y=-0.1, xanchor="center", x=0.5),
+            legend=dict(orientation="h", yanchor="top", y=-0.1, xanchor="center", x=0.5,font=dict(size=self.plot_settings["legend_font_size"])),
             margin=dict(l=35, r=35, t=60, b=90),
             hovermode='x unified',
             template=graphic_template
