@@ -52,10 +52,12 @@ class timba_dashboard:
 class validation_dashboard:
     def __init__(self,
                  scenario_folder_path:Path,
+                 additional_info_folderpath:Path,
                  num_files_to_read:int=10,
                  only_baseline_sc:bool=True):
         self.num_files_to_read = num_files_to_read
         self.scenario_folder_path = scenario_folder_path
+        self.additional_info_folderpath = additional_info_folderpath
         self.only_baseline_sc = only_baseline_sc
 
     def import_data(self):
@@ -63,10 +65,13 @@ class validation_dashboard:
         warnings.simplefilter(action='ignore', category=FutureWarning)
         from Toolbox.classes.import_data import import_pkl_data, import_formip_data
         import_pkl = import_pkl_data(num_files_to_read=self.num_files_to_read,
+                                     ADDINFOPATH=self.additional_info_folderpath,
                                      SCENARIOPATH=self.scenario_folder_path)
         self.data = import_pkl.combined_data()
 
-        import_formip_data = import_formip_data(timba_data=self.data, only_baseline_sc=self.only_baseline_sc)
+        import_formip_data = import_formip_data(timba_data=self.data, 
+                                                only_baseline_sc=self.only_baseline_sc,
+                                                ADDINFOPATH=self.additional_info_folderpath)
         self.formip_data = import_formip_data.load_formip_data()
 
 

@@ -241,10 +241,10 @@ class import_pkl_data:
 
 class import_formip_data:
     def __init__(self,
-                 FORMIPPATH:Path= toolbox_paths.FORMIPPATH,
+                 ADDINFOPATH:Path= toolbox_paths.AIINPUTPATH,
                  timba_data:pd.DataFrame=pd.DataFrame(),
                  only_baseline_sc:bool=True):
-        self.FORMIPPATH = FORMIPPATH
+        self.FORMIPPATH = ADDINFOPATH / toolbox_paths.FORMIP
         self.formip_data = self.read_formip_data()
         self.timba_data = timba_data
         self.only_baseline_sc = only_baseline_sc
@@ -311,7 +311,7 @@ class import_formip_data:
         :return:
         """
 
-        geo_data = pd.read_csv(toolbox_paths.PACKAGEDIR / toolbox_paths.ADDINFOPATH / toolbox_paths.COUNTRYINFO,
+        geo_data = pd.read_csv(toolbox_paths.AIINPUTPATH / toolbox_paths.COUNTRYINFO,
                                encoding = "ISO-8859-1")
         geo_data = geo_data[["Country-Code", "ISO-Code"]]
 
