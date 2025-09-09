@@ -83,13 +83,13 @@ class validation_dashboard:
         self.call_dashboard() 
 
 if __name__ == "__main__":
-    # td = timba_dashboard(num_files_to_read=4,
-    #                      scenario_folder_path=toolbox_paths.SCINPUTPATH,
-    #                      additional_info_folderpath= toolbox_paths.AIINPUTPATH,
-    #                      print_settings=False)
-    # td.run()
+    td = timba_dashboard(num_files_to_read=4,
+                         scenario_folder_path=toolbox_paths.SCINPUTPATH,
+                         additional_info_folderpath= toolbox_paths.AIINPUTPATH,
+                         print_settings=False)
+    td.run()
 
-    vd = validation_dashboard(num_files_to_read=5,
-                              scenario_folder_path=toolbox_paths.SCINPUTPATH,
-                              additional_info_folderpath=toolbox_paths.AIINPUTPATH)
-    vd.run()
+    # vd = validation_dashboard(num_files_to_read=5,
+    #                           scenario_folder_path=toolbox_paths.SCINPUTPATH,
+    #                           additional_info_folderpath=toolbox_paths.AIINPUTPATH)
+    # vd.run()
