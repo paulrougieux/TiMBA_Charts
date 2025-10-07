@@ -1,3 +1,42 @@
+""" TiMBA Charts Dashboard
+
+The following script starts a Dash application server running on localhost. It
+will display the TiMBA Dashboard in a web browser.
+
+To start it, move to the TiMBA_Charts directory, activate the environment and run the
+dashboard:
+
+    cd TiMBA_Charts
+    source .venv/bin/activate
+    ipython -i Toolbox/toolbox.py
+
+The following data is useful for debugging purposes, to see the modelling data
+containers made available to the dashboard application. Create a
+`timba_dashboard` object and run its `import_data` method at a python console
+as follows:
+
+    cd TiMBA_Charts
+    ipython
+    >>> import Toolbox.parameters.paths as toolbox_paths
+    >>> from Toolbox.toolbox import timba_dashboard
+    >>> td = timba_dashboard(num_files_to_read=4,
+    ...     scenario_folder_path=toolbox_paths.SCINPUTPATH,
+    ...     additional_info_folderpath= toolbox_paths.AIINPUTPATH,
+    ...     print_settings=False)
+    >>> td.import_data()
+    >>> td.data
+
+For example showing the time series of industrial roundwood non coniferous supply in Africa
+
+    >>> td.data["data_aggregated"].query("ContinentNew=='Africa' and domain=='Supply' and CommodityCode==78")
+
+For example showing the time series of industrial roundwood non coniferous supply in Germany
+
+    >>> cols = ['Model', 'Scenario', 'Country', 'CommodityCode', 'Commodity', 'year', 'domain', 'price', 'quantity']
+    >>> td.data["data_periods"].query("Country=='Germany' and domain=='Supply' and CommodityCode==78")[cols]
+
+"""
+
 from Toolbox.classes.import_data import import_pkl_data
 from Toolbox.classes.dashboard import DashboardPlotter
 from Toolbox.classes.validation_db import Vali_DashboardPlotter
